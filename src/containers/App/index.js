@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import URLSearchParams from 'url-search-params';
 import { getUser } from '../../appRedux/actions/Auth';
+import { getMainScreen } from '../../appRedux/actions/screens';
 import {
   LAYOUT_TYPE_BOXED,
   LAYOUT_TYPE_FRAMED,
@@ -82,8 +83,9 @@ class App extends Component {
     // if (this.props.initURL === '') {
     //   this.props.setInitUrl(this.props.history.location.pathname);
     // }
-    const { history, token, initURL, location } = this.props;
+    const { history, token, initURL, location, getMainScreen } = this.props;
     // getUser()
+    getMainScreen()
     if (location.pathname === '/') {
       if (token === null) {
         history.push('/signin');
@@ -156,5 +158,12 @@ const mapStateToProps = ({ settings, auth }) => {
 };
 export default connect(
   mapStateToProps,
-  { setInitUrl, getUser, setThemeType, onNavStyleChange, onLayoutTypeChange }
+  {
+    setInitUrl,
+    getUser,
+    setThemeType,
+    onNavStyleChange,
+    onLayoutTypeChange,
+    getMainScreen,
+  }
 )(App);
