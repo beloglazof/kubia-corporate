@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@amcharts/amcharts3-react": "^3.1.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.6",
     "amcharts3": "^3.21.13",
     "antd": "^3.11.6",
     "antd-theme-webpack-plugin": "^1.1.6",
@@ -35,7 +38,7 @@
     "react-intl": "^2.4.0",
     "react-notifications": "^1.4.3",
     "react-placeholder": "^3.0.1",
-    "react-redux": "^5.0.7",
+    "react-redux": "^7.1.1",
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "^2.1.3",
