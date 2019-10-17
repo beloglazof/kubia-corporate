@@ -3,7 +3,7 @@ import { routerReducer } from 'react-router-redux';
 import Settings from './Settings';
 import Auth from './Auth';
 import Common from './Common';
-import screens from './screens';
+import screens from '../features/screens/screensSlice';
 
 const reducers = combineReducers({
   routing: routerReducer,
