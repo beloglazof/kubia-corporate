@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCcMastercard } from '@fortawesome/free-brands-svg-icons';
 
 import 'assets/vendors/style';
 import 'styles/wieldy.less';
@@ -9,6 +11,7 @@ import 'styles/wieldy.less';
 import configureStore from './appRedux/store';
 import App from './containers/App';
 
+library.add(faCcMastercard);
 export const store = configureStore();
 
 const Root = () => (
