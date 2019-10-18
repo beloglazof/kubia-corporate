@@ -57,9 +57,9 @@ class SidebarContent extends Component {
               mode='inline'
             >
               <Menu.Item key='sample'>
-                <Link to='/sample'>
+                <Link to='/accounts'>
                   <i className='icon icon-widgets' />
-                  <IntlMessages id='sidebar.samplePage' />
+                  <IntlMessages id='sidebar.accounts' />
                 </Link>
               </Menu.Item>
             </Menu>

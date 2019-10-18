@@ -7,7 +7,7 @@ import {
   LAYOUT_TYPE,
   LAYOUT_TYPE_FULL,
   NAV_STYLE,
-  NAV_STYLE_FIXED,
+  NAV_STYLE_MINI_SIDEBAR,
   THEME_COLOR_SELECTION,
   THEME_COLOR_SELECTION_PRESET,
   THEME_TYPE,
@@ -16,7 +16,7 @@ import {
 
 const initialSettings = {
   navCollapsed: true,
-  navStyle: NAV_STYLE_FIXED,
+  navStyle: NAV_STYLE_MINI_SIDEBAR,
   layoutType: LAYOUT_TYPE_FULL,
   themeType: THEME_TYPE_DARK,
   colorSelection: THEME_COLOR_SELECTION_PRESET,

@@ -8,8 +8,8 @@ class UserProfile extends Component {
     const { authUser } = this.props;
     const userMenuOptions = (
       <ul className='gx-user-popover'>
-        <li>My Account</li>
-        <li>Connections</li>
+        {/* <li>My Account</li> */}
+        {/* <li>Connections</li> */}
         <li onClick={() => this.props.userSignOut()}>Logout</li>
       </ul>
     );
