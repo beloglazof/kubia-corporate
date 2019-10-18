@@ -90,12 +90,12 @@ class App extends Component {
       if (token === null) {
         history.push('/signin');
         // return <Redirect to={'/signin'} />;
-      } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
-        history.push('/sample');
+      // } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
+      //   history.push('/');
 
         // return <Redirect to={'/sample'} />;
-      } else {
-        history.push(initURL);
+      // } else {
+        // history.push(initURL);
 
         // return <Redirect to={initURL} />;
       }
