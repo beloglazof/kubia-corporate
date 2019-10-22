@@ -12,11 +12,13 @@ import {
   THEME_COLOR_SELECTION_PRESET,
   THEME_TYPE,
   THEME_TYPE_DARK,
+  NAV_STYLE_DEFAULT_HORIZONTAL,
+  NAV_STYLE_DARK_HORIZONTAL,
 } from '../../constants/ThemeSetting';
 
 const initialSettings = {
   navCollapsed: true,
-  navStyle: NAV_STYLE_MINI_SIDEBAR,
+  navStyle: NAV_STYLE_DARK_HORIZONTAL,
   layoutType: LAYOUT_TYPE_FULL,
   themeType: THEME_TYPE_DARK,
   colorSelection: THEME_COLOR_SELECTION_PRESET,

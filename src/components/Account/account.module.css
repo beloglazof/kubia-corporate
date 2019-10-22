@@ -1,0 +1,11 @@
+.name {
+  font-size: 2em;
+  margin-bottom: 1em;
+}
+.infoRow {
+  margin-bottom: 1em;
+}
+.infoParam {
+  text-align: left;
+  display: flex;
+}
