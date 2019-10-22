@@ -8,4 +8,5 @@
 .infoParam {
   text-align: left;
   display: flex;
+  white-space: nowrap;
 }

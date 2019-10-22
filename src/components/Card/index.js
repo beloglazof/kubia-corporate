@@ -70,12 +70,12 @@ const Card = ({ card }) => {
     <Collapse expandIconPosition='right' expandIcon={expandIcon}>
       <Panel header={Header} key={id}>
         <Row>
-          <Col span={6}>
+          <Col span={6} sm={8}>
             <div style={{ textAlign: 'right' }}>
-              <img src={CardImg} alt='Card image' height='200' />
+              <img src={CardImg} alt='Card image' height='200' width='120' />
             </div>
           </Col>
-          <Col span={7}>
+          <Col span={7} sm={8}>
             <div className={styles.infoParam}>
               Number:
               <div className='param-value'>
@@ -91,7 +91,7 @@ const Card = ({ card }) => {
               <div className='param-value'>{cvv.length ? cvv : 'No info'}</div>
             </div>
           </Col>
-          <Col span={11}>
+          <Col span={11} sm={8}>
             <Button block>Change PIN</Button>
           </Col>
         </Row>

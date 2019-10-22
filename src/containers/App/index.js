@@ -11,8 +11,7 @@ import { IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import URLSearchParams from 'url-search-params';
-import { getUser } from '../../appRedux/actions/Auth';
-import { fetchMainScreen } from '../../appRedux/features/screens/screensSlice';
+
 import {
   LAYOUT_TYPE_BOXED,
   LAYOUT_TYPE_FRAMED,
@@ -83,30 +82,11 @@ class App extends Component {
     // if (this.props.initURL === '') {
     //   this.props.setInitUrl(this.props.history.location.pathname);
     // }
-    const {
-      history,
-      token,
-      initURL,
-      location,
-      fetchMainScreen,
-      getUser,
-    } = this.props;
+    const { history, token, location } = this.props;
 
-    getUser();
-    fetchMainScreen();
-    
     if (location.pathname === '/') {
       if (token === null) {
         history.push('/signin');
-        // return <Redirect to={'/signin'} />;
-        // } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
-        //   history.push('/');
-
-        // return <Redirect to={'/sample'} />;
-        // } else {
-        // history.push(initURL);
-
-        // return <Redirect to={initURL} />;
       }
     }
     const params = new URLSearchParams(this.props.location.search);
@@ -169,10 +149,8 @@ export default connect(
   mapStateToProps,
   {
     setInitUrl,
-    getUser,
     setThemeType,
     onNavStyleChange,
     onLayoutTypeChange,
-    fetchMainScreen,
   }
 )(App);

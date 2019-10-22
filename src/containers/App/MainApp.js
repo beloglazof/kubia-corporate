@@ -26,7 +26,8 @@ import {
   TAB_SIZE,
 } from '../../constants/ThemeSetting';
 import NoHeaderNotification from '../Topbar/NoHeaderNotification/index';
-
+import { getUser } from '../../appRedux/actions/Auth';
+import { fetchMainScreen } from '../../appRedux/features/screens/screensSlice';
 const { Content, Footer } = Layout;
 
 export class MainApp extends Component {
@@ -93,6 +94,12 @@ export class MainApp extends Component {
     }
   };
 
+  componentDidMount() {
+    const { getUser, fetchMainScreen } = this.props;
+    getUser();
+    fetchMainScreen();
+  }
+
   render() {
     const { match, width, navStyle } = this.props;
 
@@ -119,4 +126,12 @@ const mapStateToProps = ({ settings }) => {
   const { width, navStyle } = settings;
   return { width, navStyle };
 };
-export default connect(mapStateToProps)(MainApp);
+
+const actions = {
+  getUser,
+  fetchMainScreen,
+};
+export default connect(
+  mapStateToProps,
+  actions
+)(MainApp);
