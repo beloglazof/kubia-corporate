@@ -59,6 +59,7 @@ const getExpirationDate = expiry => {
 const Card = ({ card }) => {
   const { Panel } = Collapse;
   const { id, cvv, setpin, expiry, number, type_id } = card;
+
   const typeName = getCardTypeName(type_id);
   const expirationDate = getExpirationDate(expiry);
 
