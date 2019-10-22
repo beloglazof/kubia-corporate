@@ -1,12 +1,14 @@
 import { createSlice } from 'redux-starter-kit';
 
+const storageAccounts = localStorage.getItem('accounts')
+
 const accountsSlice = createSlice({
   name: 'accounts',
-  initialState: [],
+  initialState: storageAccounts ? JSON.parse(storageAccounts) : [] ,
   reducers: {
     setAccounts(state, action) {
       console.log(action)
-      state.push(...action.payload)
+      state = action.payload
     }
   }
 })
