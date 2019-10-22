@@ -1,0 +1,47 @@
+.shortInfo {
+  display: flex;
+  align-items: center;
+}
+
+.creditCardIcon {
+  font-size: 1.7em;
+  margin-right: 1em;
+}
+
+.masterсardIcon {
+  font-size: 2.5em;
+  margin-left: 1em;
+}
+
+.number {
+  white-space: nowrap;
+  width: 120px;
+  margin-right: 1em;
+}
+
+.typeName {
+  font-size: 0.7em;
+  letter-spacing: 0.05em;
+  border: 1px solid #a0a0a0;
+  padding: 0.09em 0.5em;
+  opacity: 0.7;
+  width: 65px;
+  text-align: center;
+  margin-right: 1em;
+}
+
+.detailsButton {
+  margin-bottom: 0;
+  padding: 0.3em 0.7em 0.2em 1em;
+  height: 26px;
+}
+
+.rightIcon {
+  font-size: 1em;
+  margin-top: 0.1em;
+}
+
+.infoParam {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}

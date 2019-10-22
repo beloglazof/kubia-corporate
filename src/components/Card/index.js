@@ -4,63 +4,41 @@ import { Icon, Button, Collapse, Row, Col } from 'antd';
 
 import { ReactComponent as MastercardSymbol } from '../../assets/icons/mc_symbol.svg';
 import CardImg from '../../assets/images/card2.png';
+import styles from './card.module.css';
 
-const marginRight = { marginRight: '1em' };
-const marginLeft = { marginLeft: '0.4em' };
-const numberStyle = {
-  whiteSpace: 'nowrap',
-  width: '120px',
-  ...marginRight,
+const MastercardIcon = props => {
+  const mastercardIconStyle = { fontSize: '2.5em', marginLeft: '0.4em' };
+
+  return (
+    <Icon component={MastercardSymbol} style={mastercardIconStyle} {...props} />
+  );
 };
-const markerStyle = {
-  fontSize: '0.7em',
-  letterSpacing: '0.05em',
-  border: '1px solid #A0A0A0',
-  padding: '0.09em 0.5em',
-  opacity: '0.7',
-  width: '65px',
-  textAlign: 'center',
-  ...marginRight,
-};
-
-const MastercardIcon = props => (
-  <Icon component={MastercardSymbol} {...props} />
-);
-
 const CardShortInfo = ({ number, typeName }) => {
   const lastFourDigits = number
     .split(' ')
     .map((part, partIndex) => (partIndex === 3 ? part : '****'))
     .join(' ');
 
-  const shortInfoStyle = { display: 'flex', alignItems: 'center' };
-  const creditCardIconStyle = { fontSize: '1.7em', ...marginRight };
-  const mastercardIconStyle = { fontSize: '2.5em', ...marginLeft };
-
   return (
-    <div style={shortInfoStyle}>
-      <Icon type='credit-card' style={creditCardIconStyle} />
-      <span style={numberStyle}>{lastFourDigits}</span>
-      <span style={markerStyle}>{typeName}</span>
-      <MastercardIcon style={mastercardIconStyle} />
+    <div className={styles.shortInfo}>
+      <Icon type='credit-card' className={styles.creditCardIcon} />
+      <span className={styles.number}>{lastFourDigits}</span>
+      <span className={styles.typeName}>{typeName}</span>
+      <MastercardIcon className={styles.mastercardIcon} />
     </div>
   );
 };
 
 const expandIcon = ({ isActive }) => {
-  const btnStyle = {
-    marginBottom: '0',
-    backgroundColor: '#38424b',
-    padding: '0.3em 0.7em 0.2em 1em',
-    height: '26px',
-  };
-  const iconStyle = { fontSize: '1em', marginTop: '0.1em' };
-
   return (
     <div>
-      <Button size='small' style={btnStyle}>
+      <Button size='small' className={styles.detailsButton}>
         Card details
-        <Icon type='right' rotate={isActive ? 90 : 0} style={iconStyle} />
+        <Icon
+          type='right'
+          rotate={isActive ? 90 : 0}
+          className={styles.rightIcon}
+        />
       </Button>
     </div>
   );
@@ -81,6 +59,7 @@ const getExpirationDate = expiry => {
 const Card = ({ card }) => {
   const { Panel } = Collapse;
   const { id, cvv, setpin, expiry, number, type_id } = card;
+
   const typeName = getCardTypeName(type_id);
   const expirationDate = getExpirationDate(expiry);
 
@@ -97,21 +76,19 @@ const Card = ({ card }) => {
             </div>
           </Col>
           <Col span={7}>
-            <div style={itemStyle}>
+            <div className={styles.infoParam}>
               Number:
               <div className='param-value'>
                 {number.trim().length ? number : 'No info'}
               </div>
             </div>
-            <div style={itemStyle}>
+            <div className={styles.infoParam}>
               Expiration date:
               <div className='param-value'>{expirationDate}</div>
             </div>
-            <div style={itemStyle}>
+            <div className={styles.infoParam}>
               CVV:
-              <div className='param-value'>
-                {cvv.length ? cvv : 'No info'}
-              </div>
+              <div className='param-value'>{cvv.length ? cvv : 'No info'}</div>
             </div>
           </Col>
           <Col span={11}>
