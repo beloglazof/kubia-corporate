@@ -84,18 +84,21 @@ export const getUser = () => {
     dispatch({ type: FETCH_START });
     axios
       .get('users/me')
-      .then(({ data }) => {
-        console.log('userSignIn: ', data);
-        if (data) {
+      .then((response) => {
+        const user = response.data
+        console.log('userSignIn: ', user);
+        if (user) {
           dispatch({ type: FETCH_SUCCESS });
-          dispatch({ type: USER_DATA, payload: data });
+          dispatch({ type: USER_DATA, payload: user });
+          const userString = JSON.stringify(user);
+          localStorage.setItem('user', userString);
         } else {
-          dispatch({ type: FETCH_ERROR, payload: data.error });
+          dispatch({ type: FETCH_ERROR, payload: response.error });
         }
       })
       .catch(function(error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
-        console.log('Error****:', error.message);
+        console.log('Error:', error.message);
       });
   };
 };
