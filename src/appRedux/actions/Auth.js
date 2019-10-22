@@ -86,9 +86,9 @@ export const getUser = () => {
       .get('users/me')
       .then(({ data }) => {
         console.log('userSignIn: ', data);
-        if (data.result) {
+        if (data) {
           dispatch({ type: FETCH_SUCCESS });
-          dispatch({ type: USER_DATA, payload: data.user });
+          dispatch({ type: USER_DATA, payload: data });
         } else {
           dispatch({ type: FETCH_ERROR, payload: data.error });
         }

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { userSignIn } from '../appRedux/actions/Auth';
 import IntlMessages from 'util/IntlMessages';
-import InfoView from 'components/InfoView';
+import InfoView from 'templateComponents/InfoView';
 
 const FormItem = Form.Item;
 
