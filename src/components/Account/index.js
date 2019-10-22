@@ -3,17 +3,13 @@ import { useSelector } from 'react-redux';
 import { Card as UiCard, Button, List, Row, Col } from 'antd';
 
 import Card from '../Card';
+import styles from './account.module.css';
 
 const Cards = ({ cards }) => {
   return <List dataSource={cards} renderItem={item => <Card card={item} />} />;
 };
 
 const Account = ({ account }) => {
-  const infoStyle = {
-    // marginRight: '1em',
-    textAlign: 'left',
-    display: 'flex'
-  };
   const user = useSelector(state => state.auth.authUser);
   const { first_name, last_name } = user;
   const name = `${first_name} ${last_name}`;
@@ -22,19 +18,19 @@ const Account = ({ account }) => {
   return (
     <List.Item key={id}>
       <UiCard title='Account info'>
-        <div style={{ fontSize: '2em', marginBottom: '1em' }}>{name}</div>
-        <Row style={{ marginBottom: '1em' }}>
-          <Col span={8} style={infoStyle}>
-            Number: <div className='param-value'>{number}</div>
+        <div className={styles.name}>{name}</div>
+        <Row className={styles.infoRow}>
+          <Col span={8} className={styles.infoParam}>
+            Number: <div className={'param-value'}>{number}</div>
           </Col>
-          <Col span={8} style={infoStyle}>
-            Balance: <div className='param-value'>S${amount}</div>
+          <Col span={8} className={styles.infoParam}>
+            Balance: <div className={'param-value'}>S${amount}</div>
           </Col>
-          <Col span={8} style={infoStyle}>
-            Currency: <div className='param-value'>{currency_info.code}</div>
+          <Col span={8} className={styles.infoParam}>
+            Currency: <div className={'param-value'}>{currency_info.code}</div>
           </Col>
         </Row>
-        <Row justify='center' align='middle'>
+        <Row>
           <Col span={8}>
             <Button type='primary'>Make Payment</Button>
           </Col>
