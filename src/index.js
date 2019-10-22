@@ -5,6 +5,8 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcMastercard } from '@fortawesome/free-brands-svg-icons';
 
+import 'typeface-roboto';
+import './index.css';
 import 'assets/vendors/style';
 import 'styles/wieldy.less';
 

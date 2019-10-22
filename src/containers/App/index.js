@@ -83,18 +83,27 @@ class App extends Component {
     // if (this.props.initURL === '') {
     //   this.props.setInitUrl(this.props.history.location.pathname);
     // }
-    const { history, token, initURL, location, fetchMainScreen } = this.props;
-    // getUser()
+    const {
+      history,
+      token,
+      initURL,
+      location,
+      fetchMainScreen,
+      getUser,
+    } = this.props;
+
+    getUser();
     fetchMainScreen();
+    
     if (location.pathname === '/') {
       if (token === null) {
         history.push('/signin');
         // return <Redirect to={'/signin'} />;
-      // } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
-      //   history.push('/');
+        // } else if (initURL === '' || initURL === '/' || initURL === '/signin') {
+        //   history.push('/');
 
         // return <Redirect to={'/sample'} />;
-      // } else {
+        // } else {
         // history.push(initURL);
 
         // return <Redirect to={initURL} />;
