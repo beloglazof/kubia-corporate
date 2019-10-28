@@ -77,22 +77,22 @@ class HorizontalDark extends Component {
 
     return (
       <div className='gx-header-horizontal gx-header-horizontal-dark'>
-        <div className='gx-header-horizontal-top'>
-          <div className='gx-container'>
-            <div className='gx-header-horizontal-top-flex'>
-              <div className='gx-header-horizontal-top-left'>
-                <i className='icon icon-alert gx-mr-3' />
-                <p className='gx-mb-0 gx-text-truncate'>
-                  <IntlMessages id='app.announced' />
-                </p>
-              </div>
-              <ul className='gx-login-list'>
-                <li>Login</li>
-                <li>Signup</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        {/*<div className='gx-header-horizontal-top'>*/}
+        {/*  <div className='gx-container'>*/}
+        {/*    <div className='gx-header-horizontal-top-flex'>*/}
+        {/*      <div className='gx-header-horizontal-top-left'>*/}
+        {/*        <i className='icon icon-alert gx-mr-3' />*/}
+        {/*        <p className='gx-mb-0 gx-text-truncate'>*/}
+        {/*          <IntlMessages id='app.announced' />*/}
+        {/*        </p>*/}
+        {/*      </div>*/}
+        {/*      <ul className='gx-login-list'>*/}
+        {/*        <li>Login</li>*/}
+        {/*        <li>Signup</li>*/}
+        {/*      </ul>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <Header className='gx-header-horizontal-main'>
           <div className='gx-container'>
@@ -105,103 +105,103 @@ class HorizontalDark extends Component {
                   }}
                 />
               </div>
-              <Link
-                to='/'
-                className='gx-d-block gx-d-lg-none gx-pointer gx-mr-xs-3 gx-pt-xs-1 gx-w-logo'
-              >
-                <img alt='' src={require('assets/images/w-logo.png')} />
-              </Link>
+              {/*<Link*/}
+              {/*  to='/'*/}
+              {/*  className='gx-d-block gx-d-lg-none gx-pointer gx-mr-xs-3 gx-pt-xs-1 gx-w-logo'*/}
+              {/*>*/}
+              {/*  <img alt='' src={require('assets/images/w-logo.png')} />*/}
+              {/*</Link>*/}
               <Link
                 to='/'
                 className='gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo'
               >
-                <img alt='' src={require('assets/images/logo.png')} />
+                <img alt='' src={require('assets/images/q-logo.png')} />
               </Link>
-              <div className='gx-header-search gx-d-none gx-d-lg-flex'>
-                <SearchBox
-                  styleName='gx-lt-icon-search-bar-lg'
-                  placeholder='Search in app...'
-                  onChange={this.updateSearchChatUser.bind(this)}
-                  value={this.state.searchText}
-                />
+              {/*<div className='gx-header-search gx-d-none gx-d-lg-flex'>*/}
+              {/*  <SearchBox*/}
+              {/*    styleName='gx-lt-icon-search-bar-lg'*/}
+              {/*    placeholder='Search in app...'*/}
+              {/*    onChange={this.updateSearchChatUser.bind(this)}*/}
+              {/*    value={this.state.searchText}*/}
+              {/*  />*/}
 
-                <Select
-                  defaultValue='lucy'
-                  style={{ width: 120 }}
-                  onChange={handleChange}
-                >
-                  <Option value='jack'>Products</Option>
-                  <Option value='lucy'>Apps</Option>
-                  <Option value='Yiminghe'>Blogs</Option>
-                </Select>
-              </div>
+              {/*  <Select*/}
+              {/*    defaultValue='lucy'*/}
+              {/*    style={{ width: 120 }}*/}
+              {/*    onChange={handleChange}*/}
+              {/*  >*/}
+              {/*    <Option value='jack'>Products</Option>*/}
+              {/*    <Option value='lucy'>Apps</Option>*/}
+              {/*    <Option value='Yiminghe'>Blogs</Option>*/}
+              {/*  </Select>*/}
+              {/*</div>*/}
 
               <ul className='gx-header-notifications gx-ml-auto'>
-                <li className='gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none'>
-                  <Popover
-                    overlayClassName='gx-popover-horizantal'
-                    placement='bottomRight'
-                    content={
-                      <div className='gx-d-flex'>
-                        <Dropdown overlay={menu}>
-                          <Button>
-                            Category <Icon type='down' />
-                          </Button>
-                        </Dropdown>
-                        <SearchBox
-                          styleName='gx-popover-search-bar'
-                          placeholder='Search in app...'
-                          onChange={this.updateSearchChatUser.bind(this)}
-                          value={this.state.searchText}
-                        />
-                      </div>
-                    }
-                    trigger='click'
-                  >
-                    <span className='gx-pointer gx-d-block'>
-                      <i className='icon icon-search-new' />
-                    </span>
-                  </Popover>
-                </li>
+                {/*<li className='gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none'>*/}
+                {/*  <Popover*/}
+                {/*    overlayClassName='gx-popover-horizantal'*/}
+                {/*    placement='bottomRight'*/}
+                {/*    content={*/}
+                {/*      <div className='gx-d-flex'>*/}
+                {/*        <Dropdown overlay={menu}>*/}
+                {/*          <Button>*/}
+                {/*            Category <Icon type='down' />*/}
+                {/*          </Button>*/}
+                {/*        </Dropdown>*/}
+                {/*        <SearchBox*/}
+                {/*          styleName='gx-popover-search-bar'*/}
+                {/*          placeholder='Search in app...'*/}
+                {/*          onChange={this.updateSearchChatUser.bind(this)}*/}
+                {/*          value={this.state.searchText}*/}
+                {/*        />*/}
+                {/*      </div>*/}
+                {/*    }*/}
+                {/*    trigger='click'*/}
+                {/*  >*/}
+                {/*    <span className='gx-pointer gx-d-block'>*/}
+                {/*      <i className='icon icon-search-new' />*/}
+                {/*    </span>*/}
+                {/*  </Popover>*/}
+                {/*</li>*/}
 
-                <li className='gx-notify'>
-                  <Popover
-                    overlayClassName='gx-popover-horizantal'
-                    placement='bottomRight'
-                    content={<AppNotification />}
-                    trigger='click'
-                  >
-                    <span className='gx-pointer gx-d-block'>
-                      <i className='icon icon-notification' />
-                    </span>
-                  </Popover>
-                </li>
+                {/*<li className='gx-notify'>*/}
+                {/*  <Popover*/}
+                {/*    overlayClassName='gx-popover-horizantal'*/}
+                {/*    placement='bottomRight'*/}
+                {/*    content={<AppNotification />}*/}
+                {/*    trigger='click'*/}
+                {/*  >*/}
+                {/*    <span className='gx-pointer gx-d-block'>*/}
+                {/*      <i className='icon icon-notification' />*/}
+                {/*    </span>*/}
+                {/*  </Popover>*/}
+                {/*</li>*/}
 
-                <li className='gx-msg'>
-                  <Popover
-                    overlayClassName='gx-popover-horizantal'
-                    placement='bottomRight'
-                    content={<MailNotification />}
-                    trigger='click'
-                  >
-                    <span className='gx-pointer gx-status-pos gx-d-block'>
-                      <i className='icon icon-chat-new' />
-                      <span className='gx-status gx-status-rtl gx-small gx-orange' />
-                    </span>
-                  </Popover>
-                </li>
-                <li className='gx-language'>
-                  <Popover
-                    overlayClassName='gx-popover-horizantal'
-                    placement='bottomRight'
-                    content={this.languageMenu()}
-                    trigger='click'
-                  >
-                    <span className='gx-pointer gx-flex-row gx-align-items-center'>
-                      <i className={`flag flag-24 flag-${locale.icon}`} />
-                    </span>
-                  </Popover>
-                </li>
+                {/*<li className='gx-msg'>*/}
+                {/*  <Popover*/}
+                {/*    overlayClassName='gx-popover-horizantal'*/}
+                {/*    placement='bottomRight'*/}
+                {/*    content={<MailNotification />}*/}
+                {/*    trigger='click'*/}
+                {/*  >*/}
+                {/*    <span className='gx-pointer gx-status-pos gx-d-block'>*/}
+                {/*      <i className='icon icon-chat-new' />*/}
+                {/*      <span className='gx-status gx-status-rtl gx-small gx-orange' />*/}
+                {/*    </span>*/}
+                {/*  </Popover>*/}
+                {/*</li>*/}
+                {/*<li className='gx-language'>*/}
+                {/*  <Popover*/}
+                {/*    overlayClassName='gx-popover-horizantal'*/}
+                {/*    placement='bottomRight'*/}
+                {/*    content={this.languageMenu()}*/}
+                {/*    trigger='click'*/}
+                {/*  >*/}
+                {/*    <span className='gx-pointer gx-flex-row gx-align-items-center'>*/}
+                {/*      <i className={`flag flag-24 flag-${locale.icon}`} />*/}
+                {/*    </span>*/}
+                {/*  </Popover>*/}
+                {/*</li>*/}
                 <li className='gx-user-nav'>
                   <UserInfo />
                 </li>
@@ -213,23 +213,23 @@ class HorizontalDark extends Component {
           <div className='gx-container'>
             <div className='gx-header-horizontal-nav-flex'>
               <HorizontalNav />
-              <ul className='gx-header-notifications gx-ml-auto'>
-                <li>
-                  <span className='gx-pointer gx-d-block'>
-                    <i className='icon icon-menu-lines' />
-                  </span>
-                </li>
-                <li>
-                  <span className='gx-pointer gx-d-block'>
-                    <i className='icon icon-setting' />
-                  </span>
-                </li>
-                <li>
-                  <span className='gx-pointer gx-d-block'>
-                    <i className='icon icon-apps-new' />
-                  </span>
-                </li>
-              </ul>
+              {/*<ul className='gx-header-notifications gx-ml-auto'>*/}
+              {/*  <li>*/}
+              {/*    <span className='gx-pointer gx-d-block'>*/}
+              {/*      <i className='icon icon-menu-lines' />*/}
+              {/*    </span>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <span className='gx-pointer gx-d-block'>*/}
+              {/*      <i className='icon icon-setting' />*/}
+              {/*    </span>*/}
+              {/*  </li>*/}
+              {/*  <li>*/}
+              {/*    <span className='gx-pointer gx-d-block'>*/}
+              {/*      <i className='icon icon-apps-new' />*/}
+              {/*    </span>*/}
+              {/*  </li>*/}
+              {/*</ul>*/}
             </div>
           </div>
         </div>
