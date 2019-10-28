@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Card as UiCard, Button, List, Row, Col } from 'antd';
+import {Link} from 'react-router-dom'
 
 import Card from '../Card';
 import styles from './account.module.css';
@@ -32,7 +33,7 @@ const Account = ({ account }) => {
         </Row>
         <Row>
           <Col span={8}>
-            <Button type='primary'>Make Payment</Button>
+            <Button type='primary'><Link to='/new-payment'>Make Payment</Link></Button>
           </Col>
         </Row>
         <Cards cards={cards} />
