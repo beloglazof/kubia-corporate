@@ -45,7 +45,7 @@ const expandIcon = ({ isActive }) => {
 };
 
 const getCardTypeName = typeId => {
-  const types = useSelector(state => state.screens.main.card_types);
+  const types = useSelector(state => state?.screens?.main?.card_types);
   const type = types.find(type => type.id === typeId);
   return type.name;
 };
