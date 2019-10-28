@@ -5,10 +5,10 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCcMastercard } from '@fortawesome/free-brands-svg-icons';
 
+import 'styles/wieldy.less';
+import 'assets/vendors/style';
 import 'typeface-roboto';
 import './index.css';
-import 'assets/vendors/style';
-import 'styles/wieldy.less';
 
 import configureStore from './appRedux/store';
 import App from './containers/App';

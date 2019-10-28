@@ -7,7 +7,6 @@ const accountsSlice = createSlice({
   initialState: storageAccounts ? JSON.parse(storageAccounts) : [] ,
   reducers: {
     setAccounts(state, action) {
-      console.log(action)
       state = action.payload
     }
   }
