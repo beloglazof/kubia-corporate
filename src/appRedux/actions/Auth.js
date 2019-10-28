@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import {
   FETCH_ERROR,
   FETCH_START,
@@ -6,14 +6,14 @@ import {
   INIT_URL,
   SIGNOUT_USER_SUCCESS,
   USER_DATA,
-  USER_TOKEN_SET,
-} from '../../constants/ActionTypes';
-import axios from 'util/Api';
+  USER_TOKEN_SET
+} from "../../constants/ActionTypes";
+import axios from "util/Api";
 
 export const setInitUrl = url => {
   return {
     type: INIT_URL,
-    payload: url,
+    payload: url
   };
 };
 
@@ -22,31 +22,31 @@ export const userSignUp = ({ email, password, name }) => {
   return dispatch => {
     dispatch({ type: FETCH_START });
     axios
-      .post('auth/register', {
+      .post("auth/register", {
         email: email,
         password: password,
-        name: name,
+        name: name
       })
       .then(({ data }) => {
-        console.log('data:', data);
+        console.log("data:", data);
         if (data.result) {
           localStorage.setItem(
-            'token',
+            "token",
             JSON.stringify(data.token.access_token)
           );
-          axios.defaults.headers.common['access-token'] =
-            'Bearer ' + data.token.access_token;
+          axios.defaults.headers.common["access-token"] =
+            "Bearer " + data.token.access_token;
           dispatch({ type: FETCH_SUCCESS });
           dispatch({ type: USER_TOKEN_SET, payload: data.token.access_token });
           dispatch({ type: USER_DATA, payload: data.user });
         } else {
-          console.log('payload: data.error', data.error);
-          dispatch({ type: FETCH_ERROR, payload: 'Network Error' });
+          console.log("payload: data.error", data.error);
+          dispatch({ type: FETCH_ERROR, payload: "Network Error" });
         }
       })
       .catch(function(error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
-        console.log('Error****:', error.message);
+        console.log("Error****:", error.message);
       });
   };
 };
@@ -54,17 +54,17 @@ export const userSignIn = ({ phone, password }) => {
   return dispatch => {
     dispatch({ type: FETCH_START });
     axios
-      .post('token/obtain', {
+      .post("token/obtain", {
         phone,
-        password,
+        password
       })
       .then(({ data }) => {
-        console.log('userSignIn: ', data);
+        console.log("userSignIn: ", data);
         const { token, refresh_token } = data;
         if (token) {
-          Cookies.set('token', token);
-          Cookies.set('refreshToken', refresh_token);
-          axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+          Cookies.set("token", token);
+          Cookies.set("refreshToken", refresh_token);
+          axios.defaults.headers.common["Authorization"] = "Bearer " + token;
           dispatch({ type: FETCH_SUCCESS });
           dispatch({ type: USER_TOKEN_SET, payload: token });
           dispatch({ type: USER_DATA, payload: data.user });
@@ -74,7 +74,7 @@ export const userSignIn = ({ phone, password }) => {
       })
       .catch(function(error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
-        console.log('Error****:', error.message);
+        console.log("Error****:", error.message);
       });
   };
 };
@@ -83,22 +83,22 @@ export const getUser = () => {
   return dispatch => {
     dispatch({ type: FETCH_START });
     axios
-      .get('users/me')
-      .then((response) => {
-        const user = response.data
-        console.log('userSignIn: ', user);
+      .get("users/me")
+      .then(response => {
+        const user = response.data;
+        console.log("userSignIn: ", user);
         if (user) {
           dispatch({ type: FETCH_SUCCESS });
           dispatch({ type: USER_DATA, payload: user });
           const userString = JSON.stringify(user);
-          localStorage.setItem('user', userString);
+          localStorage.setItem("user", userString);
         } else {
           dispatch({ type: FETCH_ERROR, payload: response.error });
         }
       })
       .catch(function(error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
-        console.log('Error:', error.message);
+        console.log("Error:", error.message);
       });
   };
 };
@@ -107,16 +107,17 @@ export const userSignOut = () => {
   return dispatch => {
     dispatch({ type: FETCH_START });
     axios
-      .get('logout')
+      .get("logout")
       .then(() => {
-        Cookies.remove('token');
-        Cookies.remove('refreshToken');
+        Cookies.remove("token");
+        Cookies.remove("refreshToken");
+        localStorage.clear();
         dispatch({ type: FETCH_SUCCESS });
         dispatch({ type: SIGNOUT_USER_SUCCESS });
       })
       .catch(function(error) {
         dispatch({ type: FETCH_ERROR, payload: error.message });
-        console.log('Error****:', error.message);
+        console.log("Error****:", error.message);
       });
   };
 };
