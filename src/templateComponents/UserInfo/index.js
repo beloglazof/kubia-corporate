@@ -1,29 +1,39 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {Avatar, Popover} from "antd";
-import {userSignOut} from "appRedux/actions/Auth";
+import React, { Component } from "react";
+import { connect, useSelector } from "react-redux";
+import { Avatar, Popover } from "antd";
+import { userSignOut } from "appRedux/actions/Auth";
+
+const mapStateToProps = ({ auth }) => {
+  const avatarUrl = auth?.authUser?.avatar["128"];
+  return { avatarUrl };
+};
 
 class UserInfo extends Component {
-
   render() {
     const userMenuOptions = (
       <ul className="gx-user-popover">
-        <li>My Account</li>
-        <li>Connections</li>
-        <li onClick={() => this.props.userSignOut()}>Logout
-        </li>
+        {/*<li>My Account</li>*/}
+        {/*<li>Connections</li>*/}
+        <li onClick={() => this.props.userSignOut()}>Logout</li>
       </ul>
     );
 
-    return (
-      <Popover overlayClassName="gx-popover-horizantal" placement="bottomRight" content={userMenuOptions}
-               trigger="click">
-        <Avatar src='https://via.placeholder.com/150x150'
-                className="gx-avatar gx-pointer" alt=""/>
-      </Popover>
-    )
+    const { avatarUrl } = this.props;
 
+    return (
+      <Popover
+        overlayClassName="gx-popover-horizantal"
+        placement="bottomRight"
+        content={userMenuOptions}
+        trigger="click"
+      >
+        <Avatar src={avatarUrl} className="gx-avatar gx-pointer" alt="" />
+      </Popover>
+    );
   }
 }
 
-export default connect(null, {userSignOut})(UserInfo);
+export default connect(
+  mapStateToProps,
+  { userSignOut }
+)(UserInfo);
