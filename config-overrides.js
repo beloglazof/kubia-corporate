@@ -1,5 +1,5 @@
 const path = require('path');
-const {override,  addLessLoader} = require('customize-cra');
+const {override,  addLessLoader, useBabelRc} = require('customize-cra');
 
 
 
@@ -19,5 +19,6 @@ module.exports = override(
   }),
   overrideProcessEnv({
     VERSION: JSON.stringify(require('./package.json').version),
-  })
+  }),
+  useBabelRc()
 );

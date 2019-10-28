@@ -63,6 +63,7 @@
     "test": "react-app-rewired --env=jsdom"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "add": "^2.0.6",
     "babel-plugin-import": "^1.8.0",
     "customize-cra": "^0.2.10",
