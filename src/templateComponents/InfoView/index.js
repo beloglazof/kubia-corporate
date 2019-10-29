@@ -1,5 +1,4 @@
 import React from 'react';
-import CircularProgress from 'templateComponents/CircularProgress/index';
 import {message, Spin} from 'antd';
 // import Auxiliary from "util/Auxiliary";
 import { connect } from 'react-redux';

@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import {
   Button,
+  Col,
   Descriptions,
   Form,
   Input,
@@ -9,6 +10,7 @@ import {
   message,
   Modal,
   Radio,
+  Row,
   Select
 } from "antd";
 import { paymentsPay, usersCheck, withdrawal } from "../../api";
@@ -201,16 +203,6 @@ const NewPaymentForm = ({ form, history }) => {
   const balance = account ? account.amount : 0;
   const amount = getFieldValue("amount");
 
-  const accountFieldProps = {
-    accounts,
-    form
-  };
-
-  const amountFieldProps = {
-    balance,
-    form
-  };
-
   const sendPaymentRequest = async () => {
     const {
       amount,
@@ -286,40 +278,62 @@ const NewPaymentForm = ({ form, history }) => {
     });
   };
 
+  const accountFieldProps = {
+    accounts,
+    form
+  };
+
+  const amountFieldProps = {
+    balance,
+    form
+  };
+
+  const formLayoutProps = {
+    layout: "horizontal",
+
+    wrapperCol: {
+      xs: { span: 12 },
+      sm: { span: 12 }
+    },
+    labelCol: {
+      xs: { span: 12 },
+      sm: { span: 6 }
+    }
+  };
+
   return (
-    <div>
-      <h2>New Payment</h2>
-      <Form
-        layout="horizontal"
-        wrapperCol={{ span: 6 }}
-        labelCol={{ span: 3 }}
-        onSubmit={handleSubmit}
-      >
-        <FormItem label="Payment Type">
-          {getFieldDecorator("paymentType", {
-            rules: [{ required: true, message: "Please choose payment type!" }]
-          })(
-            <Radio.Group>
-              <Radio.Button value="internal">Internal</Radio.Button>
-              <Radio.Button value="remittance">Remittance</Radio.Button>
-            </Radio.Group>
+    <Row>
+      <Col span={24}>
+        <h2>New Payment</h2>
+        <Form onSubmit={handleSubmit} {...formLayoutProps}>
+          <FormItem label="Payment Type">
+            {getFieldDecorator("paymentType", {
+              rules: [
+                { required: true, message: "Please choose payment type!" }
+              ]
+            })(
+              <Radio.Group>
+                <Radio.Button value="internal">Internal</Radio.Button>
+                <Radio.Button value="remittance">Remittance</Radio.Button>
+              </Radio.Group>
+            )}
+          </FormItem>
+          {paymentType && <AccountField {...accountFieldProps} />}
+          {account && (
+            <>
+              <AmountField {...amountFieldProps} />
+              <NoteField form={form} />
+            </>
           )}
-        </FormItem>
-        {paymentType && <AccountField {...accountFieldProps} />}
-        {account && (
-          <>
-            <AmountField {...amountFieldProps} />
-            <NoteField form={form} />
-          </>
-        )}
-        {amount > 0 && renderRecipientFields(paymentType, form)}
-        <FormItem wrapperCol={{ span: 6, offset: 3 }}>
-          <Button htmlType="submit" type="primary">
-            Submit
-          </Button>
-        </FormItem>
-      </Form>
-    </div>
+          {amount > 0 && renderRecipientFields(paymentType, form)}
+          <FormItem wrapperCol={{ span: 6, offset: 6 }}>
+            <Button htmlType="submit" type="primary">
+              Submit
+            </Button>
+          </FormItem>
+        </Form>
+      </Col>
+    </Row>
   );
 };
 

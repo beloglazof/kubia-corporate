@@ -89,16 +89,16 @@ class App extends Component {
         history.push('/signin');
       }
     }
-    const params = new URLSearchParams(this.props.location.search);
-    if (params.has('theme')) {
-      this.props.setThemeType(params.get('theme'));
-    }
-    if (params.has('nav-style')) {
-      this.props.onNavStyleChange(params.get('nav-style'));
-    }
-    if (params.has('layout-type')) {
-      this.props.onLayoutTypeChange(params.get('layout-type'));
-    }
+    // const params = new URLSearchParams(this.props.location.search);
+    // if (params.has('theme')) {
+    //   this.props.setThemeType(params.get('theme'));
+    // }
+    // if (params.has('nav-style')) {
+    //   this.props.onNavStyleChange(params.get('nav-style'));
+    // }
+    // if (params.has('layout-type')) {
+    //   this.props.onLayoutTypeChange(params.get('layout-type'));
+    // }
   }
 
   render() {
