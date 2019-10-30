@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import Nprogress from 'nprogress';
-import ReactPlaceholder from 'react-placeholder';
-import 'nprogress/nprogress.css';
+import React, { Component } from "react";
+import Nprogress from "nprogress";
+import ReactPlaceholder from "react-placeholder";
+import "nprogress/nprogress.css";
 
-import 'react-placeholder/lib/reactPlaceholder.css';
-import CircularProgress from 'templateComponents/CircularProgress';
+import "react-placeholder/lib/reactPlaceholder.css";
+import { Spin } from "antd";
 
 export default function asyncComponent(importComponent) {
   class AsyncFunc extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        component: null,
+        component: null
       };
     }
 
@@ -29,15 +29,15 @@ export default function asyncComponent(importComponent) {
       Nprogress.done();
       if (this.mounted) {
         this.setState({
-          component: <Component {...this.props} />,
+          component: <Component {...this.props} />
         });
       }
     }
 
     render() {
-      const Component = this.state.component || <CircularProgress />;
+      const Component = this.state.component || <Spin size="large" />;
       return (
-        <ReactPlaceholder type='text' rows={7} ready={Component !== null}>
+        <ReactPlaceholder type="text" rows={7} ready={Component !== null}>
           {Component}
         </ReactPlaceholder>
       );

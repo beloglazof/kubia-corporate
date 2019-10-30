@@ -1,6 +1,5 @@
 import React from 'react';
-import CircularProgress from 'templateComponents/CircularProgress/index';
-import { message } from 'antd';
+import {message, Spin} from 'antd';
 // import Auxiliary from "util/Auxiliary";
 import { connect } from 'react-redux';
 import { hideMessage } from 'appRedux/actions/Common';
@@ -21,7 +20,7 @@ class InfoView extends React.Component {
       <React.Fragment>
         {loading && (
           <div className='gx-loader-view'>
-            <CircularProgress />
+            <Spin size='large' />
           </div>
         )}
         {displayMessage && message.success(displayMessage)}

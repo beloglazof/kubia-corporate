@@ -122,8 +122,8 @@ export class MainApp extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }) => {
-  const { width, navStyle } = settings;
+const mapStateToProps = ({ themeSettings }) => {
+  const { width, navStyle } = themeSettings;
   return { width, navStyle };
 };
 

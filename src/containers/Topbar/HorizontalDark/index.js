@@ -7,7 +7,7 @@ import {
   Menu,
   message,
   Popover,
-  Select,
+  Select
 } from 'antd';
 import { connect } from 'react-redux';
 import CustomScrollbars from 'util/CustomScrollbars';
@@ -17,12 +17,12 @@ import SearchBox from 'templateComponents/SearchBox';
 import UserInfo from 'templateComponents/UserInfo';
 import AppNotification from 'templateComponents/AppNotification';
 import MailNotification from 'templateComponents/MailNotification';
-import { Link } from 'react-router-dom';
+import { NavLink as Link } from 'react-router-dom';
 import HorizontalNav from '../HorizontalNav';
 import {
   switchLanguage,
-  toggleCollapsedSideNav,
-} from '../../../appRedux/actions/Setting';
+  toggleCollapsedNav
+} from '../../../appRedux/features/settings/themeSettingsSlice';
 import IntlMessages from '../../../util/IntlMessages';
 
 const { Header } = Layout;
@@ -30,9 +30,9 @@ const { Header } = Layout;
 const Option = Select.Option;
 const menu = (
   <Menu onClick={handleMenuClick}>
-    <Menu.Item key='1'>Products</Menu.Item>
-    <Menu.Item key='2'>Apps</Menu.Item>
-    <Menu.Item key='3'>Blogs</Menu.Item>
+    <Menu.Item key="1">Products</Menu.Item>
+    <Menu.Item key="2">Apps</Menu.Item>
+    <Menu.Item key="3">Blogs</Menu.Item>
   </Menu>
 );
 
@@ -46,20 +46,20 @@ function handleChange(value) {
 
 class HorizontalDark extends Component {
   state = {
-    searchText: '',
+    searchText: ''
   };
 
   languageMenu = () => (
-    <CustomScrollbars className='gx-popover-lang-scroll'>
-      <ul className='gx-sub-popover'>
+    <CustomScrollbars className="gx-popover-lang-scroll">
+      <ul className="gx-sub-popover">
         {languageData.map(language => (
           <li
-            className='gx-media gx-pointer'
+            className="gx-media gx-pointer"
             key={JSON.stringify(language)}
             onClick={e => this.props.switchLanguage(language)}
           >
             <i className={`flag flag-24 gx-mr-2 flag-${language.icon}`} />
-            <span className='gx-language-text'>{language.name}</span>
+            <span className="gx-language-text">{language.name}</span>
           </li>
         ))}
       </ul>
@@ -68,7 +68,7 @@ class HorizontalDark extends Component {
 
   updateSearchChatUser = evt => {
     this.setState({
-      searchText: evt.target.value,
+      searchText: evt.target.value
     });
   };
 
@@ -76,7 +76,7 @@ class HorizontalDark extends Component {
     const { locale, navCollapsed } = this.props;
 
     return (
-      <div className='gx-header-horizontal gx-header-horizontal-dark'>
+      <div className="gx-header-horizontal gx-header-horizontal-dark">
         {/*<div className='gx-header-horizontal-top'>*/}
         {/*  <div className='gx-container'>*/}
         {/*    <div className='gx-header-horizontal-top-flex'>*/}
@@ -94,14 +94,14 @@ class HorizontalDark extends Component {
         {/*  </div>*/}
         {/*</div>*/}
 
-        <Header className='gx-header-horizontal-main'>
-          <div className='gx-container'>
-            <div className='gx-header-horizontal-main-flex'>
-              <div className='gx-d-block gx-d-lg-none gx-linebar gx-mr-xs-3'>
+        <Header className="gx-header-horizontal-main">
+          <div className="gx-container">
+            <div className="gx-header-horizontal-main-flex">
+              <div className="gx-d-block gx-d-lg-none gx-linebar gx-mr-xs-3">
                 <i
-                  className='gx-icon-btn icon icon-menu'
+                  className="gx-icon-btn icon icon-menu"
                   onClick={() => {
-                    this.props.toggleCollapsedSideNav(!navCollapsed);
+                    this.props.toggleCollapsedNav(!navCollapsed);
                   }}
                 />
               </div>
@@ -112,10 +112,10 @@ class HorizontalDark extends Component {
               {/*  <img alt='' src={require('assets/images/w-logo.png')} />*/}
               {/*</Link>*/}
               <Link
-                to='/'
-                className='gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo'
+                to="/"
+                className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
-                <img alt='' src={require('assets/images/q-logo.png')} />
+                <img alt="" src={require('assets/images/logo.png')} />
               </Link>
               {/*<div className='gx-header-search gx-d-none gx-d-lg-flex'>*/}
               {/*  <SearchBox*/}
@@ -136,7 +136,7 @@ class HorizontalDark extends Component {
               {/*  </Select>*/}
               {/*</div>*/}
 
-              <ul className='gx-header-notifications gx-ml-auto'>
+              <ul className="gx-header-notifications gx-ml-auto">
                 {/*<li className='gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none'>*/}
                 {/*  <Popover*/}
                 {/*    overlayClassName='gx-popover-horizantal'*/}
@@ -202,34 +202,36 @@ class HorizontalDark extends Component {
                 {/*    </span>*/}
                 {/*  </Popover>*/}
                 {/*</li>*/}
-                <li className='gx-user-nav'>
+                <li className="gx-user-nav">
                   <UserInfo />
                 </li>
               </ul>
             </div>
           </div>
         </Header>
-        <div className='gx-header-horizontal-nav gx-d-none gx-d-lg-block'>
-          <div className='gx-container'>
-            <div className='gx-header-horizontal-nav-flex'>
+        <div className="gx-header-horizontal-nav gx-d-none gx-d-lg-block">
+          <div className="gx-container">
+            <div className="gx-header-horizontal-nav-flex">
               <HorizontalNav />
-              {/*<ul className='gx-header-notifications gx-ml-auto'>*/}
-              {/*  <li>*/}
-              {/*    <span className='gx-pointer gx-d-block'>*/}
-              {/*      <i className='icon icon-menu-lines' />*/}
-              {/*    </span>*/}
-              {/*  </li>*/}
-              {/*  <li>*/}
-              {/*    <span className='gx-pointer gx-d-block'>*/}
-              {/*      <i className='icon icon-setting' />*/}
-              {/*    </span>*/}
-              {/*  </li>*/}
-              {/*  <li>*/}
-              {/*    <span className='gx-pointer gx-d-block'>*/}
-              {/*      <i className='icon icon-apps-new' />*/}
-              {/*    </span>*/}
-              {/*  </li>*/}
-              {/*</ul>*/}
+              <ul className="gx-header-notifications gx-ml-auto">
+                {/*<li>*/}
+                {/*  <span className='gx-pointer gx-d-block'>*/}
+                {/*    <i className='icon icon-menu-lines' />*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+                {/*<li>*/}
+                {/*  <span className="gx-pointer gx-d-block">*/}
+                {/*    <Link to="/settings" style={{color: 'inherit'}}>*/}
+                {/*      <i className="icon icon-setting" />*/}
+                {/*    </Link>*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+                {/*<li>*/}
+                {/*  <span className='gx-pointer gx-d-block'>*/}
+                {/*    <i className='icon icon-apps-new' />*/}
+                {/*  </span>*/}
+                {/*</li>*/}
+              </ul>
             </div>
           </div>
         </div>
@@ -238,11 +240,11 @@ class HorizontalDark extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }) => {
-  const { locale, navCollapsed } = settings;
+const mapStateToProps = ({ themeSettings }) => {
+  const { locale, navCollapsed } = themeSettings;
   return { locale, navCollapsed };
 };
 export default connect(
   mapStateToProps,
-  { toggleCollapsedSideNav, switchLanguage }
+  { toggleCollapsedNav, switchLanguage }
 )(HorizontalDark);

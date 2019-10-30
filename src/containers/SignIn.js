@@ -18,43 +18,49 @@ class SignIn extends React.Component {
       }
     });
   };
-
+  
+  componentDidMount() {
+    if (this.props.token !== null) {
+      this.props.history.push('/');
+    }
+  }
+  
   componentDidUpdate() {
     if (this.props.token !== null) {
       this.props.history.push('/');
     }
   }
-
+  
   render() {
     const { getFieldDecorator } = this.props.form;
-
+    
     return (
-      <div className='gx-app-login-wrap'>
-        <div className='gx-app-login-container'>
-          <div className='gx-app-login-main-content'>
-            <div className='gx-app-logo-content'>
-              <div className='gx-app-logo-content-bg'>
-                <img src='https://via.placeholder.com/272x395' alt='Neature' />
+      <div className="gx-app-login-wrap">
+        <div className="gx-app-login-container">
+          <div className="gx-app-login-main-content">
+            <div className="gx-app-logo-content">
+              <div className="gx-app-logo-content-bg">
+                <img src="https://via.placeholder.com/272x395" alt="Neature"/>
               </div>
-              <div className='gx-app-logo-wid'>
+              <div className="gx-app-logo-wid">
                 <h1>
-                  <IntlMessages id='app.userAuth.signIn' />
+                  <IntlMessages id="app.userAuth.signIn"/>
                 </h1>
                 <p>
-                  <IntlMessages id='app.userAuth.bySigning' />
+                  <IntlMessages id="app.userAuth.bySigning"/>
                 </p>
                 <p>
-                  <IntlMessages id='app.userAuth.getAccount' />
+                  <IntlMessages id="app.userAuth.getAccount"/>
                 </p>
               </div>
-              <div className='gx-app-logo'>
-                <img alt='example' src={require('assets/images/logo.png')} />
+              <div className="gx-app-logo">
+                <img alt="example" src={require('assets/images/logo.png')}/>
               </div>
             </div>
-            <div className='gx-app-login-content'>
+            <div className="gx-app-login-content">
               <Form
                 onSubmit={this.handleSubmit}
-                className='gx-signin-form gx-form-row0'
+                className="gx-signin-form gx-form-row0"
               >
                 <FormItem>
                   {getFieldDecorator('phone', {
@@ -63,10 +69,10 @@ class SignIn extends React.Component {
                       {
                         required: true,
                         type: 'string',
-                        message: 'The input is not valid E-mail!',
+                        message: 'Please input your phone!',
                       },
                     ],
-                  })(<Input placeholder='Phone' />)}
+                  })(<Input placeholder="Phone"/>)}
                 </FormItem>
                 <FormItem>
                   {getFieldDecorator('password', {
@@ -77,7 +83,7 @@ class SignIn extends React.Component {
                         message: 'Please input your Password!',
                       },
                     ],
-                  })(<Input type='password' placeholder='Password' />)}
+                  })(<Input type="password" placeholder="Password"/>)}
                 </FormItem>
                 <FormItem>
                   {getFieldDecorator('remember', {
@@ -85,30 +91,30 @@ class SignIn extends React.Component {
                     initialValue: true,
                   })(
                     <Checkbox>
-                      <IntlMessages id='appModule.iAccept' />
-                    </Checkbox>
+                      <IntlMessages id="appModule.iAccept"/>
+                    </Checkbox>,
                   )}
-                  <span className='gx-signup-form-forgot gx-link'>
-                    <IntlMessages id='appModule.termAndCondition' />
+                  <span className="gx-signup-form-forgot gx-link">
+                    <IntlMessages id="appModule.termAndCondition"/>
                   </span>
                 </FormItem>
                 <FormItem>
-                  <Button type='primary' className='gx-mb-0' htmlType='submit'>
-                    <IntlMessages id='app.userAuth.signIn' />
+                  <Button type="primary" className="gx-mb-0" htmlType="submit">
+                    <IntlMessages id="app.userAuth.signIn"/>
                   </Button>
                   <span>
-                    <IntlMessages id='app.userAuth.or' />
+                    <IntlMessages id="app.userAuth.or"/>
                   </span>
-                  <Link to='/signup'>
-                    <IntlMessages id='app.userAuth.signUp' />
+                  <Link to="/signup">
+                    <IntlMessages id="app.userAuth.signUp"/>
                   </Link>
                 </FormItem>
-                <span className='gx-text-light gx-fs-sm'>
+                <span className="gx-text-light gx-fs-sm">
                   {/* demo user email: 'demo@example.com' and password: 'demo#123' */}
                 </span>
               </Form>
             </div>
-            <InfoView />
+            <InfoView/>
           </div>
         </div>
       </div>
@@ -125,5 +131,5 @@ const mapStateToProps = ({ auth }) => {
 
 export default connect(
   mapStateToProps,
-  { userSignIn }
+  { userSignIn },
 )(WrappedNormalLoginForm);

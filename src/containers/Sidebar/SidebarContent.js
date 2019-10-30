@@ -12,9 +12,10 @@ import AppsNavigation from './AppsNavigation';
 import {
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
   NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
-  THEME_TYPE_LITE,
+  THEME_TYPE_LITE
 } from '../../constants/ThemeSetting';
 import IntlMessages from '../../util/IntlMessages';
+import { renderNavigationItems } from '../../routes';
 
 class SidebarContent extends Component {
   getNoHeaderClass = navStyle => {
@@ -40,7 +41,7 @@ class SidebarContent extends Component {
     return (
       <Auxiliary>
         <SidebarLogo />
-        <div className='gx-sidebar-content'>
+        <div className="gx-sidebar-content">
           <div
             className={`gx-sidebar-notifications ${this.getNoHeaderClass(
               navStyle
@@ -49,19 +50,20 @@ class SidebarContent extends Component {
             <UserProfile />
             <AppsNavigation />
           </div>
-          <CustomScrollbars className='gx-layout-sider-scrollbar'>
+          <CustomScrollbars className="gx-layout-sider-scrollbar">
             <Menu
               defaultOpenKeys={[defaultOpenKeys]}
               selectedKeys={[selectedKeys]}
               theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
-              mode='inline'
+              mode="inline"
             >
-              <Menu.Item key='sample'>
-                <Link to='/accounts'>
-                  <i className='icon icon-widgets' />
-                  <IntlMessages id='sidebar.accounts' />
-                </Link>
-              </Menu.Item>
+              {renderNavigationItems()}
+              {/*<Menu.Item key="sample">*/}
+              {/*  <Link to="/accounts">*/}
+              {/*    <i className="icon icon-widgets" />*/}
+              {/*    <IntlMessages id="sidebar.accounts" />*/}
+              {/*  </Link>*/}
+              {/*</Menu.Item>*/}
             </Menu>
           </CustomScrollbars>
         </div>
@@ -71,8 +73,8 @@ class SidebarContent extends Component {
 }
 
 SidebarContent.propTypes = {};
-const mapStateToProps = ({ settings }) => {
-  const { navStyle, themeType, locale, pathname } = settings;
+const mapStateToProps = ({ themeSettings }) => {
+  const { navStyle, themeType, locale, pathname } = themeSettings;
   return { navStyle, themeType, locale, pathname };
 };
 export default connect(mapStateToProps)(SidebarContent);

@@ -27,8 +27,8 @@ const IconWithTextCard = (props) => {
   );
 };
 
-const mapStateToProps = ({settings}) => {
-  const {themeType} = settings;
+const mapStateToProps = ({themeSettings}) => {
+  const {themeType} = themeSettings;
   return {themeType}
 };
 export default connect(mapStateToProps, null)(IconWithTextCard);

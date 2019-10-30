@@ -42,8 +42,8 @@ const TotalRevenueCard = ({width}) => {
 };
 
 
-const mapStateToProps = ({settings}) => {
-  const {width} = settings;
+const mapStateToProps = ({themeSettings}) => {
+  const {width} = themeSettings;
   return {width}
 };
 export default connect(mapStateToProps)(TotalRevenueCard);
