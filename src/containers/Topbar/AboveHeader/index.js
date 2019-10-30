@@ -19,8 +19,8 @@ import AppNotification from 'templateComponents/AppNotification';
 import MailNotification from 'templateComponents/MailNotification';
 import {
   switchLanguage,
-  toggleCollapsedSideNav,
-} from '../../../appRedux/actions/Setting';
+  toggleCollapsedNav,
+} from '../../../appRedux/features/settings/themeSettingsSlice';
 
 import { TAB_SIZE } from '../../../constants/ThemeSetting';
 import HorizontalNav from '../HorizontalNav';
@@ -246,11 +246,11 @@ class AboveHeader extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }) => {
-  const { locale, navCollapsed, width } = settings;
+const mapStateToProps = ({ themeSettings }) => {
+  const { locale, navCollapsed, width } = themeSettings;
   return { locale, navCollapsed, width };
 };
 export default connect(
   mapStateToProps,
-  { toggleCollapsedSideNav, switchLanguage }
+  { toggleCollapsedNav, switchLanguage }
 )(AboveHeader);

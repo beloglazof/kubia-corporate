@@ -4,9 +4,9 @@ import { Drawer, Layout } from 'antd';
 
 import SidebarContent from './SidebarContent';
 import {
-  toggleCollapsedSideNav,
-  updateWindowWidth,
-} from 'appRedux/actions/Setting';
+  toggleCollapsedNav,
+  updateWindowWidth
+} from '../../appRedux/features/settings/themeSettingsSlice';
 import {
   NAV_STYLE_DRAWER,
   NAV_STYLE_FIXED,
@@ -14,14 +14,14 @@ import {
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
   NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
   TAB_SIZE,
-  THEME_TYPE_LITE,
+  THEME_TYPE_LITE
 } from '../../constants/ThemeSetting';
 
 const { Sider } = Layout;
 
 export class Sidebar extends Component {
   onToggleCollapsedNav = () => {
-    this.props.toggleCollapsedSideNav(!this.props.navCollapsed);
+    this.props.toggleCollapsedNav(!this.props.navCollapsed);
   };
 
   componentDidMount() {
@@ -74,7 +74,7 @@ export class Sidebar extends Component {
             wrapClassName={`gx-drawer-sidebar ${
               themeType !== THEME_TYPE_LITE ? 'gx-drawer-sidebar-dark' : null
             }`}
-            placement='left'
+            placement="left"
             closable={false}
             onClose={this.onToggleCollapsedNav.bind(this)}
             visible={navCollapsed}
@@ -89,11 +89,11 @@ export class Sidebar extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }) => {
-  const { themeType, navStyle, navCollapsed, width, locale } = settings;
+const mapStateToProps = ({ themeSettings }) => {
+  const { themeType, navStyle, navCollapsed, width, locale } = themeSettings;
   return { themeType, navStyle, navCollapsed, width, locale };
 };
 export default connect(
   mapStateToProps,
-  { toggleCollapsedSideNav, updateWindowWidth }
+  { toggleCollapsedNav, updateWindowWidth }
 )(Sidebar);

@@ -1,10 +1,10 @@
 import { ConfigProvider } from 'antd';
 import { setInitUrl } from 'appRedux/actions/Auth';
 import {
-  onLayoutTypeChange,
-  onNavStyleChange,
-  setThemeType,
-} from 'appRedux/actions/Setting';
+  changeLayoutType,
+  changeNavStyle,
+  setThemeType
+} from '../../appRedux/features/settings/themeSettingsSlice';
 import AppLocale from 'lngProvider';
 import React, { Component } from 'react';
 import { IntlProvider } from 'react-intl';
@@ -21,7 +21,7 @@ import {
   NAV_STYLE_DARK_HORIZONTAL,
   NAV_STYLE_DEFAULT_HORIZONTAL,
   NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
-  THEME_TYPE_DARK,
+  THEME_TYPE_DARK
 } from '../../constants/ThemeSetting';
 import SignIn from '../SignIn';
 import SignUp from '../SignUp';
@@ -37,7 +37,7 @@ const RestrictedRoute = ({ component: Component, token, ...rest }) => (
         <Redirect
           to={{
             pathname: '/signin',
-            state: { from: props.location },
+            state: { from: props.location }
           }}
         />
       )
@@ -108,12 +108,12 @@ class App extends Component {
       layoutType,
       navStyle,
       locale,
-      token,
+      token
     } = this.props;
     if (themeType === THEME_TYPE_DARK) {
       document.body.classList.add('dark-theme');
     }
-    //
+    
     this.setLayoutType(layoutType);
 
     this.setNavStyle(navStyle);
@@ -126,8 +126,8 @@ class App extends Component {
           messages={currentAppLocale.messages}
         >
           <Switch>
-            <Route exact path='/signin' component={SignIn} />
-            <Route exact path='/signup' component={SignUp} />
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
             <RestrictedRoute
               path={`${match.url}`}
               token={token}
@@ -140,8 +140,8 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ settings, auth }) => {
-  const { locale, navStyle, themeType, layoutType } = settings;
+const mapStateToProps = ({ themeSettings, auth }) => {
+  const { locale, navStyle, themeType, layoutType } = themeSettings;
   const { authUser, token, initURL } = auth;
   return { locale, token, navStyle, themeType, layoutType, authUser, initURL };
 };
@@ -150,7 +150,7 @@ export default connect(
   {
     setInitUrl,
     setThemeType,
-    onNavStyleChange,
-    onLayoutTypeChange,
+    changeNavStyle,
+    changeLayoutType
   }
 )(App);
