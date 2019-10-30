@@ -87,7 +87,7 @@ class InsideHeader extends Component {
                 <i
                   className="gx-icon-btn icon icon-menu"
                   onClick={() => {
-                    this.props.toggleCollapsedSideNav(!navCollapsed);
+                    this.props.toggleCollapsedNav(!navCollapsed);
                   }}
                 />
               </div>

@@ -21,7 +21,8 @@ const { Sider } = Layout;
 
 export class Sidebar extends Component {
   onToggleCollapsedNav = () => {
-    this.props.toggleCollapsedNav(!this.props.navCollapsed);
+    const { toggleCollapsedNav, navCollapsed } = this.props;
+    toggleCollapsedNav(!navCollapsed);
   };
 
   componentDidMount() {

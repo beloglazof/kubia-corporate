@@ -27,25 +27,26 @@ const themeSettingsSlice = createSlice({
   },
   reducers: {
     toggleCollapsedNav(state, action) {
-      state.navCollapsed = action.payload.navCollapsed;
+      console.log(action);
+      state.navCollapsed = action.payload;
     },
     updateWindowWidth(state, action) {
-      state.width = action.payload.width;
+      state.width = action.payload;
     },
     setThemeType(state, action) {
-      state.themeType = action.payload.themeType;
+      state.themeType = action.payload;
     },
     setThemeColorSelection(state, action) {
-      state.colorSelection = action.payload.colorSelection;
+      state.colorSelection = action.payload;
     },
     changeNavStyle(state, action) {
-      state.navStyle = action.payload.navStyle;
+      state.navStyle = action.payload;
     },
     changeLayoutType(state, action) {
-      state.layoutType = action.payload.layoutType;
+      state.layoutType = action.payload;
     },
     switchLanguage(state, action) {
-      state.locale = action.payload.locale;
+      state.locale = action.payload;
     }
   }
 });

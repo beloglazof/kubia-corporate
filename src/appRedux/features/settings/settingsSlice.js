@@ -6,12 +6,13 @@ const settingsSlice = createSlice({
     firstPage: 'accounts'
   },
   reducers: {
-    changeFirstPage(state, action) {
+    setFirstPage(state, action) {
+      console.log(action)
       state.firstPage = action.payload;
     }
   }
 });
 
-export const { changeFirstPage } = settingsSlice.actions;
+export const { setFirstPage } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

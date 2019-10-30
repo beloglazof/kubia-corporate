@@ -34,11 +34,11 @@ class SidebarLogo extends Component {
               } ${themeType !== THEME_TYPE_LITE ? 'gx-text-white' : ''}`}
               onClick={() => {
                 if (navStyle === NAV_STYLE_DRAWER) {
-                  this.props.toggleCollapsedSideNav(!navCollapsed);
+                  this.props.toggleCollapsedNav(!navCollapsed);
                 } else if (navStyle === NAV_STYLE_FIXED) {
                   this.props.onNavStyleChange(NAV_STYLE_MINI_SIDEBAR);
                 } else if (navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR) {
-                  this.props.toggleCollapsedSideNav(!navCollapsed);
+                  this.props.toggleCollapsedNav(!navCollapsed);
                 } else {
                   this.props.onNavStyleChange(NAV_STYLE_FIXED);
                 }
@@ -48,15 +48,14 @@ class SidebarLogo extends Component {
         ) : null}
 
         <Link to="/" className="gx-site-logo">
-          {/*{navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR &&*/}
-          {/*width >= TAB_SIZE ? (*/}
-          {/*  <img alt="" src={require('assets/images/w-logo.png')} />*/}
-          {/*) : themeType === THEME_TYPE_LITE ? (*/}
-          {/*  <img alt="" src={require('assets/images/logo-white.png')} />*/}
-          {/*) : (*/}
-          {/*  <img alt="" src={require('assets/images/logo.png')} />*/}
-          {/*)}*/}
-          <img alt="logo" src={require('assets/images/q-logo.png')} />
+          {navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR &&
+          width >= TAB_SIZE ? (
+            <img alt="" src={require('assets/images/logo.png')} />
+          ) : themeType === THEME_TYPE_LITE ? (
+            <img alt="" src={require('assets/images/logo-black.png')} />
+          ) : (
+            <img alt="" src={require('assets/images/logo.png')} />
+          )}
         </Link>
       </div>
     );

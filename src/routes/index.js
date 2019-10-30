@@ -3,9 +3,10 @@ import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import asyncComponent from 'util/asyncComponent';
 import { Icon, Menu } from 'antd';
 import { startCase } from 'lodash/string';
+import { useSelector } from 'react-redux';
 
-const navItems = [
-  { name: 'home', path: '/', iconName: 'home' },
+export const navItems = [
+  { name: 'accounts', path: '/accounts', iconName: 'dollar' },
   { name: 'settings', path: '/settings', iconName: 'setting' }
 ];
 
@@ -19,10 +20,13 @@ export const renderNavigationItems = () => {
     </Menu.Item>
   ));
 };
-const App = ({ match }) => (
+const App = ({ match }) => {
+  const {firstPage} = useSelector(state => state.settings)
+  
+  return(
   <div className="gx-main-content-wrapper">
     <Switch>
-      <Route exact path="/" render={() => <Redirect to="/accounts" />} />
+      <Route exact path="/" render={() => <Redirect to={firstPage} />} />
       <Route
         path={`/accounts`}
         component={asyncComponent(() => import('./Accounts'))}
@@ -37,6 +41,6 @@ const App = ({ match }) => (
       />
     </Switch>
   </div>
-);
+);}
 
 export default App;
