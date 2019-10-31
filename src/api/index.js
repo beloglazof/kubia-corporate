@@ -29,3 +29,13 @@ export const withdrawal = async (
 ) => await post('withdrawal', params);
 
 export const getSessions = async () => await get('sessions');
+
+export const cardsNew = async (
+  params = {
+    account_id: 0,
+    type_id: 0,
+    assoc_number: '',
+    failed_id: 0,
+    pin: ''
+  }
+) => await post('/cards/new', params);
