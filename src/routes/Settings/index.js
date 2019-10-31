@@ -7,7 +7,7 @@ import { getSessions } from '../../api';
 import { singaporeDateTimeFormat } from '../../util/config';
 import styles from './settings.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstPage } from '../../appRedux/features/settings/settingsSlice';
+import { setFirstPagePath } from '../../appRedux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
 
@@ -76,8 +76,7 @@ const Settings = ({}) => {
   const { firstPagePath } = useSelector(state => state.settings);
   const dispatch = useDispatch();
   const handleFirstPageChange = value => {
-    // console.log(value)
-    dispatch(setFirstPage(value));
+    dispatch(setFirstPagePath(value));
   };
   return (
     <>
