@@ -105,13 +105,13 @@ class HorizontalDefault extends Component {
                 to="/"
                 className="gx-d-block gx-d-lg-none gx-pointer gx-w-logo"
               >
-                <img alt="" src={require('assets/images/q-logo.png')} />
+                <img alt="" src={require('../../../assets/images/q-logo.png')} />
               </Link>
               <Link
                 to="/"
                 className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
-                <img alt="" src={require('assets/images/logo-black.png')} />
+                <img alt="" src={require('../../../assets/images/logo-black.png')} />
               </Link>
               <div className="gx-header-search gx-d-none gx-d-lg-flex">
                 <SearchBox
