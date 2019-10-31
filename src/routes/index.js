@@ -21,26 +21,27 @@ export const renderNavigationItems = () => {
   ));
 };
 const App = ({ match }) => {
-  const {firstPage} = useSelector(state => state.settings)
-  
-  return(
-  <div className="gx-main-content-wrapper">
-    <Switch>
-      <Route exact path="/" render={() => <Redirect to={firstPage} />} />
-      <Route
-        path={`/accounts`}
-        component={asyncComponent(() => import('./Accounts'))}
-      />
-      <Route
-        path={`/new-payment`}
-        component={asyncComponent(() => import('./NewPayment'))}
-      />
-      <Route
-        path={`/settings`}
-        component={asyncComponent(() => import('./Settings'))}
-      />
-    </Switch>
-  </div>
-);}
+  const { firstPagePath } = useSelector(state => state.settings);
+
+  return (
+    <div className="gx-main-content-wrapper">
+      <Switch>
+        <Route exact path="/" render={() => <Redirect to={firstPagePath} />} />
+        <Route
+          path={`/accounts`}
+          component={asyncComponent(() => import('./Accounts'))}
+        />
+        <Route
+          path={`/new-payment`}
+          component={asyncComponent(() => import('./NewPayment'))}
+        />
+        <Route
+          path={`/settings`}
+          component={asyncComponent(() => import('./Settings'))}
+        />
+      </Switch>
+    </div>
+  );
+};
 
 export default App;

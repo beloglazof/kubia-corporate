@@ -6,7 +6,7 @@ import { format, parseISO } from 'date-fns';
 import { getSessions } from '../../api';
 import { singaporeDateTimeFormat } from '../../util/config';
 import styles from './settings.module.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setFirstPage } from '../../appRedux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
@@ -73,11 +73,12 @@ const Settings = ({}) => {
     wrapperCol: { xs: 12, sm: 6 },
     labelCol: { xs: 12, sm: 6 }
   };
-  const { firstPage } = useSelector(state => state.settings);
+  const { firstPagePath } = useSelector(state => state.settings);
+  const dispatch = useDispatch();
   const handleFirstPageChange = value => {
     // console.log(value)
-    setFirstPage(value)
-  }
+    dispatch(setFirstPage(value));
+  };
   return (
     <>
       <h1>Settings</h1>
@@ -90,7 +91,7 @@ const Settings = ({}) => {
           <Form.Item label="Select your first page">
             <Select
               placeholder={'Any route'}
-              value={firstPage}
+              value={firstPagePath}
               onChange={handleFirstPageChange}
             >
               {navItems.map(item => (

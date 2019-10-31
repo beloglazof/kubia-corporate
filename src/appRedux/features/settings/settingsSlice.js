@@ -3,12 +3,11 @@ import { createSlice } from 'redux-starter-kit';
 const settingsSlice = createSlice({
   name: 'screens',
   initialState: {
-    firstPage: 'accounts'
+    firstPagePath: '/accounts'
   },
   reducers: {
     setFirstPage(state, action) {
-      console.log(action)
-      state.firstPage = action.payload;
+      state.firstPagePath = action.payload;
     }
   }
 });
