@@ -1,20 +1,19 @@
-import axios from "axios";
-import { message } from "antd";
-import { store } from "../index";
+import axios from 'axios';
+import { message } from 'antd';
+import { store } from '../index';
 
 const API_PATH = `https://sandbox.api.quancy.com.sg/v1`;
 
 const instance = axios.create({
   baseURL: API_PATH,
   headers: {
-    "Content-Type": "application/json"
+    'Content-Type': 'application/json'
   }
 });
 
 const handleRequest = request => {
   const token = store.getState().auth.token;
-  request.headers["Authorization"] = `Bearer ${token}`;
-
+  request.headers['Authorization'] = `Bearer ${token}`;
   return request;
 };
 
@@ -34,9 +33,11 @@ instance.interceptors.request.use(handleRequest);
 instance.interceptors.response.use(handleSuccess, handleError);
 
 export const get = async (url, params) => {
-  const response = await instance.get(url, { params });
-  const { data } = response;
-  return data;
+  try {
+    const response = await instance.get(url, { params });
+    const { data } = response;
+    return data;
+  } catch (e) {}
 };
 
 export const post = async (url, params) => {

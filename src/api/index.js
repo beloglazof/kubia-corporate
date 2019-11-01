@@ -39,3 +39,8 @@ export const cardsNew = async (
     pin: ''
   }
 ) => await post('/cards/new', params);
+
+export const getCardsNew = async request_id =>
+  await get('/cards/new', { request_id });
+
+export const cardsRequestState = async () => await get('/cards/request_states', {});

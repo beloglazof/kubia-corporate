@@ -5,16 +5,39 @@ import { Link } from 'react-router-dom';
 
 import Card from '../Card';
 import styles from './account.module.css';
+import InactiveCard from '../InactiveCard';
 
 const Cards = ({ cards }) => {
-  return <List dataSource={cards} renderItem={item => <Card card={item}/>}/>;
+  const fillCards = cards => {
+    switch (cards.length) {
+      case 0:
+        return [
+          { typeId: 1, state: 'inactive' },
+          { typeId: 2, state: 'inactive' }
+        ];
+      case 1:
+        const existCardType = cards[0].type_id;
+        const inactiveCardType = existCardType === 1 ? 2 : 1;
+        return [...cards, { typeId: inactiveCardType, state: 'inactive' }];
+      default:
+        return cards;
+    }
+  };
+  const filledCards = fillCards(cards);
+  const renderCard = card => {
+    if (card.state === 'inactive') {
+      return <InactiveCard typeId={card.typeId} />;
+    }
+    return <Card card={card} />
+  };
+  return <List dataSource={filledCards} renderItem={renderCard} />;
 };
 
 const Account = ({ account }) => {
   const user = useSelector(state => state.auth.authUser);
   const { first_name, last_name } = user;
   const name = `${first_name} ${last_name}`;
-  
+
   const { number, amount, currency_info, cards, id } = account;
   return (
     <List.Item key={id}>
@@ -38,7 +61,7 @@ const Account = ({ account }) => {
             </Button>
           </Col>
         </Row>
-        <Cards cards={cards}/>
+        <Cards cards={cards} />
       </UiCard>
     </List.Item>
   );

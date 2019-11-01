@@ -1435,6 +1435,24 @@ body.dark-theme {
     }
   }
 
+  & .ant-modal {
+    &-header,
+    &-footer {
+      border-color: @dark-theme-border-color;
+    }
+    &-header,
+    &-body,
+    &-footer,
+    &-title
+    {
+      background-color: @dark-theme-component-background;
+      color: @dark-theme-text-color;
+    }
+    &-close {
+      color: @dark-theme-text-color;
+    }
+  }
+
   & .ant-modal .ant-input {
     background-color: @white-color !important;
     border-color: lighten(@dark-theme-border-color, 55%);
