@@ -6,6 +6,7 @@ import { ReactComponent as MastercardSymbol } from '../../assets/icons/mc_symbol
 import CardImg from '../../assets/images/card2.png';
 import styles from './card.module.css';
 import { cardsNew } from '../../api';
+import PhysicalCardActivationModal from '../PhysicalCardActivationModal';
 
 const MastercardIcon = props => {
   const mastercardIconStyle = { fontSize: '2.5em', marginLeft: '0.4em' };
@@ -125,39 +126,46 @@ const Card = ({ card }) => {
   };
 
   return (
-    <Collapse
-      expandIconPosition="right"
-      expandIcon={showExpandIcon ? ExpandIcon : () => {}}
-    >
-      <Panel header={Header} key={id} disabled={disabled}>
-        <Row>
-          <Col span={6} sm={8}>
-            <div style={{ textAlign: 'right' }}>
-              <img src={CardImg} alt="Card image" height="200" width="120" />
-            </div>
-          </Col>
-          <Col span={7} sm={8}>
-            <div className={styles.infoParam}>
-              Number:
-              <div className="param-value">
-                {number.trim().length ? number : 'No info'}
+    <>
+      <Collapse
+        expandIconPosition="right"
+        expandIcon={showExpandIcon ? ExpandIcon : () => {}}
+      >
+        <Panel header={Header} key={id} disabled={disabled}>
+          <Row>
+            <Col span={6} sm={8}>
+              <div style={{ textAlign: 'right' }}>
+                <img src={CardImg} alt="Card image" height="200" width="120" />
               </div>
-            </div>
-            <div className={styles.infoParam}>
-              Expiration date:
-              <div className="param-value">{expirationDate}</div>
-            </div>
-            <div className={styles.infoParam}>
-              CVV:
-              <div className="param-value">{cvv.length ? cvv : 'No info'}</div>
-            </div>
-          </Col>
-          <Col span={11} sm={8}>
-            <Button block>Change PIN</Button>
-          </Col>
-        </Row>
-      </Panel>
-    </Collapse>
+            </Col>
+            <Col span={7} sm={8}>
+              <div className={styles.infoParam}>
+                Number:
+                <div className="param-value">
+                  {number.trim().length ? number : 'No info'}
+                </div>
+              </div>
+              <div className={styles.infoParam}>
+                Expiration date:
+                <div className="param-value">{expirationDate}</div>
+              </div>
+              <div className={styles.infoParam}>
+                CVV:
+                <div className="param-value">
+                  {cvv.length ? cvv : 'No info'}
+                </div>
+              </div>
+            </Col>
+            <Col span={11} sm={8}>
+              <Button block>Change PIN</Button>
+            </Col>
+          </Row>
+        </Panel>
+      </Collapse>
+      {cardState === 'CREATE_FAILED' && typeName === 'PHYSICAL' && (
+        <PhysicalCardActivationModal />
+      )}
+    </>
   );
 };
 
