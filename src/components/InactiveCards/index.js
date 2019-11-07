@@ -49,17 +49,7 @@ const CreateForm = Form.create({ name: 'form_in_modal' })(
   }
 );
 
-const CardShortInfo = ({ typeName, handleActivateClick }) => {
-  return (
-    <div className={`${styles.shortInfo}`}>
-      <span className={styles.typeName}>{typeName}</span>
-      <Icon type="credit-card" className={styles.creditCardIcon} />
-      <Button style={{ marginBottom: 0 }} onClick={handleActivateClick}>
-        Activate your {typeName.toLowerCase()} card
-      </Button>
-    </div>
-  );
-};
+
 const InactiveCard = ({ typeId }) => {
   const [cardState, setCardState] = useState('inactive');
   const [requestId, setRequestId] = useState();
@@ -99,13 +89,13 @@ const InactiveCard = ({ typeId }) => {
   const activationStateWatcher = (id) => {
     watcherIntervalId = setInterval(async () => {
       // const activationState = await cardsRequestState();
-      const cardsNew = await getCardsNew()
+      const cardsNew = await getCardsNew(id)
       // setCardState(activationState);
     }, 2000);
   };
 
   const accountId = useSelector(state => state?.accounts[0]?.id);
-  const activateCard = (assocNumber, pin) => {
+  const activateCard = async (assocNumber, pin) => {
     // send request -> get request id
     const virtualCardParams = {
       account_id: accountId,
@@ -118,7 +108,7 @@ const InactiveCard = ({ typeId }) => {
     };
 
     const params = isVirtual ? virtualCardParams : physicalCardParams;
-    const id = cardsNew(params);
+    const id = await cardsNew(params);
     setRequestId(id);
     // set card state to pending
     setCardState('pending');
@@ -126,10 +116,10 @@ const InactiveCard = ({ typeId }) => {
     activationStateWatcher(id);
   };
 
-  const handleActivateClick = () => {
+  const handleActivateClick = async () => {
     showModal();
     if (isVirtual) {
-      activateCard();
+      await activateCard();
     }
   };
   switch (cardState) {
@@ -162,4 +152,8 @@ const InactiveCard = ({ typeId }) => {
       return null;
   }
 };
-export default InactiveCard;
+// export default InactiveCard;
+
+
+
+

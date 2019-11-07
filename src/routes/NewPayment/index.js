@@ -88,7 +88,7 @@ const RecipientPhoneField = ({ form }) => {
   const { getFieldDecorator } = form;
 
   const validatePhone = async (rule, value, callback) => {
-    const user = await usersCheck(value);
+    const user = await usersCheck(value, false);
     if (user) {
       callback();
     } else {

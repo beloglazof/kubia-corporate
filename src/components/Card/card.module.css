@@ -1,6 +1,7 @@
 .shortInfo {
   display: flex;
   align-items: center;
+  color: #e0e0e0;
 }
 
 .creditCardIcon {
@@ -30,8 +31,12 @@
   margin-right: 1em;
 }
 
-.detailsButton {
+.btn {
   margin-bottom: 0;
+  margin-left: 2em;
+}
+
+.detailsButton {
   padding: 0.3em 0.7em 0.2em 1em;
   height: 26px;
 }
