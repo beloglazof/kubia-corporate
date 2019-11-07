@@ -5,32 +5,33 @@ import { Link } from 'react-router-dom';
 
 import Card from '../Card';
 import styles from './account.module.css';
-import InactiveCard from '../InactiveCard';
+import InactiveVirtualCard from '../InactiveCards/InactiveVirtualCard';
+import InactivePhysicalCard from '../InactiveCards/InactivePhysicalCard';
 
-const Cards = ({ cards }) => {
-  const fillCards = cards => {
-    switch (cards.length) {
-      case 0:
-        return [
-          { typeId: 1, state: 'inactive' },
-          { typeId: 2, state: 'inactive' }
-        ];
-      case 1:
-        const existCardType = cards[0].type_id;
-        const inactiveCardType = existCardType === 1 ? 2 : 1;
-        return [...cards, { typeId: inactiveCardType, state: 'inactive' }];
-      default:
-        return cards;
-    }
+const getInactiveCards = (cards = []) => {
+  if (cards.length === 2) return [];
+  if (cards.length === 0) return [{ typeId: 1 }, { typeId: 2 }];
+  if (cards.length === 1) {
+    const [{ type_id: activatedTypeId }] = cards;
+    const inactiveTypeId = activatedTypeId === 1 ? 2 : 1;
+    return [{ typeId: inactiveTypeId }];
+  }
+};
+
+const renderInactiveCards = (inactiveCards) => {
+  const renderInactiveCard = card => {
+    const { typeId } = card;
+    if (typeId === 1) return <InactiveVirtualCard />;
+    if (typeId === 2) return <InactivePhysicalCard />;
+    return null;
   };
-  const filledCards = fillCards(cards);
-  const renderCard = card => {
-    if (card.state === 'inactive') {
-      return <InactiveCard typeId={card.typeId} />;
-    }
-    return <Card card={card} />
-  };
-  return <List dataSource={filledCards} renderItem={renderCard} />;
+  return <List dataSource={inactiveCards} renderItem={renderInactiveCard} />;
+};
+
+const renderCards = cards => {
+  const renderCard = card => <Card card={card} />;
+
+  return <List dataSource={cards} renderItem={renderCard} />;
 };
 
 const Account = ({ account }) => {
@@ -39,6 +40,7 @@ const Account = ({ account }) => {
   const name = `${first_name} ${last_name}`;
 
   const { number, amount, currency_info, cards, id } = account;
+  const inactiveCards = getInactiveCards(cards);
   return (
     <List.Item key={id}>
       <UiCard title="Account info">
@@ -61,7 +63,8 @@ const Account = ({ account }) => {
             </Button>
           </Col>
         </Row>
-        <Cards cards={cards} />
+        {cards.length > 0 && renderCards(cards)}
+        {inactiveCards.length > 0 && renderInactiveCards(inactiveCards)}
       </UiCard>
     </List.Item>
   );

@@ -1,6 +1,7 @@
-import { get, post } from './config';
+import { get, patch, post } from './config';
 
-export const usersCheck = async phone => await get('users/check', { phone });
+export const usersCheck = async (phone, notifyError) =>
+  await get('users/check', { phone }, notifyError);
 
 export const usersMe = async () => await get('users/me');
 
@@ -30,6 +31,15 @@ export const withdrawal = async (
 
 export const getSessions = async () => await get('sessions');
 
+//cards
+
+export const getCards = async () => await get('/cards/active');
+
+export const patchCardsOTP = async (params = { request_id: 0, otp: '' }) =>
+  await patch('/cards/otp', params);
+
+export const getNewOTP = async (params = {request_id: 0}) => await post('/cards/otp', params)
+
 export const cardsNew = async (
   params = {
     account_id: 0,
@@ -43,4 +53,5 @@ export const cardsNew = async (
 export const getCardsNew = async request_id =>
   await get('/cards/new', { request_id });
 
-export const cardsRequestState = async () => await get('/cards/request_states', {});
+export const cardsRequestState = async () =>
+  await get('/cards/request_states', {});

@@ -18,32 +18,54 @@ const handleRequest = request => {
 };
 
 const handleSuccess = response => response;
-
 const handleError = err => {
-  // const { response } = err;
-  // const { data } = response;
-  // const { error } = data;
-  // const errorItem = error[0];
-  //
-  // message.error(errorItem.message);
   return Promise.reject(err);
 };
 
 instance.interceptors.request.use(handleRequest);
 instance.interceptors.response.use(handleSuccess, handleError);
 
-export const get = async (url, params) => {
+const showErrorMessage = err => {
+  const { response } = err;
+  const { data } = response;
+  const { error } = data;
+  const errorItem = error[0];
+  message.error(errorItem.message);
+};
+
+export const get = async (url, params, notifyError = true) => {
   try {
     const response = await instance.get(url, { params });
     const { data } = response;
     return data;
-  } catch (e) {}
+  } catch (e) {
+    if (notifyError) {
+      showErrorMessage();
+    }
+  }
 };
 
-export const post = async (url, params) => {
-  const response = await instance.post(url, params);
-  const { data } = response;
-  return data;
+export const post = async (url, params, notifyError = true) => {
+  try {
+    const response = await instance.post(url, params);
+    const { data } = response;
+    return data;
+  } catch (e) {
+    if (notifyError) {
+      showErrorMessage(e);
+    }
+  }
+};
+export const patch = async (url, params, notifyError = true) => {
+  try {
+    const response = await instance.patch(url, params);
+    const { data } = response;
+    return data;
+  } catch (e) {
+    if (notifyError) {
+      showErrorMessage(e);
+    }
+  }
 };
 
 export default instance;
