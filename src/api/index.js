@@ -30,6 +30,7 @@ export const withdrawal = async (
 ) => await post('withdrawal', params);
 
 export const getSessions = async () => await get('sessions');
+export const killSession = async (id) => await patch('sessions', { id });
 
 //cards
 
@@ -38,7 +39,7 @@ export const getCards = async () => await get('/cards/active');
 export const patchCardsOTP = async (params = { request_id: 0, otp: '' }) =>
   await patch('/cards/otp', params);
 
-export const getNewOTP = async (params = {request_id: 0}) => await post('/cards/otp', params)
+export const getNewOTP = async (params = { request_id: 0 }) => await post('/cards/otp', params);
 
 export const cardsNew = async (
   params = {
