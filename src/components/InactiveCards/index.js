@@ -6,48 +6,6 @@ import { cardsNew, cardsRequestState, getCardsNew } from '../../api';
 import { useSelector } from 'react-redux';
 const { Panel } = Collapse;
 
-const CreateForm = Form.create({ name: 'form_in_modal' })(
-  // eslint-disable-next-line
-  class extends React.Component {
-    render() {
-      const { visible, onCancel, onCreate, form } = this.props;
-      const { getFieldDecorator } = form;
-      return (
-        <Modal
-          visible={visible}
-          title="Input card info"
-          okText="Create"
-          onCancel={onCancel}
-          onOk={onCreate}
-        >
-          <Form layout="vertical">
-            <Form.Item label="Associated number">
-              {getFieldDecorator('assocNum', {
-                rules: [
-                  {
-                    required: true,
-                    message:
-                      'Please input the associated number from your card!'
-                  }
-                ]
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="PIN">
-              {getFieldDecorator('pin', {
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please set the pin code!'
-                  }
-                ]
-              })(<Input />)}
-            </Form.Item>
-          </Form>
-        </Modal>
-      );
-    }
-  }
-);
 
 
 const InactiveCard = ({ typeId }) => {
@@ -138,14 +96,6 @@ const InactiveCard = ({ typeId }) => {
               disabled
             />
           </Collapse>
-          {typeName.toLowerCase() === 'physical' && (
-            <CreateForm
-              wrappedComponentRef={saveFormRef}
-              visible={modalOpen}
-              onCancel={handleCancel}
-              onCreate={handleCreate}
-            />
-          )}
         </>
       );
     default:
