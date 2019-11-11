@@ -7,7 +7,9 @@ import { useSelector } from 'react-redux';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'dollar' },
-  { name: 'settings', path: '/settings', iconName: 'setting' }
+  { name: 'settings', path: '/settings', iconName: 'setting' },
+  { name: 'pay', path: '/new-payment', iconName: 'transaction' },
+  
 ];
 
 export const renderNavigationItems = () => {

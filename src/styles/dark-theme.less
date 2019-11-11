@@ -1435,6 +1435,13 @@ body.dark-theme {
     }
   }
 
+  & .ant-descriptions {
+    &-item-label,
+    &-item-content {
+      color: @dark-theme-text-color
+    }
+  }
+
   & .ant-modal {
     &-header,
     &-footer {
@@ -1442,8 +1449,11 @@ body.dark-theme {
     }
     &-header,
     &-body,
+    &-confirm-body,
     &-footer,
-    &-title
+    &-title,
+    &-confirm-title,
+    &-confirm-content
     {
       background-color: @dark-theme-component-background;
       color: @dark-theme-text-color;
