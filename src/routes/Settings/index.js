@@ -59,6 +59,7 @@ const Settings = ({}) => {
   useEffect(() => {
     async function fetchSessions() {
       const fetchedSessions = await getSessions();
+      if (!fetchedSessions) return;
       const keyedSessions = fetchedSessions.map(session => ({
         ...session,
         key: uniqueId()
