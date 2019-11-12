@@ -37,7 +37,7 @@ const renderRecipientFields = (paymentType, form) => {
 };
 
 const PaymentData = ({ form }) => {
-  console.log(form)
+  console.log(form);
   const { getFieldsValue } = form;
   const fields = getFieldsValue();
   const renderFields = () => {
@@ -173,21 +173,21 @@ const PaymentForm = ({ form, history }) => {
     wrapperCol: {
       xs: { span: 24 },
       sm: { span: 12 },
-      md: { span: 8}
+      md: { span: 8 }
     },
     labelCol: {
       xs: { span: 12 },
       sm: { span: 6 }
     }
   };
-  
+
   const submitButtonLayoutProps = {
     wrapperCol: {
       xs: { span: 24, offset: 8 },
       sm: { span: 12 },
-      md: { span: 8}
-    },
-  }
+      md: { span: 8 }
+    }
+  };
 
   return (
     <Row>
@@ -202,7 +202,9 @@ const PaymentForm = ({ form, history }) => {
               <NoteField form={form} />
             </>
           )}
-          {amount > 0 && renderRecipientFields(paymentType, form)}
+          {amount > 0 &&
+            amount <= balance &&
+            renderRecipientFields(paymentType, form)}
           <FormItem {...submitButtonLayoutProps}>
             <Button htmlType="submit" type="primary">
               Submit

@@ -6,7 +6,7 @@ const InternalRecipientFields = ({ form }) => {
   const [user, setUser] = useState();
   const { getFieldDecorator } = form;
 
-  const formatPhone = value => value.replace(/\+65|65/g, '');
+  const formatPhone = value => value && value.replace(/\+65|65/g, '');
 
   const validatePhone = async (rule, value, callback) => {
     console.log(value);
@@ -27,13 +27,7 @@ const InternalRecipientFields = ({ form }) => {
           { validator: validatePhone }
         ],
         normalize: formatPhone
-      })(
-        <Input
-          inputMode={'tel'}
-          addonBefore={'+65'}
-          pattern={'[0-9]*'}
-        />
-      )}
+      })(<Input inputMode={'tel'} addonBefore={'+65'} pattern={'[0-9]*'} />)}
     </Form.Item>
   );
 };

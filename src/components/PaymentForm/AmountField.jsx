@@ -16,17 +16,13 @@ const AmountField = ({ balance, form }) => {
     callback();
   };
 
-  const formatter = value =>
-    `S$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  const parser = value => value.replace(/S\$\s?|(,*)/g, '');
-  
   return (
     <Form.Item label="Amount" hasFeedback>
       {getFieldDecorator('amount', {
         rules: [
           { required: true, message: 'Please enter amount!' },
           { validator: greaterThanZero },
-          { validator: lessOrEqualBalance },
+          { validator: lessOrEqualBalance }
         ]
       })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={'S$'} />)}
     </Form.Item>
