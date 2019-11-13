@@ -16,6 +16,7 @@ import {
 } from '../../constants/ThemeSetting';
 import IntlMessages from '../../util/IntlMessages';
 import { renderNavigationItems } from '../../routes';
+import UserInfo from '../../templateComponents/UserInfo';
 
 class SidebarContent extends Component {
   getNoHeaderClass = navStyle => {
@@ -47,7 +48,7 @@ class SidebarContent extends Component {
               navStyle
             )}`}
           >
-            <UserProfile />
+            <UserInfo />
             <AppsNavigation />
           </div>
           <CustomScrollbars className="gx-layout-sider-scrollbar">

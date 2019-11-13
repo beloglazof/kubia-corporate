@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
+import { connect } from 'react-redux';
 
 import Sidebar from '../Sidebar/index';
 import HorizontalDefault from '../Topbar/HorizontalDefault/index';
@@ -9,9 +10,8 @@ import AboveHeader from '../Topbar/AboveHeader/index';
 import BelowHeader from '../Topbar/BelowHeader/index';
 
 import Topbar from '../Topbar/index';
-import { footerText } from 'util/config';
-import Routes from 'routes/index';
-import { connect } from 'react-redux';
+import { footerText } from '../../util/config';
+import Routes from '../../routes/index';
 import {
   NAV_STYLE_ABOVE_HEADER,
   NAV_STYLE_BELOW_HEADER,
@@ -23,11 +23,12 @@ import {
   NAV_STYLE_MINI_SIDEBAR,
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
   NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
-  TAB_SIZE,
+  TAB_SIZE
 } from '../../constants/ThemeSetting';
 import NoHeaderNotification from '../Topbar/NoHeaderNotification/index';
-import { getUser } from '../../appRedux/actions/Auth';
-import { fetchMainScreen } from '../../appRedux/features/screens/screensSlice';
+import { fetchMainScreen } from '../../redux/features/screens/screensSlice';
+import { fetchUser } from '../../redux/features/user/userSlice';
+
 const { Content, Footer } = Layout;
 
 export class MainApp extends Component {
@@ -95,8 +96,8 @@ export class MainApp extends Component {
   };
 
   componentDidMount() {
-    const { getUser, fetchMainScreen } = this.props;
-    getUser();
+    const { fetchMainScreen, fetchUser } = this.props;
+    fetchUser();
     fetchMainScreen();
   }
 
@@ -104,7 +105,7 @@ export class MainApp extends Component {
     const { match, width, navStyle } = this.props;
 
     return (
-      <Layout className='gx-app-layout'>
+      <Layout className="gx-app-layout">
         {this.getSidebar(navStyle, width)}
         <Layout>
           {this.getNavStyles(navStyle)}
@@ -113,7 +114,7 @@ export class MainApp extends Component {
           >
             <Routes match={match} />
             <Footer>
-              <div className='gx-layout-footer-content'>{footerText}</div>
+              <div className="gx-layout-footer-content">{footerText}</div>
             </Footer>
           </Content>
         </Layout>
@@ -128,8 +129,8 @@ const mapStateToProps = ({ themeSettings }) => {
 };
 
 const actions = {
-  getUser,
   fetchMainScreen,
+  fetchUser
 };
 export default connect(
   mapStateToProps,

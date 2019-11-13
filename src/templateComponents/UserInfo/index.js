@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { connect, useSelector } from "react-redux";
-import { Avatar, Popover } from "antd";
-import { userSignOut } from "appRedux/actions/Auth";
+import React, { Component } from 'react';
+import { connect, useSelector } from 'react-redux';
+import { Avatar, Popover } from 'antd';
+import { signOut } from '../../redux/features/session/sessionSlice';
 
-const mapStateToProps = ({ auth }) => {
-  const avatarUrl = auth?.authUser?.avatar["128"];
+const mapStateToProps = ({ user }) => {
+  const avatarUrl = user.avatar?.length > 0 && user.avatar['128'];
   return { avatarUrl };
 };
 
@@ -14,7 +14,7 @@ class UserInfo extends Component {
       <ul className="gx-user-popover">
         {/*<li>My Account</li>*/}
         {/*<li>Connections</li>*/}
-        <li onClick={() => this.props.userSignOut()}>Logout</li>
+        <li onClick={() => this.props.signOut()}>Logout</li>
       </ul>
     );
 
@@ -33,7 +33,8 @@ class UserInfo extends Component {
   }
 }
 
+const actions = { signOut };
 export default connect(
   mapStateToProps,
-  { userSignOut }
+  actions
 )(UserInfo);

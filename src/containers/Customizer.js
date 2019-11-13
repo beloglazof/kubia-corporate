@@ -10,7 +10,7 @@ import {
   changeNavStyle,
   setThemeColorSelection,
   setThemeType
-} from '../appRedux/features/settings/themeSettingsSlice';
+} from '../redux/features/settings/themeSettingsSlice';
 
 import {
   BLUE,

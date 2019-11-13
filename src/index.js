@@ -10,7 +10,7 @@ import 'assets/vendors/style';
 import 'typeface-roboto';
 import './index.css';
 
-import configureStore from './appRedux/store';
+import configureStore from './redux/store';
 import App from './containers/App';
 
 library.add(faCcMastercard);
@@ -19,7 +19,7 @@ export const store = configureStore();
 const Root = () => (
   <Provider store={store}>
     <Router>
-      <Route path='/' component={App} />
+      <Route path="/" component={App} />
     </Router>
   </Provider>
 );
@@ -29,7 +29,7 @@ const renderApp = () => {
 };
 
 if (process.env.NODE_ENV !== 'production' && module.hot) {
-  module.hot.accept(renderApp);
+  module.hot.accept('./containers/App', renderApp);
 }
 
 renderApp();

@@ -1,13 +1,14 @@
 import { createSlice } from 'redux-starter-kit';
 import axios from '../../../util/Api';
 import { setAccounts } from '../accounts/accountsSlice';
+import { getDesktopMainScreen } from '../../../api';
 
 const storageMainString = localStorage.getItem('main');
 const screensSlice = createSlice({
   name: 'screens',
   initialState: {
     main: storageMainString ? JSON.parse(storageMainString) : null,
-    error: null,
+    error: null
   },
   reducers: {
     getMainScreenSuccess(state, action) {
@@ -17,20 +18,21 @@ const screensSlice = createSlice({
     getMainScreenFailed(state, action) {
       state.main = null;
       state.error = action.payload;
-    },
-  },
+    }
+  }
 });
 
 export const {
   getMainScreenSuccess,
-  getMainScreenFailed,
+  getMainScreenFailed
 } = screensSlice.actions;
 
 export default screensSlice.reducer;
 
 export const fetchMainScreen = () => async dispatch => {
   try {
-    const { data } = await axios.get('compose/desktop-main-screen');
+    const data = await getDesktopMainScreen();
+    if (!data) return;
     dispatch(getMainScreenSuccess(data));
     const mainString = JSON.stringify(data);
     localStorage.setItem('main', mainString);

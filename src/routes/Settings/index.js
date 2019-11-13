@@ -7,7 +7,7 @@ import { getSessions, killSession } from '../../api';
 import { singaporeDateTimeFormat } from '../../util/config';
 import styles from './settings.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstPagePath } from '../../appRedux/features/settings/settingsSlice';
+import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
 
@@ -75,7 +75,12 @@ const Settings = ({}) => {
   useEffect(() => {
     async function fetchSessions() {
       const fetchedSessions = await getSessions();
-      setSessions(fetchedSessions);
+      if (!fetchedSessions) return;
+      const keyedSessions = fetchedSessions.map(session => ({
+        ...session,
+        key: uniqueId()
+      }));
+      setSessions(keyedSessions);
       // console.log(fetchedSessions);
     }
 

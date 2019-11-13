@@ -20,7 +20,7 @@ import MailNotification from 'templateComponents/MailNotification';
 import {
   switchLanguage,
   toggleCollapsedNav
-} from '../../../appRedux/features/settings/themeSettingsSlice';
+} from '../../../redux/features/settings/themeSettingsSlice';
 
 import { TAB_SIZE } from '../../../constants/ThemeSetting';
 import HorizontalNav from '../HorizontalNav';

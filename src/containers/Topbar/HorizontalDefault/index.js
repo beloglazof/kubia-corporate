@@ -20,7 +20,7 @@ import MailNotification from 'templateComponents/MailNotification';
 
 import HorizontalNav from '../HorizontalNav';
 import { Link } from 'react-router-dom';
-import { switchLanguage } from '../../../appRedux/features/settings/themeSettingsSlice';
+import { switchLanguage } from '../../../redux/features/settings/themeSettingsSlice';
 import IntlMessages from '../../../util/IntlMessages';
 
 const { Header } = Layout;

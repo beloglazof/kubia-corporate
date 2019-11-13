@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { toggleCollapsedNav } from '../../../appRedux/features/settings/themeSettingsSlice';
+import { toggleCollapsedNav } from '../../../redux/features/settings/themeSettingsSlice';
 import IntlMessages from 'util/IntlMessages';
 
 class NoHeaderNotification extends Component {

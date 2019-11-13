@@ -12,7 +12,7 @@ import CardInfo from '../CardInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { cardsNew, getCardsNew, getNewOTP, patchCardsOTP } from '../../../api';
 import cardStates from '../../../constants/cardStates';
-import { fetchMainScreen } from '../../../appRedux/features/screens/screensSlice';
+import { fetchMainScreen } from '../../../redux/features/screens/screensSlice';
 
 const InputOTP = Form.create({ name: 'input-otp' })(
   // eslint-disable-next-line

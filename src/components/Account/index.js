@@ -35,9 +35,9 @@ const renderCards = cards => {
 };
 
 const Account = ({ account }) => {
-  const user = useSelector(state => state.auth.authUser);
+  const user = useSelector(({ user }) => user);
   const { first_name, last_name } = user;
-  const name = `${first_name} ${last_name}`;
+  const name = first_name && last_name && `${first_name} ${last_name}`;
 
   const { number, amount, currency_info, cards, id } = account;
   const inactiveCards = getInactiveCards(cards);

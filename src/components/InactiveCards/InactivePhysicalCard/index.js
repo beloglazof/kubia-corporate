@@ -3,7 +3,7 @@ import CardInfo from '../CardInfo';
 import React, { useState } from 'react';
 import { cardsNew } from '../../../api';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMainScreen } from '../../../appRedux/features/screens/screensSlice';
+import { fetchMainScreen } from '../../../redux/features/screens/screensSlice';
 import PhysicalCardActivationModal from '../../PhysicalCardActivationModal';
 
 

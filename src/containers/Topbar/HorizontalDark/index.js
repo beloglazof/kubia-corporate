@@ -22,7 +22,7 @@ import HorizontalNav from '../HorizontalNav';
 import {
   switchLanguage,
   toggleCollapsedNav
-} from '../../../appRedux/features/settings/themeSettingsSlice';
+} from '../../../redux/features/settings/themeSettingsSlice';
 import IntlMessages from '../../../util/IntlMessages';
 
 const { Header } = Layout;

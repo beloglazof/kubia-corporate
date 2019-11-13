@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Avatar, Popover } from 'antd';
-import { userSignOut } from 'appRedux/actions/Auth';
+import { signOut } from '../../redux/features/session/sessionSlice';
 
 class UserProfile extends Component {
   render() {
     const { authUser } = this.props;
     const userMenuOptions = (
-      <ul className='gx-user-popover'>
+      <ul className="gx-user-popover">
         {/* <li>My Account</li> */}
         {/* <li>Connections</li> */}
-        <li onClick={() => this.props.userSignOut()}>Logout</li>
+        <li onClick={() => this.props.signOut()}>Sign Out</li>
       </ul>
     );
     const username = authUser
@@ -18,20 +18,20 @@ class UserProfile extends Component {
       : 'Dear Mr. User';
 
     return (
-      <div className='gx-flex-row gx-align-items-center gx-mb-4 gx-avatar-row'>
+      <div className="gx-flex-row gx-align-items-center gx-mb-4 gx-avatar-row">
         <Popover
-          placement='bottomRight'
+          placement="bottomRight"
           content={userMenuOptions}
-          trigger='click'
+          trigger="click"
         >
           <Avatar
-            src='https://via.placeholder.com/150x150'
-            className='gx-size-40 gx-pointer gx-mr-3'
-            alt=''
+            src="https://via.placeholder.com/150x150"
+            className="gx-size-40 gx-pointer gx-mr-3"
+            alt=""
           />
-          <span className='gx-avatar-name'>
+          <span className="gx-avatar-name">
             {username}
-            <i className='icon icon-chevron-down gx-fs-xxs gx-ml-2' />
+            <i className="icon icon-chevron-down gx-fs-xxs gx-ml-2" />
           </span>
         </Popover>
       </div>
@@ -44,7 +44,11 @@ const mapStateToProps = ({ auth }) => {
   return { authUser };
 };
 
+const actions = {
+  signOut
+};
+
 export default connect(
   mapStateToProps,
-  { userSignOut }
+  actions
 )(UserProfile);

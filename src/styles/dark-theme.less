@@ -22,6 +22,13 @@ body.dark-theme {
   color: @dark-theme-text-color;
   background-color: @dark-theme-primary-color;
 
+  & input:-internal-autofill-selected,
+  input:-webkit-autofill {
+    //transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: @dark-theme-text-color;
+    //background: transparent;
+  }
+
   & .ant-empty {
     &-description {
       color: @dark-theme-text-color;

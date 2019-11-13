@@ -7,7 +7,7 @@ import languageData from './languageData';
 import {
   switchLanguage,
   toggleCollapsedNav
-} from '../../appRedux/features/settings/themeSettingsSlice';
+} from '../../redux/features/settings/themeSettingsSlice';
 import SearchBox from 'templateComponents/SearchBox';
 import UserInfo from 'templateComponents/UserInfo';
 import AppNotification from 'templateComponents/AppNotification';
