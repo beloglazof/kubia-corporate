@@ -2,7 +2,7 @@ import React from 'react';
 import {message, Spin} from 'antd';
 // import Auxiliary from "util/Auxiliary";
 import { connect } from 'react-redux';
-import { hideMessage } from 'appRedux/actions/Common';
+import { hideMessage } from 'redux/actions/Common';
 
 class InfoView extends React.Component {
   componentWillReceiveProps(nextProps) {

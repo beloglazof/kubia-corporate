@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   changeNavStyle,
   toggleCollapsedNav
-} from '../../appRedux/features/settings/themeSettingsSlice';
+} from '../../redux/features/settings/themeSettingsSlice';
 import {
   NAV_STYLE_DRAWER,
   NAV_STYLE_FIXED,

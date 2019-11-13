@@ -2,7 +2,8 @@ import axios from 'axios';
 import { message } from 'antd';
 import Cookies from 'js-cookie';
 import { store } from '../index';
-import { userSignOut } from '../appRedux/actions';
+import { removeSession } from '../redux/features/session/sessionSlice';
+import { resetState } from '../redux/reducers';
 
 const API_PATH = `https://sandbox.api.quancy.com.sg/v1`;
 
@@ -22,10 +23,10 @@ const handleRequest = request => {
 
 const handleSuccess = response => response;
 const handleError = err => {
-  // console.log(err.toJSON());
   const status = err?.response?.status;
   if (status === 403) {
-    store.dispatch(userSignOut());
+    store.dispatch(removeSession());
+    store.dispatch(resetState());
   }
   return Promise.reject(err);
 };

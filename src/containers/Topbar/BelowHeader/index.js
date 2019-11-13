@@ -20,7 +20,7 @@ import MailNotification from 'templateComponents/MailNotification';
 import {
   switchLanguage,
   toggleCollapsedNav
-} from '../../../appRedux/features/settings/themeSettingsSlice';
+} from '../../../redux/features/settings/themeSettingsSlice';
 import HorizontalNav from '../HorizontalNav';
 import { Link } from 'react-router-dom';
 import IntlMessages from 'util/IntlMessages';

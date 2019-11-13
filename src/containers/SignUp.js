@@ -3,7 +3,7 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { userSignUp } from '../appRedux/actions/Auth';
+// import { userSignUp } from '../redux/actions/Auth';
 
 import IntlMessages from 'util/IntlMessages';
 import InfoView from 'templateComponents/InfoView';
@@ -133,5 +133,5 @@ const mapStateToProps = ({ auth }) => {
 
 export default connect(
   mapStateToProps,
-  { userSignUp }
+  // { userSignUp }
 )(WrappedSignUpForm);

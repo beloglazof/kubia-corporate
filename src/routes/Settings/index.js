@@ -7,7 +7,7 @@ import { getSessions, killSession } from '../../api';
 import { singaporeDateTimeFormat } from '../../util/config';
 import styles from './settings.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstPagePath } from '../../appRedux/features/settings/settingsSlice';
+import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
 

@@ -6,7 +6,7 @@ import SidebarContent from './SidebarContent';
 import {
   toggleCollapsedNav,
   updateWindowWidth
-} from '../../appRedux/features/settings/themeSettingsSlice';
+} from '../../redux/features/settings/themeSettingsSlice';
 import {
   NAV_STYLE_DRAWER,
   NAV_STYLE_FIXED,

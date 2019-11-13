@@ -1,16 +1,15 @@
 import { ConfigProvider } from 'antd';
-import { setInitUrl } from 'appRedux/actions/Auth';
+import AppLocale from 'lngProvider';
+import React, { Component } from 'react';
+import { IntlProvider } from 'react-intl';
+import { connect, useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+
 import {
   changeLayoutType,
   changeNavStyle,
   setThemeType
-} from '../../appRedux/features/settings/themeSettingsSlice';
-import AppLocale from 'lngProvider';
-import React, { Component } from 'react';
-import { IntlProvider } from 'react-intl';
-import { connect } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import URLSearchParams from 'url-search-params';
+} from '../../redux/features/settings/themeSettingsSlice';
 
 import {
   LAYOUT_TYPE_BOXED,
@@ -24,26 +23,29 @@ import {
   THEME_TYPE_DARK
 } from '../../constants/ThemeSetting';
 import SignIn from '../SignIn';
-import SignUp from '../SignUp';
+// import SignUp from '../SignUp';
 import MainApp from './MainApp';
 
-const RestrictedRoute = ({ component: Component, token, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      token ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/signin',
-            state: { from: props.location }
-          }}
-        />
-      )
-    }
-  />
-);
+const RestrictedRoute = ({ component: Component, ...rest }) => {
+  const token = useSelector(({ session }) => session.token);
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        token ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/sign-in',
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
 class App extends Component {
   setLayoutType = layoutType => {
@@ -78,42 +80,21 @@ class App extends Component {
     }
   };
 
-  componentDidMount() {
-    // if (this.props.initURL === '') {
-    //   this.props.setInitUrl(this.props.history.location.pathname);
-    // }
-    const { history, token, location } = this.props;
-
-    if (location.pathname === '/') {
-      if (token === null) {
-        history.push('/signin');
-      }
-    }
-    // const params = new URLSearchParams(this.props.location.search);
-    // if (params.has('theme')) {
-    //   this.props.setThemeType(params.get('theme'));
-    // }
-    // if (params.has('nav-style')) {
-    //   this.props.onNavStyleChange(params.get('nav-style'));
-    // }
-    // if (params.has('layout-type')) {
-    //   this.props.onLayoutTypeChange(params.get('layout-type'));
-    // }
-  }
+  // componentDidMount() {
+  //   const { history, token, location } = this.props;
+  //   if (location.pathname === '/') {
+  //     if (token === null) {
+  //       history.push('/sign-in');
+  //     }
+  //   }
+  // }
 
   render() {
-    const {
-      match,
-      themeType,
-      layoutType,
-      navStyle,
-      locale,
-      token
-    } = this.props;
+    const { match, themeType, layoutType, navStyle, locale } = this.props;
     if (themeType === THEME_TYPE_DARK) {
       document.body.classList.add('dark-theme');
     }
-    
+
     this.setLayoutType(layoutType);
 
     this.setNavStyle(navStyle);
@@ -126,13 +107,9 @@ class App extends Component {
           messages={currentAppLocale.messages}
         >
           <Switch>
-            <Route exact path="/signin" component={SignIn} />
-            <Route exact path="/signup" component={SignUp} />
-            <RestrictedRoute
-              path={`${match.url}`}
-              token={token}
-              component={MainApp}
-            />
+            <Route exact path="/sign-in" component={SignIn} />
+            {/*<Route exact path="/sign-up" component={SignUp} />*/}
+            <RestrictedRoute path={`${match.url}`} component={MainApp} />
           </Switch>
         </IntlProvider>
       </ConfigProvider>
@@ -140,17 +117,17 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ themeSettings, auth }) => {
+const mapStateToProps = ({ themeSettings, session }) => {
   const { locale, navStyle, themeType, layoutType } = themeSettings;
-  const { authUser, token, initURL } = auth;
-  return { locale, token, navStyle, themeType, layoutType, authUser, initURL };
+  const { token } = session;
+  return { locale, token, navStyle, themeType, layoutType };
+};
+const actions = {
+  setThemeType,
+  changeNavStyle,
+  changeLayoutType
 };
 export default connect(
   mapStateToProps,
-  {
-    setInitUrl,
-    setThemeType,
-    changeNavStyle,
-    changeLayoutType
-  }
+  actions
 )(App);
