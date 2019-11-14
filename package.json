@@ -61,6 +61,8 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "deploy:corporate": "cp -r build/* /var/www/dev.account3.quancy.com.sg/public_html",
+    "deploy:person": "cp -r build/* /var/www/dev.account2.quancy.com.sg/public_html",
     "test": "react-app-rewired --env=jsdom"
   },
   "devDependencies": {
