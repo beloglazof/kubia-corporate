@@ -168,17 +168,17 @@ const PaymentForm = ({ form, history }) => {
   };
 
   const formLayoutProps = {
-    layout: 'horizontal',
-
+    labelCol: {
+      xs: { span: 8 },
+      sm: { span: 4 },
+      md: { span: 4 }
+    },
     wrapperCol: {
       xs: { span: 24 },
       sm: { span: 12 },
-      md: { span: 8 }
+      md: { span: 12 }
     },
-    labelCol: {
-      xs: { span: 12 },
-      sm: { span: 6 }
-    }
+    labelAlign: 'left'
   };
 
   const submitButtonLayoutProps = {
