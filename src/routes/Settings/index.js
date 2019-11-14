@@ -75,21 +75,16 @@ const Settings = ({}) => {
   useEffect(() => {
     async function fetchSessions() {
       const fetchedSessions = await getSessions();
-      if (!fetchedSessions) return;
-      const keyedSessions = fetchedSessions.map(session => ({
-        ...session,
-        key: uniqueId()
-      }));
-      setSessions(keyedSessions);
-      // console.log(fetchedSessions);
+      setSessions(fetchedSessions.reverse());
     }
 
     fetchSessions();
   }, []);
 
   const formLayoutProps = {
-    wrapperCol: { xs: 12, sm: 6 },
-    labelCol: { xs: 12, sm: 6 }
+    labelAlign: 'left',
+    labelCol: { xs: 12, sm: 6 },
+    wrapperCol: { xs: 12, sm: 6 }
   };
   const { firstPagePath } = useSelector(state => state.settings);
   const dispatch = useDispatch();
@@ -98,11 +93,12 @@ const Settings = ({}) => {
   };
   return (
     <>
-      <h1>Settings</h1>
       <section className={styles.parameter}>
-        {/*<h2>First page</h2>*/}
-        <Divider orientation={'left'} style={{ fontSize: '1.4em' }}>
-          First page
+        <Divider
+          orientation={'left'}
+          style={{ fontSize: '1.4em', margin: '1.3em 0' }}
+        >
+          Settings
         </Divider>
         <Form {...formLayoutProps}>
           <Form.Item label="Select your first page">
@@ -121,7 +117,6 @@ const Settings = ({}) => {
         </Form>
       </section>
       <section className={styles.parameter}>
-        {/*<h2>Active sessions</h2>*/}
         <Divider orientation={'left'} style={{ fontSize: '1.4em' }}>
           Active sessions
         </Divider>
@@ -132,6 +127,9 @@ const Settings = ({}) => {
           loading={!sessions}
           pagination={{ pageSize: 5 }}
           rowKey={'id'}
+          rowClassName={(record, index) => {
+            if (record.current) return styles.current
+          }}
           bordered
         />
       </section>
