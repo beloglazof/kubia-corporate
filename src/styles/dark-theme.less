@@ -1053,11 +1053,13 @@ body.dark-theme {
 
   & .ant-table {
     color: @dark-theme-text-color;
+
     &-placeholder {
       background: @dark-theme-component-background;
       color: @dark-theme-text-color;
       border-top-color: @dark-theme-border-color;
     }
+
     &-thead > tr > th {
       background: lighten(@dark-theme-component-background, 5%);
       color: @dark-theme-text-color;
@@ -1086,6 +1088,7 @@ body.dark-theme {
 
     &-small {
       border-color: @dark-theme-border-color;
+
       & .ant-table-content {
         border-color: @dark-theme-border-color;
       }
@@ -1236,9 +1239,11 @@ body.dark-theme {
     &-item {
       background-color: darken(@dark-theme-component-background, 5%);
       border-color: @dark-theme-border-color;
+
       & a {
         color: darken(@dark-theme-text-color, 20%);
       }
+
       &-active a,
       &:hover a,
       &:focus a {
@@ -1445,7 +1450,7 @@ body.dark-theme {
   & .ant-descriptions {
     &-item-label,
     &-item-content {
-      color: @dark-theme-text-color
+      color: @dark-theme-text-color;
     }
   }
 
@@ -1454,17 +1459,18 @@ body.dark-theme {
     &-footer {
       border-color: @dark-theme-border-color;
     }
+
     &-header,
     &-body,
     &-confirm-body,
     &-footer,
     &-title,
     &-confirm-title,
-    &-confirm-content
-    {
+    &-confirm-content {
       background-color: @dark-theme-component-background;
       color: @dark-theme-text-color;
     }
+
     &-close {
       color: @dark-theme-text-color;
     }
@@ -1987,19 +1993,18 @@ body.dark-theme {
         color: @dark-theme-text-color;
       }
 
-      &-checked {
+      &-checked:not(.ant-radio-button-wrapper-disabled) {
         box-shadow: none;
         border-color: lighten(@dark-theme-component-background, 50%);
         color: lighten(@dark-theme-component-background, 50%);
 
-        &:hover,
-        &:focus {
-          color: @dark-theme-text-color;
-        }
-
         &:first-child {
           border-color: lighten(@dark-theme-component-background, 50%);
           color: lighten(@dark-theme-component-background, 50%);
+        }
+        &:hover,
+        &:focus {
+          color: @dark-theme-text-color;
         }
       }
 
@@ -2023,15 +2028,17 @@ body.dark-theme {
       &:hover,
       &:focus {
         color: lighten(@dark-theme-component-background, 10%);
+        border-color: lighten(@dark-theme-border-color, 10%);
       }
 
-      &.ant-radio-button-wrapper-checked {
+      &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
         color: @dark-theme-text-color;
         background-color: @cyan-color;
-
         &:hover,
         &:focus {
           color: @white-color;
+          border-color: @white-color;
+          box-shadow: none;
         }
       }
     }
