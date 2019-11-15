@@ -1,6 +1,6 @@
 import { createSlice } from 'redux-starter-kit';
 import Cookies from 'js-cookie';
-import { logout, tokenObtain } from '../../../api';
+import { logout, tokenObtain, tokenRefresh } from '../../../api';
 import { setUser } from '../user/userSlice';
 import { resetState } from '../../reducers';
 
@@ -46,4 +46,11 @@ export const signOut = () => async dispatch => {
   await logout();
   dispatch(removeSession());
   dispatch(resetState());
+};
+
+export const getNewToken = () => async dispatch => {
+  const params = { refresh_token: storageRefreshToken };
+  const session = await tokenRefresh(params);
+  const { token, refresh_token } = session;
+  dispatch(setSession({ token, refresh_token }));
 };
