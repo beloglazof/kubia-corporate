@@ -24,9 +24,14 @@ const handleRequest = request => {
 const handleSuccess = response => response;
 const handleError = err => {
   const status = err?.response?.status;
-  if (status === 403) {
-    store.dispatch(removeSession());
-    store.dispatch(resetState());
+  switch (status) {
+    case 403:
+    case 401:
+      store.dispatch(removeSession());
+      store.dispatch(resetState());
+      break;
+    default:
+      break;
   }
   return Promise.reject(err);
 };
@@ -35,11 +40,8 @@ instance.interceptors.request.use(handleRequest);
 instance.interceptors.response.use(handleSuccess, handleError);
 
 const showErrorMessage = err => {
-  const { response } = err;
-  if (!response) return;
-  const { data } = response;
-  if (!data) return;
-  const { error } = data;
+  const error = err?.response?.data?.error;
+
   if (!error || error.length <= 0) return;
   const errorItem = error[0];
   message.error(errorItem.message);
