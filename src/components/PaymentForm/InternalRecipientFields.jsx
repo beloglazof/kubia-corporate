@@ -1,6 +1,7 @@
 import { usersCheck } from '../../api';
 import { Form, Input } from 'antd';
 import React, { useState } from 'react';
+import { PHONE_NUMBER_LENGTH } from '../../constants';
 
 const InternalRecipientFields = ({ form }) => {
   const [user, setUser] = useState();
@@ -9,11 +10,14 @@ const InternalRecipientFields = ({ form }) => {
   const formatPhone = value => value && value.replace(/\+65|65/g, '');
 
   const validatePhone = async (rule, value, callback) => {
-    console.log(value);
-    const fetchedUser = await usersCheck(`65${value}`, false);
-    setUser(fetchedUser);
+    if (value.length !== PHONE_NUMBER_LENGTH) {
+      return callback('Not enough digits in phone number');
+    }
 
-    if (fetchedUser && fetchedUser.phone === value) {
+    const user = await usersCheck(`65${value}`, false);
+    setUser(user);
+
+    if (user && user.phone === value) {
       callback();
     } else {
       callback('Phone not found');
