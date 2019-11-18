@@ -12,7 +12,6 @@ const instance = axios.create({
   headers: {
     'Content-Type': 'application/json'
   },
-  validateStatus: status => status < 400
 });
 
 const handleRequest = request => {

@@ -1,5 +1,6 @@
 import { get, patch, post } from './config';
-export const getDesktopMainScreen = async () => await get('compose/desktop-main-screen')
+export const getDesktopMainScreen = async () =>
+  await get('compose/desktop-main-screen');
 export const usersCheck = async (phone, notifyError) =>
   await get('users/check', { phone }, notifyError);
 
@@ -63,3 +64,5 @@ export const getCardsNew = async request_id =>
 
 export const cardsRequestState = async () =>
   await get('/cards/request_states', {});
+
+export const getTransactions = async () => await get('/transactions');

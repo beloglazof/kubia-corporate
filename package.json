@@ -21,6 +21,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.22.2",
     "nprogress": "^0.2.0",
+    "object-resolve-path": "^1.1.1",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-big-calendar": "^0.19.2",
