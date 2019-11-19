@@ -9,7 +9,8 @@ export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'dollar' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
-  
+  { name: 'transactions', path: '/transactions', iconName: '' },
+  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' },
 ];
 
 export const renderNavigationItems = () => {
@@ -40,6 +41,19 @@ const App = ({ match }) => {
         <Route
           path={`/settings`}
           component={asyncComponent(() => import('./Settings'))}
+        />
+        <Route
+          path={`/transactions`}
+          component={asyncComponent(() => import('../components/Transactions'))}
+        />
+        <Route
+          exact
+          path={`/beneficiaries`}
+          component={asyncComponent(() => import('./Beneficiaries'))}
+        />
+        <Route
+          path={`/beneficiaries/add`}
+          component={asyncComponent(() => import('../components/BeneficiaryAddForm'))}
         />
       </Switch>
     </div>

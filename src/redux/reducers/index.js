@@ -4,8 +4,9 @@ import screens from '../features/screens/screensSlice';
 import accounts from '../features/accounts/accountsSlice';
 import themeSettings from '../features/settings/themeSettingsSlice';
 import settings from '../features/settings/settingsSlice';
-import session, { removeSession } from '../features/session/sessionSlice';
+import session from '../features/session/sessionSlice';
 import user from '../features/user/userSlice';
+import transactions from './Transactions';
 
 const reducers = combineReducers({
   commonData: Common,
@@ -14,10 +15,12 @@ const reducers = combineReducers({
   themeSettings,
   settings,
   session,
-  user
+  user,
+  transactions
 });
 
 const RESET_STATE = 'RESET_STATE';
+
 export const resetState = () => ({ type: RESET_STATE });
 
 const rootReducer = (state, action) => {

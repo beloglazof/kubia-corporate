@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Form, Select, Table } from 'antd';
-import { uniqueId } from 'lodash';
 import { format, parseISO } from 'date-fns';
 
 import { getSessions, killSession } from '../../api';
@@ -75,7 +74,9 @@ const Settings = ({}) => {
   useEffect(() => {
     async function fetchSessions() {
       const fetchedSessions = await getSessions();
-      setSessions(fetchedSessions.reverse());
+      if (fetchedSessions) {
+        setSessions(fetchedSessions.reverse());
+      }
     }
 
     fetchSessions();
@@ -127,8 +128,8 @@ const Settings = ({}) => {
           loading={!sessions}
           pagination={{ pageSize: 5 }}
           rowKey={'id'}
-          rowClassName={(record, index) => {
-            if (record.current) return styles.current
+          rowClassName={record => {
+            if (record.current) return styles.current;
           }}
           bordered
         />

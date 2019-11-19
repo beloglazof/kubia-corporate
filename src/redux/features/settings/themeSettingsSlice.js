@@ -27,7 +27,6 @@ const themeSettingsSlice = createSlice({
   },
   reducers: {
     toggleCollapsedNav(state, action) {
-      console.log(action);
       state.navCollapsed = action.payload;
     },
     updateWindowWidth(state, action) {
