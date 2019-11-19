@@ -71,3 +71,7 @@ export const getBeneficiary = async id => await get('/beneficiary', { id });
 export const getBeneficiaryFields = async () =>
   await get('/beneficiary/fields');
 export const postBeneficiary = async json => await post('/beneficiary', json);
+
+export const getCountries = async () => await get('/countries');
+
+export const getCurrencies = async () => await get('/currencies');
