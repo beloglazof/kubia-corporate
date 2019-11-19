@@ -55,6 +55,7 @@
     "redux-thunk": "^2.3.0",
     "rheostat": "^3.0.1",
     "slick-carousel": "^1.8.1",
+    "sunflower-antd": "^0.8.0",
     "typeface-roboto": "^0.0.75",
     "url-search-params": "^1.1.0",
     "victory": "^0.27.2"

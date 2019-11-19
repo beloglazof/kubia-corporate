@@ -10,6 +10,7 @@ export const navItems = [
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: '' },
+  { name: 'counterparties', path: '/counterparties', iconName: 'user' },
 ];
 
 export const renderNavigationItems = () => {
@@ -44,6 +45,15 @@ const App = ({ match }) => {
         <Route
           path={`/transactions`}
           component={asyncComponent(() => import('../components/Transactions'))}
+        />
+        <Route
+          exact
+          path={`/counterparties`}
+          component={asyncComponent(() => import('./Counterparties'))}
+        />
+        <Route
+          path={`/counterparties/add`}
+          component={asyncComponent(() => import('../components/CounterpartyAddForm'))}
         />
       </Switch>
     </div>

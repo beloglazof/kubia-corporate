@@ -66,3 +66,8 @@ export const cardsRequestState = async () =>
   await get('/cards/request_states', {});
 
 export const getTransactions = async () => await get('/transactions');
+
+export const getBeneficiary = async id => await get('/beneficiary', { id });
+export const getBeneficiaryFields = async () =>
+  await get('/beneficiary/fields');
+export const postBeneficiary = async json => await post('/beneficiary', json);
