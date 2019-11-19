@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Descriptions, List } from 'antd';
-import CounterpartyAddForm from '../../components/CounterpartyAddForm';
+import CounterpartyAddForm from '../../components/BeneficiaryAddForm';
 import { getBeneficiary } from '../../api';
 import { startCase } from 'lodash';
 
 // TODO rename counterparty to beneficiary
-const Counterparties = ({ history }) => {
+const Beneficiaries = ({ history }) => {
   const handleAddClick = () => {
-    history.push('counterparties/add');
+    history.push('beneficiaries/add');
   };
 
-  const [counterparties, setCounterparties] = useState([]);
+  const [beneficiaries, setBeneficiaries] = useState([]);
   useEffect(() => {
-    const fetchCounterparties = async () => {
+    const fetchBeneficiaries = async () => {
       const fetchedCounterparties = await getBeneficiary();
       if (fetchedCounterparties) {
         const filtered = fetchedCounterparties.filter(
           counterparty => counterparty.accountNumber
         );
         console.log(filtered);
-        setCounterparties(filtered);
+        setBeneficiaries(filtered);
       }
     };
-    fetchCounterparties();
+    fetchBeneficiaries();
   }, []);
 
-  const renderCounterparty = counterparty => {
+  const renderBeneficiary = beneficiary => {
     return (
       <List.Item>
-        <CounterpartyCard counterparty={counterparty} />
+        <CounterpartyCard counterparty={beneficiary} />
       </List.Item>
     );
   };
@@ -38,7 +38,7 @@ const Counterparties = ({ history }) => {
       <Button onClick={handleAddClick} type="primary">
         Add
       </Button>
-      <List dataSource={counterparties} renderItem={renderCounterparty} />
+      <List dataSource={beneficiaries} renderItem={renderBeneficiary} />
     </>
   );
 };
@@ -59,4 +59,4 @@ const CounterpartyCard = ({ counterparty }) => {
   );
 };
 
-export default Counterparties;
+export default Beneficiaries;

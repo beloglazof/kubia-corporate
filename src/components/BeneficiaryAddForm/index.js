@@ -1,8 +1,8 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm, useStepsForm } from 'sunflower-antd';
 import { Button, Form, Input, Result, Select, Steps } from 'antd';
 import { startCase } from 'lodash';
-import { postBeneficiary } from '../../api';
+import { getCountries, postBeneficiary } from '../../api';
 
 const InputItem = ({
   form,
@@ -68,7 +68,7 @@ const TypeSelect = ({ form }) => {
 };
 
 const countries = [{ value: 'SG', title: 'Singapore' }];
-const CountrySelect = ({ form }) => {
+const CountrySelect = ({ form, options }) => {
   return (
     <SelectItem
       form={form}
@@ -80,7 +80,7 @@ const CountrySelect = ({ form }) => {
   );
 };
 
-const BankAccountCountrySelect = ({ form }) => {
+const BankAccountCountrySelect = ({ form, options }) => {
   return (
     <SelectItem
       form={form}
@@ -143,7 +143,7 @@ const NextStepButton = props => {
     </Button>
   );
 };
-const PreStepForm = ({ form, nextStep, setMainFormFields }) => {
+const PreStepForm = ({ form, nextStep, setMainFormFields, countries }) => {
   // const handleSubmit = values => {
   //   const mainFormFields = getMainFormFields(values);
   //   if (!mainFormFields) {
@@ -167,11 +167,14 @@ const PreStepForm = ({ form, nextStep, setMainFormFields }) => {
   //   labelAlign: 'left',
   //   layout: 'horizontal'
   // };
+  console.log(countries);
   const fieldProps = { form };
+  const countryOptions =
+    countries && countries.map(c => ({ value: c.iso2, title: c.name }));
   return (
     <>
-      <CountrySelect {...fieldProps} />
-      <BankAccountCountrySelect {...fieldProps} />
+      <CountrySelect options={countryOptions} {...fieldProps} />
+      <BankAccountCountrySelect options={countryOptions} {...fieldProps} />
       <CurrencySelect {...fieldProps} />
       <TypeSelect {...fieldProps} />
     </>
@@ -235,7 +238,7 @@ const MainStepForm = ({ form, fields, nextStep }) => {
 
 // const MainStep = Form.create()(MainStepForm);
 
-const CounterpartyAddForm = ({ history, form }) => {
+const BeneficiaryAddForm = ({ history, form }) => {
   const goToCounterparties = () => {
     history.push('/counterparties');
   };
@@ -274,30 +277,56 @@ const CounterpartyAddForm = ({ history, form }) => {
     gotoStep(current + 1);
   };
 
+  const [countries, setCountries] = useState([]);
+  useEffect(() => {
+    const fetchCountries = async () => {
+      const fetchedCountries = await getCountries();
+      console.log(fetchedCountries);
+      if (fetchedCountries) {
+        setCountries(fetchedCountries);
+      }
+    };
+    fetchCountries();
+  });
+
   const Step = Steps.Step;
+  const layout = {
+    labelCol: {
+      span: 6
+      // xs: { span: 6 },
+      // sm: { span: 6 }
+    },
+    wrapperCol: {
+      span: 24
+      // xs: { span: 12 },
+      // sm: { span: 12 }
+    },
+    labelAlign: 'left'
+    // layout: 'horizontal'
+  };
   return (
     <>
-      <h1>Add new counterparty</h1>
+      <h1 style={{ marginBottom: '2em' }}>Add new beneficiary</h1>
       <Steps {...stepsProps}>
-        <Step title="First Step" description="Input your basic info" />
+        <Step title="First Step" />
         <Step title="Second Step" />
         <Step title="Success" />
       </Steps>
-      <Form {...formProps}>
-        {current === 0 && <PreStepForm form={form} />}
+      <Form layout="vertical" {...formProps} style={{ margin: '2em 0' }}>
+        {current === 0 && <PreStepForm form={form} countries={countries} />}
         {current === 1 && <MainStepForm form={form} fields={mainFormFields} />}
       </Form>
       {current === 2 && (
         <Result
           status="success"
-          title="Submit is succeed!"
+          title="Beneficiary added!"
           extra={
             <>
               <Button type="primary" onClick={() => gotoStep(0)}>
-                Add another counterparty
+                Add another beneficiary
               </Button>
               <Button onClick={goToCounterparties}>
-                Go to counterparties list
+                Go to beneficiary list
               </Button>
             </>
           }
@@ -317,4 +346,4 @@ const CounterpartyAddForm = ({ history, form }) => {
   );
 };
 
-export default Form.create()(CounterpartyAddForm);
+export default Form.create()(BeneficiaryAddForm);
