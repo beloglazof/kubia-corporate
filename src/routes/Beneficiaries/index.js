@@ -4,7 +4,6 @@ import CounterpartyAddForm from '../../components/BeneficiaryAddForm';
 import { getBeneficiary } from '../../api';
 import { startCase } from 'lodash';
 
-// TODO rename counterparty to beneficiary
 const Beneficiaries = ({ history }) => {
   const handleAddClick = () => {
     history.push('beneficiaries/add');

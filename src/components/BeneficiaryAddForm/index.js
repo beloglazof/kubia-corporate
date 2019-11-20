@@ -48,7 +48,7 @@ const SelectItem = ({ form, label, id, options, required }) => {
     rules.push(requiredRule);
   }
   const renderOption = ({ value, title }) => (
-    <Select.Option value={value}>{title}</Select.Option>
+    <Select.Option value={value} key={value}>{title}</Select.Option>
   );
   const fieldConfig = {
     rules
@@ -85,7 +85,7 @@ const CountrySelect = ({ form, options }) => {
       form={form}
       label="Country"
       id="country"
-      options={countries}
+      options={options}
       required
     />
   );
@@ -97,7 +97,7 @@ const BankAccountCountrySelect = ({ form, options }) => {
       form={form}
       label="Bank Account Country"
       id="bankAccountCountry"
-      options={countries}
+      options={options}
       required
     />
   );
