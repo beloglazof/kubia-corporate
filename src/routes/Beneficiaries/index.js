@@ -18,7 +18,6 @@ const Beneficiaries = ({ history }) => {
         const filtered = fetchedCounterparties.filter(
           counterparty => counterparty.accountNumber
         );
-        console.log(filtered);
         setBeneficiaries(filtered);
       }
     };

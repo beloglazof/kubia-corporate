@@ -1,4 +1,4 @@
-import { createSlice } from 'redux-starter-kit';
+import { createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
 import { logout, tokenObtain, tokenRefresh } from '../../../api';
 import { setUser } from '../user/userSlice';
