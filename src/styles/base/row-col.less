@@ -7,19 +7,19 @@
 
 .make-grid-columns() {
   .col(@index) {
-    @item: ~".@{ant-prefix}-col-@{index}, .@{ant-prefix}-col-xs-@{index}, .@{ant-prefix}-col-sm-@{index}, .@{ant-prefix}-col-md-@{index}, .@{ant-prefix}-col-lg-@{index}";
+    @item: ~'.@{ant-prefix}-col-@{index}, .@{ant-prefix}-col-xs-@{index}, .@{ant-prefix}-col-sm-@{index}, .@{ant-prefix}-col-md-@{index}, .@{ant-prefix}-col-lg-@{index}';
     .col((@index + 1), @item);
   }
   .col(@index, @list) when (@index =< @grid-columns) {
-    @item: ~".@{ant-prefix}-col-@{index}, .@{ant-prefix}-col-xs-@{index}, .@{ant-prefix}-col-sm-@{index}, .@{ant-prefix}-col-md-@{index}, .@{ant-prefix}-col-lg-@{index}";
-    .col((@index + 1), ~"@{list}, @{item}");
+    @item: ~'.@{ant-prefix}-col-@{index}, .@{ant-prefix}-col-xs-@{index}, .@{ant-prefix}-col-sm-@{index}, .@{ant-prefix}-col-md-@{index}, .@{ant-prefix}-col-lg-@{index}';
+    .col((@index + 1), ~'@{list}, @{item}');
   }
   .col(@index, @list) when (@index > @grid-columns) {
     @{list} {
       // Prevent columns from collapsing when empty
       padding-left: (@grid-gutter-width / 2);
       padding-right: (@grid-gutter-width / 2);
-      float: none !important;
+      float: none;
     }
   }
   .col(1);
@@ -48,4 +48,3 @@
     width: 100%;
   }
 }
-
