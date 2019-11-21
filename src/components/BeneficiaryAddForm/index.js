@@ -53,6 +53,8 @@ const BeneficiaryAddForm = ({ history, form }) => {
     gotoStep(current + 1);
   };
 
+  
+  // TODO useAsync
   const [countries, setCountries] = useState([]);
   useEffect(() => {
     const fetchCountries = async () => {
@@ -64,7 +66,8 @@ const BeneficiaryAddForm = ({ history, form }) => {
     };
     fetchCountries();
   }, []);
-
+  
+  // TODO useAsync
   const [currencies, setCurrencies] = useState([]);
   useEffect(() => {
     const fetchCurrencies = async () => {
