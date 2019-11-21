@@ -1,4 +1,4 @@
-import { createSlice } from 'redux-starter-kit';
+import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../../util/Api';
 import { setAccounts } from '../accounts/accountsSlice';
 import { getDesktopMainScreen } from '../../../api';

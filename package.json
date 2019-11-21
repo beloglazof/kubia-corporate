@@ -1,5 +1,5 @@
 {
-  "name": "q-web",
+  "name": "q-web-corporate",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
@@ -7,6 +7,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-brands-svg-icons": "^5.11.2",
     "@fortawesome/react-fontawesome": "^0.1.6",
+    "@reduxjs/toolkit": "^1.0.4",
     "amcharts3": "^3.21.13",
     "antd": "^3.11.6",
     "antd-theme-webpack-plugin": "^1.1.6",
@@ -51,10 +52,10 @@
     "react-star-rating-component": "^1.4.1",
     "recharts": "^1.0.1",
     "redux": "^4.0.0",
-    "redux-starter-kit": "^0.8.1",
     "redux-thunk": "^2.3.0",
     "rheostat": "^3.0.1",
     "slick-carousel": "^1.8.1",
+    "sunflower-antd": "^0.8.0",
     "typeface-roboto": "^0.0.75",
     "url-search-params": "^1.1.0",
     "victory": "^0.27.2"

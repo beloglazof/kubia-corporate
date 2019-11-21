@@ -11,7 +11,7 @@ const instance = axios.create({
   baseURL: API_PATH,
   headers: {
     'Content-Type': 'application/json'
-  },
+  }
 });
 
 const handleRequest = request => {
@@ -50,6 +50,7 @@ export const get = async (url, params, notifyError = true) => {
   try {
     const response = await instance.get(url, { params });
     const { data } = response;
+    if (!data) return response;
     return data;
   } catch (e) {
     if (notifyError) {

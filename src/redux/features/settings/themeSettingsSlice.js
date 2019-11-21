@@ -1,4 +1,4 @@
-import { createSlice } from 'redux-starter-kit';
+import { createSlice } from '@reduxjs/toolkit';
 import {
   LAYOUT_TYPE_FULL,
   NAV_STYLE_DARK_HORIZONTAL,

@@ -63,8 +63,8 @@ const Account = ({ account }) => {
             </Button>
           </Col>
         </Row>
-        {cards.length > 0 && renderCards(cards)}
-        {inactiveCards.length > 0 && renderInactiveCards(inactiveCards)}
+        {/*{cards.length > 0 && renderCards(cards)}*/}
+        {/*{inactiveCards.length > 0 && renderInactiveCards(inactiveCards)}*/}
       </UiCard>
     </List.Item>
   );
