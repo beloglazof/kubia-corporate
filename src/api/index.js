@@ -86,27 +86,29 @@ export const getCurrencies = async () => await get('/currencies');
 
 export const fetchPaymentQuotesMock = async () =>
   await new Promise(resolve =>
-    setTimeout(
-      () => ({
-        deliveryDate: '2018-09-27',
-        buyCurrency: 'IDR',
-        sellCurrency: 'SGD',
-        buyAmount: 1000,
-        sellAmount: 0.1,
-        rate: 10898,
-        feeRate: 0,
-        totalAmount: 0.1,
-        quoteId: '5595393c-9294-4a60-a1e7-97fb4981b9a3',
-        conversionDate: '2018-09-27',
-        conversionFee: 0,
-        paymentFee: 0,
-        totalFee: 0,
-        conversionFeeRate: 0,
-        paymentFeeRate: 0,
-        totalFeeRate: 0,
-        expiresAt: '2018-09-27T00:35:45Z'
-      }),
-      1000
+    setTimeout(() =>
+      resolve(
+        {
+          deliveryDate: '2018-09-27',
+          buyCurrency: 'IDR',
+          sellCurrency: 'SGD',
+          buyAmount: 1000,
+          sellAmount: 0.1,
+          rate: 10898,
+          feeRate: 0,
+          totalAmount: 0.1,
+          quoteId: '5595393c-9294-4a60-a1e7-97fb4981b9a3',
+          conversionDate: '2018-09-27',
+          conversionFee: 0,
+          paymentFee: 0,
+          totalFee: 0,
+          conversionFeeRate: 0,
+          paymentFeeRate: 0,
+          totalFeeRate: 0,
+          expiresAt: '2018-09-27T00:35:45Z'
+        },
+        1000
+      )
     )
   );
 

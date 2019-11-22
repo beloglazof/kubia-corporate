@@ -24,8 +24,10 @@ const handleSuccess = response => response;
 const handleError = err => {
   const status = err?.response?.status;
   switch (status) {
-    case 403:
     case 401:
+      store.dispatch(removeSession());
+      break;
+    case 403:
       store.dispatch(removeSession());
       store.dispatch(resetState());
       break;
