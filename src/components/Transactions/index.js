@@ -2,23 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  Spin,
-  Tabs,
-  Radio,
+  Anchor,
+  BackTop,
+  Card,
   Divider,
   Icon,
-  Tooltip,
-  Card,
-  BackTop,
-  Anchor,
-  Select
+  Radio,
+  Select,
+  Spin,
+  Tabs,
+  Tooltip
 } from 'antd';
-import TrasactionDetails from './TransactionDetails/TransactionDetails'; //  Transaction details modal
-
+import TransactionDetails from './TransactionDetails/TransactionDetails'; //  Transaction details modal
 import { fetchList } from '../../redux/actions';
-
 // import 'antd/dist/antd.css'; //  Default Ant Design styles
-import './Transactions.css'; //  Additional table styles
+import './Transactions.css';
 
 const { Link } = Anchor;
 const { Option } = Select;
@@ -64,35 +62,13 @@ const Transactions = ({ transList, fetchList }) => {
     8: 'August',
     9: 'September',
     10: 'October',
-    11: 'Noveber',
+    11: 'November',
     12: 'December'
   };
   const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
   const LINKED_ACC_TYPES = {
     DEPOSIT: 'Sender',
     WITHDRAWAL: 'Recipient'
-  };
-
-  //  Date conversion to readable format
-  const convertDate = date => {
-    const month =
-      new Date(date).getMonth() + 1 < 10
-        ? `0${new Date(date).getMonth()}`
-        : new Date(date).getMonth() + 1;
-    const transDate = `${new Date(date).getDate()}.${month}.${new Date(
-      date
-    ).getFullYear()}`;
-    return transDate;
-  };
-
-  //  Time conversion to readable format
-  const convertTime = time => {
-    const minutes =
-      new Date(time).getMinutes() < 10
-        ? `0${new Date(time).getMinutes()}`
-        : new Date(time).getMinutes();
-    const transTime = `${new Date(time).getHours()}:${minutes}`;
-    return transTime;
   };
 
   //  Transaction details modal toggler
@@ -322,12 +298,10 @@ const Transactions = ({ transList, fetchList }) => {
           </Tabs>
         </Spin>
       </div>
-      <TrasactionDetails
+      <TransactionDetails
         modalShown={modalShown}
         modalData={modalData}
         toggleModal={toggleModal}
-        convertDate={convertDate}
-        convertTime={convertTime}
         COLORS={COLORS}
         TRANS_ICONS={TRANS_ICONS}
         LINKED_ACC_TYPES={LINKED_ACC_TYPES}
@@ -346,7 +320,4 @@ const mapDispatchToProps = dispatch => ({
   fetchList: () => dispatch(fetchList())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
