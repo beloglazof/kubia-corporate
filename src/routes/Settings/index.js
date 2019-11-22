@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Divider, Form, Select, Table } from 'antd';
-import { format, parseISO } from 'date-fns';
 
 import { getSessions, killSession } from '../../api';
-import { singaporeDateTimeFormat } from '../../util/config';
 import styles from './settings.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
+import { formatISODate } from '../../util';
 
-const formatDate = date => {
-  if (!date) return;
-  const parsedDate = parseISO(date);
-  if (parsedDate) return format(parsedDate, singaporeDateTimeFormat.medium);
-};
 const CloseSessionButton = ({ sessionId, handleClose }) => {
   const handleClick = () => {
     handleClose(sessionId);
@@ -54,13 +48,13 @@ const Settings = ({}) => {
       title: 'Creation Date',
       dataIndex: 'created',
       key: 'created',
-      render: formatDate
+      render: v => formatISODate(v)
     },
     {
       title: 'Expiration Date',
       dataIndex: 'expire',
       key: 'expire',
-      render: formatDate
+      render: v => formatISODate(v)
     },
     {
       title: 'Action',
