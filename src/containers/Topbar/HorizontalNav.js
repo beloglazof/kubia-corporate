@@ -30,12 +30,13 @@ class HorizontalNav extends Component {
   };
 
   render() {
-    const { pathname, navStyle } = this.props;
-    const selectedKeys = pathname.substr(1);
-    const defaultOpenKeys = selectedKeys.split('/')[1];
+    const { location } = this.props;
+    const { pathname } = location;
+    const selectedKeys = pathname;
+    // const defaultOpenKeys = selectedKeys[1];
     return (
       <Menu
-        defaultOpenKeys={[defaultOpenKeys]}
+        // defaultOpenKeys={[defaultOpenKeys]}
         selectedKeys={[selectedKeys]}
         mode="horizontal"
       >

@@ -80,10 +80,10 @@ export class Sidebar extends Component {
             onClose={this.onToggleCollapsedNav.bind(this)}
             visible={navCollapsed}
           >
-            <SidebarContent />
+            <SidebarContent location={this.props.location} />
           </Drawer>
         ) : (
-          <SidebarContent />
+          <SidebarContent location={this.props.location} />
         )}
       </Sider>
     );

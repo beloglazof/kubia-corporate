@@ -53,7 +53,7 @@ export class MainApp extends Component {
       case NAV_STYLE_DEFAULT_HORIZONTAL:
         return <HorizontalDefault />;
       case NAV_STYLE_DARK_HORIZONTAL:
-        return <HorizontalDark />;
+        return <HorizontalDark location={this.props.location} />;
       case NAV_STYLE_INSIDE_HEADER_HORIZONTAL:
         return <InsideHeader />;
       case NAV_STYLE_ABOVE_HEADER:
@@ -77,7 +77,7 @@ export class MainApp extends Component {
 
   getSidebar = (navStyle, width) => {
     if (width < TAB_SIZE) {
-      return <Sidebar />;
+      return <Sidebar location={this.props.location} />;
     }
     switch (navStyle) {
       case NAV_STYLE_FIXED:

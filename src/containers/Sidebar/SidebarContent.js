@@ -36,9 +36,8 @@ class SidebarContent extends Component {
   };
 
   render() {
-    const { themeType, navStyle, pathname } = this.props;
-    const selectedKeys = pathname.substr(1);
-    const defaultOpenKeys = selectedKeys.split('/')[1];
+    const { themeType, navStyle, location } = this.props;
+    const selectedKeys = location.pathname;
     return (
       <Auxiliary>
         <SidebarLogo />
@@ -53,7 +52,6 @@ class SidebarContent extends Component {
           </div>
           <CustomScrollbars className="gx-layout-sider-scrollbar">
             <Menu
-              defaultOpenKeys={[defaultOpenKeys]}
               selectedKeys={[selectedKeys]}
               theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
               mode="inline"

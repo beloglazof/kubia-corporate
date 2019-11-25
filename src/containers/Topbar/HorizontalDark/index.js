@@ -212,7 +212,7 @@ class HorizontalDark extends Component {
         <div className="gx-header-horizontal-nav gx-d-none gx-d-lg-block">
           <div className="gx-container">
             <div className="gx-header-horizontal-nav-flex">
-              <HorizontalNav />
+              <HorizontalNav location={this.props.location} />
               <ul className="gx-header-notifications gx-ml-auto">
                 {/*<li>*/}
                 {/*  <span className='gx-pointer gx-d-block'>*/}
