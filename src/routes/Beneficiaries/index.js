@@ -26,7 +26,7 @@ const Beneficiaries = ({ history }) => {
   const renderBeneficiary = beneficiary => {
     return (
       <List.Item>
-        <CounterpartyCard counterparty={beneficiary} />
+        <BeneficiaryCard beneficiary={beneficiary} />
       </List.Item>
     );
   };
@@ -36,23 +36,65 @@ const Beneficiaries = ({ history }) => {
       <Button onClick={handleAddClick} type="primary">
         Add
       </Button>
-      <List dataSource={beneficiaries} renderItem={renderBeneficiary} />
+      <List
+        dataSource={beneficiaries}
+        renderItem={renderBeneficiary}
+        grid={{
+          gutter: 16,
+          xs: 1,
+          md: 2,
+          lg: 3
+        }}
+      />
     </>
   );
 };
 
-const CounterpartyCard = ({ counterparty }) => {
+const BeneficiaryCard = ({ beneficiary }) => {
+  const visibleFields = new Set([
+    'accountNumber',
+    'companyName',
+    'email',
+    'firstName',
+    'lastName',
+    'country'
+  ]);
   const renderInfo = info => {
     return Object.entries(info)
-      .filter(([name]) => name !== 'id')
+      .filter(([name]) => visibleFields.has(name))
       .map(([name, value]) => {
         const label = startCase(name);
-        return <Descriptions.Item label={label}>{value}</Descriptions.Item>;
+        const span = name === 'email' ? 2 : 1
+        return <Descriptions.Item span={span} label={label}>{value}</Descriptions.Item>;
       });
   };
+  const cardTitle = startCase(beneficiary?.nickname) || null;
+
+  const editBeneficiary = () => {};
+  const beneficiaryDetails = () => {};
+  const deleteBeneficiary = () => {};
+
+  const cardActions = [
+    { name: 'edit', handler: editBeneficiary, icon: 'edit' },
+    { name: 'details', handler: beneficiaryDetails, icon: 'profile' },
+    { name: 'delete', handler: deleteBeneficiary, icon: 'delete' }
+  ].map(({ name, handler, icon }) => {
+    return (
+      <Button type="primary" icon={icon} onClick={handler}>
+        {startCase(name)}
+      </Button>
+    );
+  });
   return (
-    <Card size={'small'}>
-      <Descriptions bordered column={2}>{renderInfo(counterparty)}</Descriptions>
+    <Card
+      title={cardTitle}
+      headStyle={{ fontSize: '1.5em' }}
+      size={'small'}
+      actions={cardActions}
+    >
+      <Descriptions bordered column={2} layout="vertical">
+        {renderInfo(beneficiary)}
+      </Descriptions>
     </Card>
   );
 };

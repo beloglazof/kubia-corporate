@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Descriptions, Divider, Form, Select, Table } from 'antd';
+import {
+  Button,
+  Descriptions,
+  Divider,
+  Form,
+  Radio,
+  Select,
+  Switch,
+  Table
+} from 'antd';
 
 import { getSessions, killSession } from '../../api';
 import styles from './settings.module.css';
@@ -8,6 +17,8 @@ import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { navItems } from '../index';
 import { startCase } from 'lodash/string';
 import { formatISODate } from '../../util';
+import { THEME_TYPE_DARK, THEME_TYPE_LITE } from '../../constants/ThemeSetting';
+import { setThemeType } from '../../redux/features/settings/themeSettingsSlice';
 
 const CloseSessionButton = ({ sessionId, handleClose }) => {
   const handleClick = () => {
@@ -103,6 +114,12 @@ const Settings = ({}) => {
   ];
   const showCloseAllButton = sessions && sessions.length > 0;
   const showSessionsTable = sessions && sessions.length > 0;
+
+  const currentTheme = useSelector(state => state.themeSettings.themeType);
+  const handleThemeChange = event => {
+    const { value } = event.target;
+    dispatch(setThemeType(value));
+  };
   return (
     <>
       <section className={styles.parameter}>
@@ -125,6 +142,15 @@ const Settings = ({}) => {
                 </Select.Option>
               ))}
             </Select>
+          </Form.Item>
+          <Form.Item label="Theme">
+            <Radio.Group
+              onChange={handleThemeChange}
+              defaultValue={currentTheme}
+            >
+              <Radio.Button value={THEME_TYPE_DARK}>Dark</Radio.Button>
+              <Radio.Button value={THEME_TYPE_LITE}>Light</Radio.Button>
+            </Radio.Group>
           </Form.Item>
         </Form>
       </section>
