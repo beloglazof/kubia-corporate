@@ -1,27 +1,40 @@
 import React from 'react';
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
-import asyncComponent from 'util/asyncComponent';
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import { Icon, Menu } from 'antd';
 import { startCase } from 'lodash/string';
 import { useSelector } from 'react-redux';
+
+import Transactions from '../components/Transactions';
+import Accounts from './Accounts';
+import NewPayment from './NewPayment';
+import Settings from './Settings';
+import Beneficiaries from './Beneficiaries';
+import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'dollar' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: '' },
-  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' },
+  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' }
 ];
 
 export const renderNavigationItems = () => {
-  return navItems.map(route => (
-    <Menu.Item key={route.name}>
-      <Link to={route.path}>
-        <Icon type={route.iconName} />
-        {startCase(route.name)}
-      </Link>
-    </Menu.Item>
-  ));
+  const activeStyles = {
+    fontWeight: 'bold'
+  };
+  const renderItem = route => {
+    const showIcon = route.iconName && route.iconName.length > 0;
+    return (
+      <Menu.Item key={route.path}>
+        <NavLink activeStyle={activeStyles} to={route.path}>
+          {showIcon && <Icon type={route.iconName} />}
+          {startCase(route.name)}
+        </NavLink>
+      </Menu.Item>
+    );
+  };
+  return navItems.map(renderItem);
 };
 const App = ({ match }) => {
   const { firstPagePath } = useSelector(state => state.settings);
@@ -29,32 +42,13 @@ const App = ({ match }) => {
   return (
     <div className="gx-main-content-wrapper">
       <Switch>
-        <Route exact path="/" render={() => <Redirect to={firstPagePath} />} />
-        <Route
-          path={`/accounts`}
-          component={asyncComponent(() => import('./Accounts'))}
-        />
-        <Route
-          path={`/new-payment`}
-          component={asyncComponent(() => import('./NewPayment'))}
-        />
-        <Route
-          path={`/settings`}
-          component={asyncComponent(() => import('./Settings'))}
-        />
-        <Route
-          path={`/transactions`}
-          component={asyncComponent(() => import('../components/Transactions'))}
-        />
-        <Route
-          exact
-          path={`/beneficiaries`}
-          component={asyncComponent(() => import('./Beneficiaries'))}
-        />
-        <Route
-          path={`/beneficiaries/add`}
-          component={asyncComponent(() => import('../components/BeneficiaryAddForm'))}
-        />
+        <Redirect exact from="/" to={firstPagePath} />
+        <Route path={`/accounts`} component={Accounts} />
+        <Route path={`/new-payment`} component={NewPayment} />
+        <Route path={`/settings`} component={Settings} />
+        <Route path={`/transactions`} component={Transactions} />
+        <Route exact path={`/beneficiaries`} component={Beneficiaries} />
+        <Route path={`/beneficiaries/add`} component={BeneficiaryAddForm} />
       </Switch>
     </div>
   );
