@@ -6,13 +6,15 @@ import {
   THEME_TYPE_DARK
 } from '../../../constants/ThemeSetting';
 
+const storageTheme = localStorage.getItem('theme');
+
 const themeSettingsSlice = createSlice({
   name: 'screens',
   initialState: {
     navCollapsed: true,
     navStyle: NAV_STYLE_DARK_HORIZONTAL,
     layoutType: LAYOUT_TYPE_FULL,
-    themeType: THEME_TYPE_DARK,
+    themeType: storageTheme || THEME_TYPE_DARK,
     colorSelection: THEME_COLOR_SELECTION_PRESET,
 
     pathname: '',
@@ -34,6 +36,7 @@ const themeSettingsSlice = createSlice({
     },
     setThemeType(state, action) {
       state.themeType = action.payload;
+      localStorage.setItem('theme', action.payload);
     },
     setThemeColorSelection(state, action) {
       state.colorSelection = action.payload;

@@ -20,7 +20,8 @@ import {
   NAV_STYLE_DARK_HORIZONTAL,
   NAV_STYLE_DEFAULT_HORIZONTAL,
   NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
-  THEME_TYPE_DARK
+  THEME_TYPE_DARK,
+  THEME_TYPE_LITE
 } from '../../constants/ThemeSetting';
 import SignIn from '../SignIn';
 // import SignUp from '../SignUp';
@@ -94,6 +95,9 @@ class App extends Component {
     if (themeType === THEME_TYPE_DARK) {
       document.body.classList.add('dark-theme');
     }
+    if (themeType === THEME_TYPE_LITE) {
+      document.body.classList.remove('dark-theme');
+    }
 
     this.setLayoutType(layoutType);
 
@@ -127,7 +131,4 @@ const actions = {
   changeNavStyle,
   changeLayoutType
 };
-export default connect(
-  mapStateToProps,
-  actions
-)(App);
+export default connect(mapStateToProps, actions)(App);

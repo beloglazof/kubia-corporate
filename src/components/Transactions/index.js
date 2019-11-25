@@ -20,6 +20,37 @@ import styles from './Transactions.module.css';
 const { Link } = Anchor;
 const { Option } = Select;
 
+const COLORS = {
+  DEPOSIT: 'limegreen',
+  WITHDRAWAL: 'tomato',
+  TRANSFER: '#28aaeb'
+};
+const TRANS_ICONS = {
+  DEPOSIT: 'rise',
+  WITHDRAWAL: 'fall'
+};
+const { TabPane } = Tabs;
+const MONTHS = {
+  1: 'January',
+  2: 'February',
+  3: 'March',
+  4: 'April',
+  5: 'May',
+  6: 'June',
+  7: 'July',
+  8: 'August',
+  9: 'September',
+  10: 'October',
+  11: 'November',
+  12: 'December'
+};
+
+const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
+const LINKED_ACC_TYPES = {
+  DEPOSIT: 'Sender',
+  WITHDRAWAL: 'Recipient'
+};
+
 const Transactions = ({ transList, fetchList }) => {
   //  Fetching full list of transactions
   useEffect(() => {
@@ -40,35 +71,6 @@ const Transactions = ({ transList, fetchList }) => {
   const [modalShown, toggleModal] = useState(false); //  Modal state
   const [modalData, fillModal] = useState(''); // Modal content state
   // Transaction type colors
-  const COLORS = {
-    DEPOSIT: 'limegreen',
-    WITHDRAWAL: 'tomato',
-    TRANSFER: '#28aaeb'
-  };
-  const TRANS_ICONS = {
-    DEPOSIT: 'rise',
-    WITHDRAWAL: 'fall'
-  };
-  const { TabPane } = Tabs;
-  const MONTHS = {
-    1: 'January',
-    2: 'February',
-    3: 'March',
-    4: 'April',
-    5: 'May',
-    6: 'June',
-    7: 'July',
-    8: 'August',
-    9: 'September',
-    10: 'October',
-    11: 'November',
-    12: 'December'
-  };
-  const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
-  const LINKED_ACC_TYPES = {
-    DEPOSIT: 'Sender',
-    WITHDRAWAL: 'Recipient'
-  };
 
   //  Transaction details modal toggler
   const handleClick = record => {
@@ -284,6 +286,7 @@ const Transactions = ({ transList, fetchList }) => {
             {Object.keys(MONTHS).map(monthNum => (
               <TabPane tab={MONTHS[monthNum]} key={monthNum}>
                 <Anchor
+                  affix={false}
                   offsetTop={15}
                   style={{ position: 'absolute', margin: '15px 0 0 0' }}
                   getContainer={() =>
