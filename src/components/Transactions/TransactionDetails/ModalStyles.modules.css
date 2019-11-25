@@ -1,0 +1,12 @@
+.descriptions {
+  text-align: center;
+}
+
+.item-label,
+.item-content {
+  width: 40%;
+}
+.item-label:last-child,
+.item-content:last-child {
+  width: 20%;
+}

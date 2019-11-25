@@ -9,7 +9,7 @@ const Accounts = () => {
   const accounts = useSelector(state => state.accounts);
   return (
     <>
-      <Row>
+      <Row gutter={16}>
         <Col span={24} xl={12}>
           <List
             itemLayout="vertical"
@@ -22,7 +22,7 @@ const Accounts = () => {
           <CompanyInfoCard />
         </Col>
       </Row>
-      <Row>
+      <Row gutter={16}>
         <Col xl={12}>
           <Transactions />
         </Col>

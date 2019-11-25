@@ -1005,7 +1005,7 @@ body.dark-theme {
 
   & .ant-divider {
     color: @dark-theme-text-color;
-    background: @dark-theme-border-color;
+    background: inherit;
 
     &.ant-divider-with-text,
     &.ant-divider-with-text-left,
@@ -1466,7 +1466,8 @@ body.dark-theme {
       }
     }
     &-item-label,
-    &-item-content {
+    &-item-content,
+    &-title {
       color: @dark-theme-text-color;
     }
   }

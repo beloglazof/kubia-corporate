@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Divider, Form, Select, Table } from 'antd';
+import { Button, Descriptions, Divider, Form, Select, Table } from 'antd';
 
 import { getSessions, killSession } from '../../api';
 import styles from './settings.module.css';
@@ -24,6 +24,23 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
 
 const Settings = ({}) => {
   const [sessions, setSessions] = useState([]);
+  const [currentSession, setCurrentSession] = useState(null);
+  useEffect(() => {
+    async function fetchSessions() {
+      const fetchedSessions = await getSessions();
+      if (fetchedSessions) {
+        const current = fetchedSessions.find(session => session.current);
+        const otherSessions = fetchedSessions.filter(
+          session => !session.current
+        );
+        setCurrentSession(current);
+        setSessions(otherSessions);
+      }
+    }
+
+    fetchSessions();
+  }, []);
+
   const closeSession = async sessionId => {
     const killed = await killSession(sessionId);
     if (killed) {
@@ -32,6 +49,26 @@ const Settings = ({}) => {
       );
     }
   };
+
+  const handleCloseAllClick = async () => {
+    const sessionIds = sessions.map(({ id }) => id);
+    const allKilled = await killSession(sessionIds);
+    if (allKilled) {
+      setSessions([]);
+    }
+  };
+
+  const formLayoutProps = {
+    labelAlign: 'left',
+    labelCol: { xs: 12, sm: 6 },
+    wrapperCol: { xs: 12, sm: 6 }
+  };
+  const { firstPagePath } = useSelector(state => state.settings);
+  const dispatch = useDispatch();
+  const handleFirstPageChange = value => {
+    dispatch(setFirstPagePath(value));
+  };
+
   const columns = [
     {
       title: 'IP',
@@ -64,28 +101,8 @@ const Settings = ({}) => {
       )
     }
   ];
-
-  useEffect(() => {
-    async function fetchSessions() {
-      const fetchedSessions = await getSessions();
-      if (fetchedSessions) {
-        setSessions(fetchedSessions.reverse());
-      }
-    }
-
-    fetchSessions();
-  }, []);
-
-  const formLayoutProps = {
-    labelAlign: 'left',
-    labelCol: { xs: 12, sm: 6 },
-    wrapperCol: { xs: 12, sm: 6 }
-  };
-  const { firstPagePath } = useSelector(state => state.settings);
-  const dispatch = useDispatch();
-  const handleFirstPageChange = value => {
-    dispatch(setFirstPagePath(value));
-  };
+  const showCloseAllButton = sessions && sessions.length > 0;
+  const showSessionsTable = sessions && sessions.length > 0;
   return (
     <>
       <section className={styles.parameter}>
@@ -115,21 +132,60 @@ const Settings = ({}) => {
         <Divider orientation={'left'} style={{ fontSize: '1.4em' }}>
           Active sessions
         </Divider>
-        <Table
-          columns={columns}
-          dataSource={sessions}
-          size="small"
-          loading={!sessions}
-          pagination={{ pageSize: 5 }}
-          rowKey={'id'}
-          rowClassName={record => {
-            if (record.current) return styles.current;
-          }}
-          bordered
-        />
+        <CurrentSession session={currentSession} />
+        <div>
+          {showCloseAllButton && (
+            <Button onClick={handleCloseAllClick} type="primary">
+              Close All
+            </Button>
+          )}
+        </div>
+        {showSessionsTable && (
+          <Table
+            columns={columns}
+            dataSource={sessions}
+            size="small"
+            loading={!sessions}
+            pagination={{ pageSize: 5 }}
+            rowKey={'id'}
+            rowClassName={record => {
+              if (record.current) return styles.current;
+            }}
+            bordered
+          />
+        )}
       </section>
     </>
   );
 };
 
 export default Settings;
+
+const CurrentSession = ({ session }) => {
+  if (!session) return null;
+  const visibleFields = new Set(['created', 'expire', 'ip']);
+  const dateFields = new Set(['created', 'expire']);
+  const renderSession = fields => {
+    return Object.entries(fields).map(([fieldName, fieldValue]) => {
+      if (visibleFields.has(fieldName)) {
+        const value = dateFields.has(fieldName)
+          ? formatISODate(fieldValue)
+          : fieldValue;
+        return (
+          <Descriptions.Item label={fieldName}> {value}</Descriptions.Item>
+        );
+      }
+    });
+  };
+  return (
+    <Descriptions
+      title="Current session"
+      column={1}
+      size="small"
+      style={{ marginBottom: '2em' }}
+      bordered
+    >
+      {renderSession(session)}
+    </Descriptions>
+  );
+};

@@ -13,10 +13,9 @@ import {
   Tabs,
   Tooltip
 } from 'antd';
-import TransactionDetails from './TransactionDetails/TransactionDetails'; //  Transaction details modal
+import TransactionDetails from './TransactionDetails/TransactionDetails';
 import { fetchList } from '../../redux/actions';
-// import 'antd/dist/antd.css'; //  Default Ant Design styles
-import './Transactions.css';
+import styles from './Transactions.module.css';
 
 const { Link } = Anchor;
 const { Option } = Select;
@@ -98,23 +97,24 @@ const Transactions = ({ transList, fetchList }) => {
     filteredData.filter(t => new Date(t.creationDate).getMonth() === month - 1);
 
   // Get each day's transactions
-  const dalyTransactions = (transactions, day) =>
+  const dailyTransactions = (transactions, day) =>
     transactions.filter(t => new Date(t.creationDate).getDate() === day);
 
   //  Return daily grouped transactions
   const transactionsOfADay = monthNum => {
     const group = [];
     for (let i = 1; i <= MONTHS_LENGTH[monthNum - 1]; i++) {
-      if (dalyTransactions(monthlyTransactions(monthNum), i).length) {
+      if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
         group.push(
           <div key={i} style={{ alignContent: 'center' }}>
             <Divider
-              style={{ margin: '10px auto' }}
+              // style={{ margin: '10px auto' }}
               id={`${i}-${MONTHS[monthNum]}`}
+              className={styles.divider}
             >
               {i} {MONTHS[monthNum]}
             </Divider>
-            {dalyTransactions(monthlyTransactions(monthNum), i).map(t => (
+            {dailyTransactions(monthlyTransactions(monthNum), i).map(t => (
               <Card
                 key={t.id}
                 size="small"
@@ -158,7 +158,7 @@ const Transactions = ({ transList, fetchList }) => {
   const anchorBuilder = monthNum => {
     const anchors = [];
     for (let i = 1; i <= MONTHS_LENGTH[monthNum - 1]; i++) {
-      if (dalyTransactions(monthlyTransactions(monthNum), i).length) {
+      if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
         anchors.push(
           <Link
             key={`#${i}-${MONTHS[monthNum]}`}
@@ -277,7 +277,7 @@ const Transactions = ({ transList, fetchList }) => {
             defaultActiveKey={(new Date().getMonth() + 1).toString()}
             size="small"
             tabBarGutter={15}
-            tabBarStyle={{ margin: '0' }}
+            // tabBarStyle={{ margin: '0' }}
             animated={false}
             /* onChange={(activeKey) => handleFilter(activeKey)} */
           >
