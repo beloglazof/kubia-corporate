@@ -7,6 +7,7 @@ const InputItem = ({
   label = 'Input',
   placeholder = 'Placeholder',
   validationPattern,
+  initialValue,
   required = false,
   disabled
 }) => {
@@ -25,6 +26,7 @@ const InputItem = ({
   }
   const fieldConfig = {
     rules,
+    initialValue,
     validateTrigger: 'onSubmit'
   };
 

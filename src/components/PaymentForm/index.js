@@ -20,6 +20,87 @@ import { useStepsForm } from '@sunflower-antd/steps-form';
 const FormItem = Form.Item;
 const { Step } = Steps;
 
+const submitButtonLayoutProps = {
+  wrapperCol: {
+    xs: { span: 24, offset: 8 },
+    sm: { span: 12 },
+    md: { span: 8, offset: 6 }
+  }
+};
+
+const PaymentForm = ({ form, history }) => {
+  const [paymentType, setPaymentType] = useState();
+  const handleSubmit = async values => {
+    sendPaymentRequest(values, paymentType, history);
+    gotoStep(current + 1);
+  };
+
+  const { current, gotoStep, stepsProps, formProps, submit } = useStepsForm({
+    submit: handleSubmit,
+    form,
+    total: 3
+  });
+
+  const [paymentQuotes, setPaymentQuotes] = useState();
+
+  const getQuotes = async () => {
+    // await get quotes request
+    const fetchedQuotes = await fetchPaymentQuotesMock();
+    // console.log(fetchedQuotes);
+    if (fetchedQuotes) setPaymentQuotes(fetchedQuotes);
+  };
+
+  const formLayoutProps = {
+    labelCol: {
+      xs: { span: 8 },
+      sm: { span: 6 },
+      md: { span: 6 }
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 12 },
+      md: { span: 12 }
+    },
+    labelAlign: 'left'
+  };
+
+  return (
+    <Row>
+      <Col span={24}>
+        <h2>New Payment</h2>
+
+        <Steps {...stepsProps}>
+          <Step title="Payment Info" />
+          <Step title="Payment Details" />
+          <Step title="Payment " />
+        </Steps>
+
+        <Form {...formLayoutProps} {...formProps}>
+          {current === 0 && (
+            <PaymentInfoForm
+              form={form}
+              setPaymentType={setPaymentType}
+              gotoStep={gotoStep}
+              getQuotes={getQuotes}
+            />
+          )}
+          {current === 1 && (
+            <PaymentDetails form={form} quotes={paymentQuotes} />
+          )}
+        </Form>
+
+        {current === 1 && (
+          <Button type="primary" htmlType="submit" onClick={() => submit()}>
+            Submit
+          </Button>
+        )}
+      </Col>
+    </Row>
+  );
+};
+
+export default PaymentForm;
+
 const renderRecipientFields = (paymentType, form) => {
   switch (paymentType) {
     case 'internal':
@@ -132,14 +213,6 @@ const sendPaymentRequest = async (values, paymentType, history) => {
   }
 };
 
-const submitButtonLayoutProps = {
-  wrapperCol: {
-    xs: { span: 24, offset: 8 },
-    sm: { span: 12 },
-    md: { span: 8, offset: 6 }
-  }
-};
-
 const PaymentInfoForm = ({ form, setPaymentType, gotoStep, getQuotes }) => {
   const { getFieldsValue, getFieldValue } = form;
   const accounts = useSelector(state => state.accounts);
@@ -186,76 +259,3 @@ const PaymentInfoForm = ({ form, setPaymentType, gotoStep, getQuotes }) => {
     </>
   );
 };
-
-const PaymentForm = ({ form, history }) => {
-  const [paymentType, setPaymentType] = useState();
-  const handleSubmit = async values => {
-    sendPaymentRequest(values, paymentType, history);
-    gotoStep(current + 1);
-  };
-
-  const { current, gotoStep, stepsProps, formProps, submit } = useStepsForm({
-    submit: handleSubmit,
-    form,
-    total: 3
-  });
-
-  const [paymentQuotes, setPaymentQuotes] = useState();
-
-  const getQuotes = async values => {
-    // await get quotes request
-    const fetchedQuotes = await fetchPaymentQuotesMock();
-    console.log(fetchedQuotes);
-    if (fetchedQuotes) setPaymentQuotes(fetchedQuotes);
-  };
-
-  const formLayoutProps = {
-    labelCol: {
-      xs: { span: 8 },
-      sm: { span: 6 },
-      md: { span: 6 }
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 12 },
-      md: { span: 12 }
-    },
-    labelAlign: 'left'
-  };
-
-  return (
-    <Row>
-      <Col span={24}>
-        <h2>New Payment</h2>
-
-        <Steps {...stepsProps}>
-          <Step title="Payment Info" />
-          <Step title="Payment Details" />
-          <Step title="Payment " />
-        </Steps>
-
-        <Form {...formLayoutProps} {...formProps}>
-          {current === 0 && (
-            <PaymentInfoForm
-              form={form}
-              setPaymentType={setPaymentType}
-              gotoStep={gotoStep}
-              getQuotes={getQuotes}
-            />
-          )}
-          {current === 1 && (
-            <PaymentDetails form={form} quotes={paymentQuotes} />
-          )}
-        </Form>
-
-        {current === 1 && (
-          <Button type="primary" htmlType="submit" onClick={() => submit()}>
-            Submit
-          </Button>
-        )}
-      </Col>
-    </Row>
-  );
-};
-
-export default PaymentForm;

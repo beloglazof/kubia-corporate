@@ -15,7 +15,7 @@ export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'dollar' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
-  { name: 'transactions', path: '/transactions', iconName: '' },
+  { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' }
 ];
 
@@ -36,7 +36,7 @@ export const renderNavigationItems = () => {
   };
   return navItems.map(renderItem);
 };
-const App = ({ match }) => {
+const App = () => {
   const { firstPagePath } = useSelector(state => state.settings);
 
   return (
