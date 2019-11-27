@@ -67,7 +67,15 @@ export const cardsRequestState = async () =>
 
 export const getTransactions = async () => await get('/transactions');
 
-export const getBeneficiary = async id => await get('/beneficiary', { id });
+export const getBeneficiary = async id => {
+  const fetched = await get('/beneficiary', { id });
+  if (fetched) {
+    const filtered = fetched.filter(counterparty => counterparty.accountNumber);
+    return filtered;
+  } else {
+    return [];
+  }
+};
 export const getBeneficiaryFields = async (
   currency,
   bank_account_country,
