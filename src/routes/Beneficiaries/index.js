@@ -1,35 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Descriptions, List } from 'antd';
-import CounterpartyAddForm from '../../components/BeneficiaryAddForm';
+import React from 'react';
+import { Button, List } from 'antd';
 import { getBeneficiary } from '../../api';
-import { startCase } from 'lodash';
+import BeneficiaryCard from '../../components/BeneficiaryCard';
+import useAsync from '../../hooks/useAsync';
 
 const Beneficiaries = ({ history }) => {
   const handleAddClick = () => {
     history.push('beneficiaries/add');
   };
 
-  const [beneficiaries, setBeneficiaries] = useState([]);
-  useEffect(() => {
-    const fetchBeneficiaries = async () => {
-      const fetchedCounterparties = await getBeneficiary();
-      if (fetchedCounterparties) {
-        const filtered = fetchedCounterparties.filter(
-          counterparty => counterparty.accountNumber
-        );
-        setBeneficiaries(filtered);
-      }
-    };
-    fetchBeneficiaries();
-  }, []);
+  const beneficiaries = useAsync(getBeneficiary);
+  const dataSource = beneficiaries ? beneficiaries : [];
+  const loading = !beneficiaries;
 
-  const renderBeneficiary = beneficiary => {
-    return (
-      <List.Item>
-        <BeneficiaryCard beneficiary={beneficiary} />
-      </List.Item>
-    );
-  };
   return (
     <>
       <h1>Beneficiaries</h1>
@@ -37,7 +20,8 @@ const Beneficiaries = ({ history }) => {
         Add
       </Button>
       <List
-        dataSource={beneficiaries}
+        loading={loading}
+        dataSource={dataSource}
         renderItem={renderBeneficiary}
         grid={{
           gutter: 16,
@@ -50,53 +34,12 @@ const Beneficiaries = ({ history }) => {
   );
 };
 
-const BeneficiaryCard = ({ beneficiary }) => {
-  const visibleFields = new Set([
-    'accountNumber',
-    'companyName',
-    'email',
-    'firstName',
-    'lastName',
-    'country'
-  ]);
-  const renderInfo = info => {
-    return Object.entries(info)
-      .filter(([name]) => visibleFields.has(name))
-      .map(([name, value]) => {
-        const label = startCase(name);
-        const span = name === 'email' ? 2 : 1
-        return <Descriptions.Item span={span} label={label}>{value}</Descriptions.Item>;
-      });
-  };
-  const cardTitle = startCase(beneficiary?.nickname) || null;
+export default Beneficiaries;
 
-  const editBeneficiary = () => {};
-  const beneficiaryDetails = () => {};
-  const deleteBeneficiary = () => {};
-
-  const cardActions = [
-    { name: 'edit', handler: editBeneficiary, icon: 'edit' },
-    { name: 'details', handler: beneficiaryDetails, icon: 'profile' },
-    { name: 'delete', handler: deleteBeneficiary, icon: 'delete' }
-  ].map(({ name, handler, icon }) => {
-    return (
-      <Button type="primary" icon={icon} onClick={handler}>
-        {startCase(name)}
-      </Button>
-    );
-  });
+const renderBeneficiary = beneficiary => {
   return (
-    <Card
-      title={cardTitle}
-      headStyle={{ fontSize: '1.5em' }}
-      size={'small'}
-      actions={cardActions}
-    >
-      <Descriptions bordered column={2} layout="vertical">
-        {renderInfo(beneficiary)}
-      </Descriptions>
-    </Card>
+    <List.Item key={beneficiary.id}>
+      <BeneficiaryCard beneficiary={beneficiary} />
+    </List.Item>
   );
 };
-
-export default Beneficiaries;
