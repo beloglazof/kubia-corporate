@@ -60,6 +60,18 @@ export const get = async (url, params, notifyError = true) => {
     }
   }
 };
+export const httpDelete = async (url, params, notifyError = true) => {
+  try {
+    const response = await instance.delete(url, {params});
+    const { data } = response;
+    return data;
+  } catch (e) {
+    if (notifyError) {
+      showErrorMessage(e);
+    }
+  }
+}
+
 
 export const post = async (url, params, notifyError = true) => {
   try {
@@ -83,5 +95,7 @@ export const patch = async (url, params, notifyError = true) => {
     }
   }
 };
+
+
 
 export default instance;

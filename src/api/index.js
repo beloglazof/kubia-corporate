@@ -1,4 +1,4 @@
-import { get, patch, post } from './config';
+import { get, httpDelete, patch, post } from './config';
 export const getDesktopMainScreen = async () =>
   await get('compose/desktop-main-screen');
 export const usersCheck = async (phone, notifyError) =>
@@ -86,7 +86,12 @@ export const getBeneficiaryFields = async (
     bank_account_country,
     beneficiary_country
   });
-export const postBeneficiary = async json => await post('/beneficiary', json);
+export const createBeneficiary = async json => await post('/beneficiary', json);
+
+export const updateBeneficiary = async (id, updatedFields) =>
+  await patch('/beneficiary', updatedFields);
+
+export const deleteBeneficiary = async id => await httpDelete(`/beneficiary/${id}`)
 
 export const getCountries = async () => await get('/countries');
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStepsForm } from 'sunflower-antd';
 import { Button, Form, Result, Steps } from 'antd';
-import { getCountries, getCurrencies, postBeneficiary } from '../../api';
+import { getCountries, getCurrencies, createBeneficiary } from '../../api';
 import ClarifyingStepForm from './ClarifyingStepForm';
 import BeneficiaryInfoStepForm from './BeneficiaryInfoStepForm';
 import useAsync from '../../hooks/useAsync';
@@ -16,7 +16,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
         ...values,
         entityType: 'company'
       };
-      const id = await postBeneficiary(params);
+      const id = await createBeneficiary(params);
       if (id) {
         gotoStep(current + 1);
       }
