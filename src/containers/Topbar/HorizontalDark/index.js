@@ -24,6 +24,7 @@ import {
   toggleCollapsedNav
 } from '../../../redux/features/settings/themeSettingsSlice';
 import IntlMessages from '../../../util/IntlMessages';
+import MainLogo from '../../../components/MainLogo';
 
 const { Header } = Layout;
 
@@ -115,7 +116,7 @@ class HorizontalDark extends Component {
                 to="/"
                 className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
-                <img alt="" src={require('assets/images/logo.png')} />
+                <MainLogo />
               </Link>
               {/*<div className='gx-header-search gx-d-none gx-d-lg-flex'>*/}
               {/*  <SearchBox*/}
@@ -244,7 +245,6 @@ const mapStateToProps = ({ themeSettings }) => {
   const { locale, navCollapsed } = themeSettings;
   return { locale, navCollapsed };
 };
-export default connect(
-  mapStateToProps,
-  { toggleCollapsedNav, switchLanguage }
-)(HorizontalDark);
+export default connect(mapStateToProps, { toggleCollapsedNav, switchLanguage })(
+  HorizontalDark
+);

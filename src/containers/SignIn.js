@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import IntlMessages from 'util/IntlMessages';
 import InfoView from '../templateComponents/InfoView';
 import { signIn } from '../redux/features/session/sessionSlice';
+import MainLogo from '../components/MainLogo';
 
 const FormItem = Form.Item;
 
@@ -20,7 +21,7 @@ class SignIn extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.token)
+    console.log(this.props.token);
     if (this.props.token !== null) {
       this.props.history.push('/');
     }
@@ -53,7 +54,8 @@ class SignIn extends React.Component {
                 {/*</p>*/}
               </div>
               <div className="gx-app-logo">
-                <img alt="example" src={require('../assets/images/logo.png')} />
+                {/*<img alt="example" src={require('../assets/images/main-logo.svg')} />*/}
+                <MainLogo />
               </div>
             </div>
             <div className="gx-app-login-content">
@@ -130,7 +132,4 @@ const mapStateToProps = ({ session }) => {
 
 const actions = { signIn };
 
-export default connect(
-  mapStateToProps,
-  actions
-)(WrappedNormalLoginForm);
+export default connect(mapStateToProps, actions)(WrappedNormalLoginForm);

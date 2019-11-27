@@ -24,6 +24,7 @@ import {
 import HorizontalNav from '../HorizontalNav';
 import { Link } from 'react-router-dom';
 import IntlMessages from 'util/IntlMessages';
+import MainLogo from '../../../components/MainLogo';
 
 const { Header } = Layout;
 
@@ -109,13 +110,13 @@ class BelowHeader extends Component {
                 to="/"
                 className="gx-d-block gx-d-lg-none gx-pointer gx-mr-xs-3 gx-pt-xs-1 gx-w-logo"
               >
-                <img alt="" src={require('assets/images/q-logo.png')} />
+                <img alt="" src={require('assets/images/small-logo.png')} />
               </Link>
               <Link
                 to="/"
                 className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
-                <img alt="" src={require('assets/images/logo.png')} />
+                <MainLogo />
               </Link>
               <div className="gx-header-search gx-d-none gx-d-lg-flex">
                 <SearchBox
@@ -242,7 +243,6 @@ const mapStateToProps = ({ themeSettings }) => {
   const { locale, navCollapsed } = themeSettings;
   return { locale, navCollapsed };
 };
-export default connect(
-  mapStateToProps,
-  { toggleCollapsedNav, switchLanguage }
-)(BelowHeader);
+export default connect(mapStateToProps, { toggleCollapsedNav, switchLanguage })(
+  BelowHeader
+);

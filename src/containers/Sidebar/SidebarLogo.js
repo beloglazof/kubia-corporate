@@ -14,6 +14,7 @@ import {
   TAB_SIZE,
   THEME_TYPE_LITE
 } from '../../constants/ThemeSetting';
+import MainLogo from '../../components/MainLogo';
 
 class SidebarLogo extends Component {
   render() {
@@ -50,11 +51,11 @@ class SidebarLogo extends Component {
         <Link to="/" className="gx-site-logo">
           {navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR &&
           width >= TAB_SIZE ? (
-            <img alt="" src={require('assets/images/logo.png')} />
+            <MainLogo />
           ) : themeType === THEME_TYPE_LITE ? (
-            <img alt="" src={require('assets/images/logo-black.png')} />
+            <img alt="" src={require('assets/images/main-logo-black.png')} />
           ) : (
-            <img alt="" src={require('assets/images/logo.png')} />
+            <MainLogo />
           )}
         </Link>
       </div>
@@ -67,10 +68,7 @@ const mapStateToProps = ({ themeSettings }) => {
   return { navStyle, themeType, width, navCollapsed };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    changeNavStyle,
-    toggleCollapsedNav
-  }
-)(SidebarLogo);
+export default connect(mapStateToProps, {
+  changeNavStyle,
+  toggleCollapsedNav
+})(SidebarLogo);

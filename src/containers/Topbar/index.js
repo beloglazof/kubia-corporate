@@ -71,7 +71,7 @@ class Topbar extends Component {
             </div>
           ) : null}
           <Link to="/" className="gx-d-block gx-d-lg-none gx-pointer">
-            <img alt="" src={require('assets/images/q-logo.png')} />
+            <img alt="" src={require('assets/images/small-logo.png')} />
           </Link>
 
           <SearchBox

@@ -1,5 +1,5 @@
 module.exports = {
-  footerText: 'Copyright Quancy Ltd. © 2019',
+  footerText: 'Copyright Kubia Ltd. © 2019',
   // Date formats from
   // https://www.ibm.com/support/knowledgecenter/en/SSS28S_8.1.0/XFDL/i_xfdl_r_formats_en_SG.html
   singaporeDateFormat: {
