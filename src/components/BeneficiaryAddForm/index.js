@@ -31,8 +31,6 @@ const BeneficiaryAddForm = ({ history, form }) => {
 
   const [mainFormFields, setMainFormFields] = useState();
 
-  const countries = useAsync(getCountries);
-  const currencies = useAsync(getCurrencies);
 
   const goToBeneficiaries = () => {
     history.push('/beneficiaries');
@@ -63,8 +61,6 @@ const BeneficiaryAddForm = ({ history, form }) => {
         {current === 0 && (
           <ClarifyingStepForm
             form={form}
-            countries={countries}
-            currencies={currencies}
             setMainFormFields={setMainFormFields}
             gotoStep={gotoStep}
             current={current}

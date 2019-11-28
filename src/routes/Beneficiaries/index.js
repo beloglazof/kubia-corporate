@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { Button, List } from 'antd';
-import { getBeneficiary } from '../../api';
+import {
+  deleteBeneficiary,
+  getBeneficiary,
+  updateBeneficiary
+} from '../../api';
 import BeneficiaryCard from '../../components/BeneficiaryCard';
 import useAsync from '../../hooks/useAsync';
 
@@ -9,9 +13,48 @@ const Beneficiaries = ({ history }) => {
     history.push('beneficiaries/add');
   };
 
-  const beneficiaries = useAsync(getBeneficiary);
-  const dataSource = beneficiaries ? beneficiaries : [];
-  const loading = !beneficiaries;
+  const fetchedBeneficiaries = useAsync(getBeneficiary);
+  const [beneficiaries, setBeneficiaries] = useState([]);
+  useLayoutEffect(() => {
+    if (fetchedBeneficiaries) {
+      setBeneficiaries(fetchedBeneficiaries);
+    }
+  }, [fetchedBeneficiaries]);
+
+  const handleDelete = beneficiaryId => async () => {
+    const deleted = await deleteBeneficiary(beneficiaryId);
+    if (deleted) {
+      setBeneficiaries(
+        beneficiaries.filter(beneficiary => beneficiary.id !== beneficiaryId)
+      );
+    }
+  };
+
+  const handleEdit = beneficiaryId => async newBeneficiary => {
+    const updated = await updateBeneficiary(beneficiaryId, newBeneficiary);
+    if (updated) {
+      setBeneficiaries(
+        beneficiaries.map(beneficiary =>
+          beneficiary.id === beneficiaryId
+            ? { ...beneficiary, ...newBeneficiary }
+            : beneficiary
+        )
+      );
+    }
+  };
+
+  const loading = !fetchedBeneficiaries;
+  const renderBeneficiary = beneficiary => {
+    return (
+      <List.Item key={beneficiary.id}>
+        <BeneficiaryCard
+          beneficiary={beneficiary}
+          onDelete={handleDelete(beneficiary.id)}
+          onEdit={handleEdit(beneficiary.id)}
+        />
+      </List.Item>
+    );
+  };
 
   return (
     <>
@@ -21,7 +64,7 @@ const Beneficiaries = ({ history }) => {
       </Button>
       <List
         loading={loading}
-        dataSource={dataSource}
+        dataSource={beneficiaries}
         renderItem={renderBeneficiary}
         grid={{
           gutter: 16,
@@ -35,11 +78,3 @@ const Beneficiaries = ({ history }) => {
 };
 
 export default Beneficiaries;
-
-const renderBeneficiary = beneficiary => {
-  return (
-    <List.Item key={beneficiary.id}>
-      <BeneficiaryCard beneficiary={beneficiary} />
-    </List.Item>
-  );
-};

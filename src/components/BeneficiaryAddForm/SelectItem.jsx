@@ -1,13 +1,20 @@
 import { Form, Select } from 'antd';
-import React from 'react';
-const {Option} = Select
+import React, { useLayoutEffect, useState } from 'react';
+const { Option } = Select;
 const renderOption = ({ value, title }) => (
   <Option value={value} key={value}>
     {title}
   </Option>
 );
 
-const SelectItem = ({ form, label, id, options, ...selectProps }) => {
+const SelectItem = ({
+  form,
+  label,
+  id,
+  options,
+  initialValue,
+  ...selectProps
+}) => {
   if (!form) return null;
   const rules = [];
   if (selectProps.required) {
@@ -15,12 +22,9 @@ const SelectItem = ({ form, label, id, options, ...selectProps }) => {
     rules.push(requiredRule);
   }
 
-  const fieldConfig = {
-    rules
-  };
   return (
     <Form.Item label={label}>
-      {form.getFieldDecorator(id, fieldConfig)(
+      {form.getFieldDecorator(id, { rules, initialValue })(
         <Select {...selectProps}>{options.map(renderOption)}</Select>
       )}
     </Form.Item>

@@ -2,18 +2,10 @@ import React from 'react';
 import SelectItem from './SelectItem';
 import { Button, Form, message } from 'antd';
 import { getBeneficiaryFields } from '../../api';
+import CountrySelect from '../CountrySelect';
+import CurrencySelect from '../CurrencySelect';
 
-const ClarifyingStepForm = ({ form, countries, currencies, setMainFormFields, gotoStep, current }) => {
-  const countryOptions = countries
-    ? countries.map(c => ({ value: c.iso2, title: c.name }))
-    : [];
-  const countryLoading = !countries || countries.length === 0;
-
-  const currencyOptions = currencies
-    ? currencies.map(c => ({ value: c.code, title: c.name }))
-    : [];
-  const currencyLoading = !currencies || currencies.length === 0;
-
+const ClarifyingStepForm = ({ form, setMainFormFields, gotoStep, current }) => {
   const handleNext = async () => {
     form.validateFields(async (errors, values) => {
       if (errors) return;
@@ -22,26 +14,20 @@ const ClarifyingStepForm = ({ form, countries, currencies, setMainFormFields, go
         setMainFormFields(mainFormFields);
         gotoStep(current + 1);
       } else {
-        message.error('We do not support selected configuration.', 5)
+        message.error('We do not support selected configuration.', 5);
       }
     });
   };
 
   const countrySelectProps = {
-    options: countryOptions,
-    loading: countryLoading,
     form
   };
 
   return (
     <>
-      <CountrySelect {...countrySelectProps} />
-      <BankAccountCountrySelect {...countrySelectProps} />
-      <CurrencySelect
-        options={currencyOptions}
-        loading={currencyLoading}
-        form={form}
-      />
+      <CountrySelect form={form} />
+      <BankAccountCountrySelect form={form} />
+      <CurrencySelect form={form} />
       <Form.Item wrapperCol={{ offset: 6 }}>
         <Button type="primary" onClick={handleNext}>
           Next
@@ -84,29 +70,10 @@ const TypeSelect = ({ form }) => {
   );
 };
 
-const filterCountry = (inputValue, option) => {
-  return option.props.children.toLowerCase().includes(inputValue.toLowerCase());
-};
-
-const CountrySelect = ({ label = 'Country', id = 'country', ...props }) => (
-  <SelectItem
-    label={label}
-    id={id}
-    required
-    showSearch
-    filterOption={filterCountry}
-    {...props}
-  />
-);
-
-const BankAccountCountrySelect = props => (
+const BankAccountCountrySelect = ({ form }) => (
   <CountrySelect
+    form={form}
     label="Bank Account Country"
     id="bankAccountCountry"
-    {...props}
   />
-);
-
-const CurrencySelect = props => (
-  <SelectItem label="Currency" id="currency" required {...props} />
 );

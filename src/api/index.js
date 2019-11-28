@@ -89,9 +89,10 @@ export const getBeneficiaryFields = async (
 export const createBeneficiary = async json => await post('/beneficiary', json);
 
 export const updateBeneficiary = async (id, updatedFields) =>
-  await patch('/beneficiary', updatedFields);
+  await patch(`/beneficiary/${id}`, updatedFields);
 
-export const deleteBeneficiary = async id => await httpDelete(`/beneficiary/${id}`)
+export const deleteBeneficiary = async id =>
+  await httpDelete(`/beneficiary/${id}`);
 
 export const getCountries = async () => await get('/countries');
 

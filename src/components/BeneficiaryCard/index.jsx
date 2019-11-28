@@ -1,10 +1,22 @@
 import { startCase } from 'lodash';
-import { Button, Card, Descriptions, Modal } from 'antd';
+import { Button, Card, Descriptions, Form, Modal } from 'antd';
 import React from 'react';
-import { useModal } from 'sunflower-antd';
+import { useForm, useModal } from 'sunflower-antd';
+import InputItem from '../BeneficiaryAddForm/InputItem';
+import CountrySelect from '../CountrySelect';
 
-const BeneficiaryCard = ({ beneficiary = {} }) => {
-  const { modalProps, show, close } = useModal();
+const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
+  const { modalProps: detailsModalProps, show: showDetails } = useModal({
+    defaultVisible: false
+  });
+  const {
+    modalProps: editModalProps,
+    show: showEditModal,
+    close: closeEditModal
+  } = useModal({
+    defaultVisible: false
+  });
+
   const fieldsSet = new Set([
     'accountNumber',
     'companyName',
@@ -13,11 +25,13 @@ const BeneficiaryCard = ({ beneficiary = {} }) => {
     'lastName',
     'country'
   ]);
-  const details = Object.entries(beneficiary);
+  const details = Object.entries(beneficiary).filter(
+    ([fieldName]) => fieldName !== 'id'
+  );
   const fields = details.filter(([name]) => fieldsSet.has(name));
   const cardTitle = startCase(beneficiary?.nickname) || null;
 
-  const actions = getCardActions(show);
+  const actions = getCardActions(showDetails, onDelete, showEditModal);
   return (
     <Card
       title={cardTitle}
@@ -28,23 +42,32 @@ const BeneficiaryCard = ({ beneficiary = {} }) => {
       <Descriptions bordered column={2} layout="vertical">
         {renderFields(fields)}
       </Descriptions>
-      <DetailsModal {...modalProps} details={details} />
+      <DetailsModal {...detailsModalProps} details={details} />
+      <EditFormModal
+        {...editModalProps}
+        close={closeEditModal}
+        details={details}
+        onEdit={onEdit}
+      />
     </Card>
   );
 };
 
 export default BeneficiaryCard;
 
-const getCardActions = showDetails => {
-  const editBeneficiary = () => {};
+const getCardActions = (showDetails, onDelete, showEditModal) => {
+  const editBeneficiary = () => {
+    showEditModal();
+  };
   const beneficiaryDetails = () => {
     showDetails();
   };
-  const deleteBeneficiary = () => {};
+  const handleDelete = async () => await onDelete();
+
   const cardActions = [
     { name: 'edit', handler: editBeneficiary, icon: 'edit' },
     { name: 'details', handler: beneficiaryDetails, icon: 'profile' },
-    { name: 'delete', handler: deleteBeneficiary, icon: 'delete' }
+    { name: 'delete', handler: handleDelete, icon: 'delete' }
   ];
   return cardActions.map(renderAction);
 };
@@ -70,12 +93,98 @@ const renderFields = fields => {
 };
 
 const DetailsModal = ({ details, ...props }) => {
-  console.log(details);
   return (
-    <Modal footer={null} closable title="Beneficiary details" {...props}>
+    <Modal
+      footer={null}
+      destroyOnClose
+      closable
+      title="Beneficiary details"
+      {...props}
+    >
       <Descriptions bordered column={2} layout="vertical">
         {renderFields(details)}
       </Descriptions>
     </Modal>
   );
 };
+
+const renderFormFields = (form, fields) => {
+  const renderField = ([fieldName, value]) => {
+    const disabledFields = new Set(['entityType']);
+    const disabled = disabledFields.has(fieldName);
+
+    const isCountryField = fieldName === 'country';
+
+    const startCasedName = startCase(fieldName);
+    const label = fieldName === 'bicSwift' ? 'SWIFT' : startCasedName;
+    const placeholder = label;
+
+    if (isCountryField) {
+      return (
+        <CountrySelect
+          form={form}
+          initialValue={value.toLowerCase()}
+          key={fieldName}
+        />
+      );
+    }
+
+    return (
+      <InputItem
+        form={form}
+        id={fieldName}
+        placeholder={placeholder}
+        label={label}
+        key={fieldName}
+        disabled={disabled}
+        initialValue={value}
+        required
+      />
+    );
+  };
+  return fields.map(renderField);
+};
+
+const EditBeneficiaryFormModal = ({
+  form,
+  details,
+  onEdit,
+  close,
+  ...props
+}) => {
+  const handleSubmit = event => {
+    form.validateFields((errors, values) => {
+      // console.log(values);
+      if (!errors) {
+        onEdit(values);
+        close();
+      }
+    });
+  };
+  const { formProps } = useForm({ form, submit: handleSubmit });
+  const formLayout = {
+    labelCol: {
+      span: 9
+    },
+    wrapperCol: {
+      span: 14
+    },
+    labelAlign: 'right'
+  };
+  return (
+    <Modal
+      {...props}
+      onOk={handleSubmit}
+      okText="Save"
+      title="Edit beneficiary"
+      closable
+      destroyOnClose
+    >
+      <Form {...formProps} {...formLayout}>
+        {renderFormFields(form, details)}
+      </Form>
+    </Modal>
+  );
+};
+
+const EditFormModal = Form.create()(EditBeneficiaryFormModal);
