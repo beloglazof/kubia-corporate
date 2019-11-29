@@ -7,7 +7,8 @@ import {
   Radio,
   Select,
   Switch,
-  Table
+  Table,
+  Popconfirm
 } from 'antd';
 
 import { getSessions, killSession } from '../../api';
@@ -25,11 +26,16 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
     handleClose(sessionId);
   };
   return (
-    <span>
-      <Button type="primary" style={{ marginBottom: 0 }} onClick={handleClick}>
+    <Popconfirm
+      title="Are you sure close all session until current?"
+      onConfirm={handleClick}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button type="primary" style={{ marginBottom: 0 }}>
         Close
       </Button>
-    </span>
+    </Popconfirm>
   );
 };
 
@@ -137,7 +143,7 @@ const Settings = ({}) => {
               onChange={handleFirstPageChange}
             >
               {navItems.map(item => (
-                <Select.Option value={item.path}>
+                <Select.Option value={item.path} key={item.path}>
                   {startCase(item.name)}
                 </Select.Option>
               ))}
@@ -159,11 +165,9 @@ const Settings = ({}) => {
           Active sessions
         </Divider>
         <CurrentSession session={currentSession} />
-        <div>
+        <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
           {showCloseAllButton && (
-            <Button onClick={handleCloseAllClick} type="primary">
-              Close All
-            </Button>
+            <CloseAllSessionsButton handler={handleCloseAllClick} />
           )}
         </div>
         {showSessionsTable && (
@@ -198,7 +202,7 @@ const CurrentSession = ({ session }) => {
           ? formatISODate(fieldValue)
           : fieldValue;
         return (
-          <Descriptions.Item label={fieldName}> {value}</Descriptions.Item>
+          <Descriptions.Item label={fieldName} key={fieldName}> {value}</Descriptions.Item>
         );
       }
     });
@@ -213,5 +217,18 @@ const CurrentSession = ({ session }) => {
     >
       {renderSession(session)}
     </Descriptions>
+  );
+};
+
+const CloseAllSessionsButton = ({ handler }) => {
+  return (
+    <Popconfirm
+      title="Are you sure close all session until current?"
+      onConfirm={handler}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button type="danger">Close All</Button>
+    </Popconfirm>
   );
 };

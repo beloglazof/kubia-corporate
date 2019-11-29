@@ -7,6 +7,7 @@ const updateList = newList => ({
 });
 
 export const fetchList = () => async dispatch => {
+
   const response = await getTransactions();
-  dispatch(updateList(response.results));
+  dispatch(updateList(response?.results));
 };

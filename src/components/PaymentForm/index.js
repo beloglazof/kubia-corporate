@@ -1,24 +1,98 @@
-import { Button, Col, Descriptions, Form, message, Row, Steps } from 'antd';
+import { useStepsForm } from '@sunflower-antd/steps-form';
 import {
-  fetchPaymentQuotesMock,
+  Button,
+  Col,
+  Descriptions,
+  Form,
+  Icon,
+  message,
+  Row,
+  Steps,
+  Upload,
+  Input,
+  Result,
+  Radio
+} from 'antd';
+import { startCase } from 'lodash/string';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  fetchPaymentDetails,
+  getBeneficiary,
   paymentsPay,
   usersCheck,
   withdrawal
 } from '../../api';
-import React, { useState } from 'react';
-import { startCase } from 'lodash/string';
-import { useSelector } from 'react-redux';
+import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
+import InputItem from '../BeneficiaryAddForm/InputItem';
+import SelectItem from '../BeneficiaryAddForm/SelectItem';
 import InternalRecipientFields from './InternalRecipientFields';
-import RemittanceRecipientFields from './RemittanceRecipientFields';
-import PaymentTypeField from './PaymentTypeField';
-import AccountField from './AccountField';
-import AmountField from './AmountField';
-import NoteField from './NoteField';
-import { useStepsForm } from '@sunflower-antd/steps-form';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
+
+const sendPaymentRequest = async (values, paymentType, history) => {
+  const {
+    amount,
+    account,
+    note,
+    phone,
+    swift,
+    bankCode,
+    bankName,
+    bankAddress,
+    bankBranchCode,
+    accountId
+  } = values;
+
+  const account_id = account.id;
+  const idempotency = getRandomString();
+  let params;
+  let request;
+  if (paymentType === 'internal') {
+    const recipientUser = await usersCheck(phone);
+    const user_id = recipientUser.id;
+    params = {
+      amount,
+      account_id,
+      user_id,
+      description: note || '',
+      idempotency
+    };
+    request = paymentsPay;
+  }
+  if (paymentType === 'remittance') {
+    params = {
+      amount,
+      account_id,
+      notes: note || '',
+      withdrawal_type: 1,
+      idempotency,
+      recipient: {
+        swift,
+        bank_code: bankCode,
+        bank_account_id: accountId,
+        branch_code: bankBranchCode,
+        bank_address: bankAddress,
+        bank_name: bankName
+      }
+    };
+    request = withdrawal;
+  }
+
+  try {
+    const response = await request(params);
+    if (response) {
+      message.success('We executing your payment request now');
+      history.push('/');
+    }
+  } catch (error) {
+    const err = error.response.data.error[0];
+    const msg = `${err.message} ${err.code}`;
+    message.error(msg);
+  }
+};
 
 const submitButtonLayoutProps = {
   wrapperCol: {
@@ -30,9 +104,10 @@ const submitButtonLayoutProps = {
 
 const PaymentForm = ({ form, history }) => {
   const [paymentType, setPaymentType] = useState();
+  const gotoNextStep = () => gotoStep(current + 1);
   const handleSubmit = async values => {
     sendPaymentRequest(values, paymentType, history);
-    gotoStep(current + 1);
+    gotoNextStep();
   };
 
   const { current, gotoStep, stepsProps, formProps, submit } = useStepsForm({
@@ -41,13 +116,11 @@ const PaymentForm = ({ form, history }) => {
     total: 3
   });
 
-  const [paymentQuotes, setPaymentQuotes] = useState();
+  const [paymentDetails, setPaymentDetails] = useState();
 
-  const getQuotes = async () => {
-    // await get quotes request
-    const fetchedQuotes = await fetchPaymentQuotesMock();
-    // console.log(fetchedQuotes);
-    if (fetchedQuotes) setPaymentQuotes(fetchedQuotes);
+  const getDetails = async () => {
+    const fetchedDetails = await fetchPaymentDetails();
+    if (fetchedDetails) setPaymentDetails(fetchedDetails);
   };
 
   const formLayoutProps = {
@@ -61,38 +134,52 @@ const PaymentForm = ({ form, history }) => {
       sm: { span: 12 },
       md: { span: 12 }
     },
-    labelAlign: 'left'
+    labelAlign: 'right'
   };
 
   return (
     <Row>
       <Col span={24}>
-        <h2>New Payment</h2>
+        <h2 style={{ marginBottom: '2em' }}>New Payment</h2>
 
         <Steps {...stepsProps}>
-          <Step title="Payment Info" />
-          <Step title="Payment Details" />
-          <Step title="Payment " />
+          <Step title="Create Payment Request" />
+          <Step title="Submit Payment Request" />
+          <Step title="Success" />
         </Steps>
 
-        <Form {...formLayoutProps} {...formProps}>
+        <Form {...formLayoutProps} {...formProps} style={{ marginTop: '2em' }}>
           {current === 0 && (
             <PaymentInfoForm
               form={form}
               setPaymentType={setPaymentType}
-              gotoStep={gotoStep}
-              getQuotes={getQuotes}
+              gotoNextStep={gotoNextStep}
+              getDetails={getDetails}
             />
           )}
           {current === 1 && (
-            <PaymentDetails form={form} quotes={paymentQuotes} />
+            <PaymentDetails
+              form={form}
+              details={paymentDetails}
+              gotoNextStep={gotoNextStep}
+            />
           )}
         </Form>
-
-        {current === 1 && (
-          <Button type="primary" htmlType="submit" onClick={() => submit()}>
-            Submit
-          </Button>
+        {current === 2 && (
+          <Result
+            status="success"
+            title="Request succefully submitted!"
+            extra={
+              <>
+                <Button type="primary" onClick={() => gotoStep(0)}>
+                  Make new payment
+                </Button>
+                {/* <Button onClick={() => }>
+                  Go home
+                </Button> */}
+              </>
+            }
+          />
         )}
       </Col>
     </Row>
@@ -101,18 +188,7 @@ const PaymentForm = ({ form, history }) => {
 
 export default PaymentForm;
 
-const renderRecipientFields = (paymentType, form) => {
-  switch (paymentType) {
-    case 'internal':
-      return <InternalRecipientFields form={form} />;
-    case 'remittance':
-      return <RemittanceRecipientFields form={form} />;
-    default:
-      return null;
-  }
-};
-
-const PaymentDetails = ({ details }) => {
+const PaymentDetails = ({ form, details, gotoNextStep }) => {
   const renderFields = fields => {
     if (!fields) return null;
     return Object.entries(fields).map(field => {
@@ -143,7 +219,58 @@ const PaymentDetails = ({ details }) => {
       );
     });
   };
-  return <Descriptions column={1}>{renderFields(details)}</Descriptions>;
+
+  const [submitState, setSubmitState] = useState('pending');
+  const handleSubmitClick = async () => {
+    // -> request otp
+    const OTPRequested = await new Promise(resolve =>
+      setTimeout(() => resolve(true), 2000)
+    );
+    if (OTPRequested) {
+      setSubmitState('OTP');
+    }
+  };
+
+  const [OTP, setOTP] = useState();
+  const handleOTPSendClick = async () => {
+    // -> send otp and payment id
+    const submitted = await new Promise(resolve =>
+      setTimeout(() => resolve(true), 2000)
+    );
+    if (submitted) {
+      setSubmitState('submitted');
+      gotoNextStep();
+    }
+  };
+  return (
+    <>
+      <Descriptions bordered column={1}>
+        {renderFields(details)}
+      </Descriptions>
+      {submitState === 'pending' && (
+        <Button type="primary" onClick={handleSubmitClick}>
+          Submit payment
+        </Button>
+      )}
+      {submitState === 'OTP' && (
+        <>
+          <Form.Item>
+            <Input
+              id="otp"
+              label="Code"
+              placeholder="Code from SMS"
+              onChange={e => setOTP(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" onClick={handleOTPSendClick}>
+              Send
+            </Button>
+          </Form.Item>
+        </>
+      )}
+    </>
+  );
 
   // confirm button
   // -> request otp
@@ -151,69 +278,12 @@ const PaymentDetails = ({ details }) => {
   // -> send otp and payment id
 };
 
-const sendPaymentRequest = async (values, paymentType, history) => {
-  const {
-    amount,
-    account,
-    note,
-    phone,
-    swift,
-    bankCode,
-    bankName,
-    bankAddress,
-    bankBranchCode,
-    accountId
-  } = values;
-
-  const account_id = account.id;
-  const idempotency = getRandomString();
-  let params;
-  let request;
-  if (paymentType === 'internal') {
-    const recipientUser = await usersCheck(phone);
-    const user_id = recipientUser.id;
-    params = {
-      amount,
-      account_id,
-      user_id,
-      description: note ? note : '',
-      idempotency
-    };
-    request = paymentsPay;
-  }
-  if (paymentType === 'remittance') {
-    params = {
-      amount,
-      account_id,
-      notes: note ? note : '',
-      withdrawal_type: 1,
-      idempotency,
-      recipient: {
-        swift,
-        bank_code: bankCode,
-        bank_account_id: accountId,
-        branch_code: bankBranchCode,
-        bank_address: bankAddress,
-        bank_name: bankName
-      }
-    };
-    request = withdrawal;
-  }
-
-  try {
-    const response = await request(params);
-    if (response) {
-      message.success('We executing your payment request now');
-      history.push('/');
-    }
-  } catch (error) {
-    const err = error.response.data.error[0];
-    const msg = `${err.message} ${err.code}`;
-    message.error(msg);
-  }
-};
-
-const PaymentInfoForm = ({ form, setPaymentType, gotoStep, getQuotes }) => {
+const PaymentInfoForm = ({
+  form,
+  setPaymentType,
+  gotoNextStep,
+  getDetails
+}) => {
   const { getFieldsValue, getFieldValue } = form;
   const accounts = useSelector(state => state.accounts);
 
@@ -227,35 +297,196 @@ const PaymentInfoForm = ({ form, setPaymentType, gotoStep, getQuotes }) => {
   const recipientField = paymentType === 'internal' ? 'phone' : 'beneficiary';
   const recipient = getFieldValue(recipientField);
 
-  const handleGetQuotes = async () => {
+  const handleCreateClick = async () => {
     const values = getFieldsValue();
-    //send values for getting quote info
-    getQuotes(values);
-    // console.log(values);
-    gotoStep(1);
+    getDetails(values);
+    gotoNextStep();
   };
 
   return (
     <>
       <PaymentTypeField form={form} />
-      {/* payment reference optional */}
-      {paymentType && <AccountField form={form} accounts={accounts} />}
-      {account && <AmountField form={form} balance={balance} />}
-      {amount > 0 &&
-        amount <= balance &&
-        renderRecipientFields(paymentType, form)}
-      {/* purpose */}
-      {/* invoice file */}
-      {recipient && (
+      {paymentType && (
         <>
+          {/* payment reference optional */}
+          <PaymentReference form={form} />
+          <AccountField form={form} accounts={accounts} />
+          <AmountField form={form} balance={balance} />
+          {paymentType === 'internal' && (
+            <InternalRecipientFields form={form} />
+          )}
+          {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
+          {/* purpose */}
+          <PaymentPurpose form={form} />
+          {/* invoice file */}
+          <UploadInvoice form={form} />
           <NoteField form={form} />
           <FormItem {...submitButtonLayoutProps}>
-            <Button type="primary" onClick={handleGetQuotes}>
+            <Button type="primary" onClick={handleCreateClick}>
               Create Payment Request
             </Button>
           </FormItem>
         </>
       )}
     </>
+  );
+};
+const PaymentTypeField = ({ form }) => {
+  const { getFieldDecorator } = form;
+
+  return (
+    <Form.Item label="Payment Type">
+      {getFieldDecorator('paymentType', {
+        rules: [{ required: true, message: 'Please choose payment type!' }]
+      })(
+        <Radio.Group>
+          <Radio.Button value="internal">Internal</Radio.Button>
+          <Radio.Button value="remittance">Remittance</Radio.Button>
+        </Radio.Group>
+      )}
+    </Form.Item>
+  );
+};
+
+const accountToOption = account => {
+  const { number, amount } = account;
+  const title = `${number} | Balance: S$ ${amount}`;
+  return {
+    title,
+    value: account
+  };
+};
+const AccountField = ({ accounts, form }) => {
+  const options = accounts.map(accountToOption);
+  return (
+    <SelectItem
+      form={form}
+      options={options}
+      id="account"
+      label="Account"
+      placeholder="Select account"
+      required
+    />
+  );
+};
+
+const AmountField = ({ balance, form }) => {
+  const { getFieldDecorator } = form;
+  const greaterThanZero = (rule, value, callback) => {
+    if (value > 0) {
+      return callback();
+    }
+    callback('Amount must be greater than zero');
+  };
+  const lessOrEqualBalance = (rule, value, callback) => {
+    if (value > balance) {
+      return callback("Amount can't be more than balance");
+    }
+    callback();
+  };
+
+  return (
+    <Form.Item label="Amount" hasFeedback>
+      {getFieldDecorator('amount', {
+        rules: [
+          { required: true, message: 'Please enter amount!' },
+          { validator: greaterThanZero },
+          { validator: lessOrEqualBalance }
+        ]
+      })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={'S$'} />)}
+    </Form.Item>
+  );
+};
+
+const SelectBeneficiary = ({ form }) => {
+  const beneficiaries = useAsync(getBeneficiary);
+  const options = beneficiaries
+    ? beneficiaries
+        .filter(counterparty => counterparty.accountNumber)
+        .map(b => {
+          const { nickname, accountNumber, id, companyName } = b;
+
+          const option = {
+            value: id,
+            title: `${nickname || ''} ${companyName || ''} ${accountNumber ||
+              ''}`
+          };
+
+          return option;
+        })
+    : [];
+
+  return (
+    <SelectItem
+      form={form}
+      label="Beneficiary"
+      id="beneficiary"
+      placeholder="Select beneficiary"
+      options={options}
+      required
+    />
+  );
+};
+
+const PaymentPurpose = ({ form }) => {
+  const options = [];
+  return (
+    <SelectItem
+      form={form}
+      options={options}
+      label="Payment Purpose"
+      id="paymentPurpose"
+    />
+  );
+};
+
+const PaymentReference = ({ form }) => {
+  return (
+    <InputItem
+      form={form}
+      label="Payment Reference"
+      placeholder="For family"
+      id="paymentRefrence"
+    />
+  );
+};
+
+const UploadInvoice = ({ form }) => {
+  const normFile = e => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+  return (
+    <Form.Item label="Upload Invoice">
+      {form.getFieldDecorator('invoice', {
+        valuePropName: 'fileList',
+        getValueFromEvent: normFile,
+        rules: [{ required: false, message: 'Please upload invoice' }]
+      })(
+        <Upload.Dragger name="files" action="/upload.do">
+          <p className="ant-upload-drag-icon">
+            <Icon type="inbox" />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload.
+          </p>
+        </Upload.Dragger>
+      )}
+    </Form.Item>
+  );
+};
+
+const NoteField = ({ form }) => {
+  const { getFieldDecorator } = form;
+  return (
+    <Form.Item label="Note">
+      {getFieldDecorator('note')(<Input allowClear />)}
+    </Form.Item>
   );
 };

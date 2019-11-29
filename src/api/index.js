@@ -98,7 +98,7 @@ export const getCountries = async () => await get('/countries');
 
 export const getCurrencies = async () => await get('/currencies');
 
-export const fetchPaymentQuotesMock = async () =>
+export const fetchPaymentDetails = async () =>
   await new Promise(resolve =>
     setTimeout(() =>
       resolve(
