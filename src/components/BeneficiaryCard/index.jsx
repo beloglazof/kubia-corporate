@@ -1,5 +1,5 @@
 import { startCase } from 'lodash';
-import { Button, Card, Descriptions, Form, Modal } from 'antd';
+import { Button, Card, Descriptions, Form, Modal, Popconfirm } from 'antd';
 import React from 'react';
 import { useForm, useModal } from 'sunflower-antd';
 import InputItem from '../BeneficiaryAddForm/InputItem';
@@ -35,9 +35,13 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
   return (
     <Card
       title={cardTitle}
-      headStyle={{ fontSize: '1.5em' }}
-      size={'small'}
+      headStyle={{
+        fontSize: '1.6em',
+        marginLeft: '1em',
+        lineHeight: '1.5em'
+      }}
       actions={actions}
+      size='small'
     >
       <Descriptions bordered column={2} layout="vertical">
         {renderFields(fields)}
@@ -73,8 +77,25 @@ const getCardActions = (showDetails, onDelete, showEditModal) => {
 };
 
 const renderAction = ({ name, handler, icon }) => {
+  const styles = {
+    marginBottom: 0
+  };
+  if (name === 'delete') {
+    return (
+      <Popconfirm
+        title="Are you sure delete beneficiary?"
+        onConfirm={handler}
+        okText="Yes"
+        cancelText="No"
+      >
+        <Button style={styles} type="danger" icon={icon}>
+          {startCase(name)}
+        </Button>
+      </Popconfirm>
+    );
+  }
   return (
-    <Button type="primary" icon={icon} onClick={handler}>
+    <Button type="primary" icon={icon} onClick={handler} style={styles}>
       {startCase(name)}
     </Button>
   );
