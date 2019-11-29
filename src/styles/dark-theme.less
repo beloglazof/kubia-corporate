@@ -1458,7 +1458,7 @@ body.dark-theme {
       & .ant-descriptions-view,
       & .ant-descriptions-item-content,
       & .ant-descriptions-row {
-        border-color: @dark-theme-border-color;
+        border-color: lighten(@dark-theme-border-color, 5%);
       }
       & .ant-descriptions-item-label {
         background-color: lighten(@dark-theme-primary-color, 2%);
@@ -1473,6 +1473,7 @@ body.dark-theme {
   }
 
   & .ant-modal {
+    color: @dark-theme-text-color;
     &-header,
     &-footer {
       border-color: @dark-theme-border-color;
@@ -1546,6 +1547,16 @@ body.dark-theme {
       &:hover {
         border-color: fade(@grey-2, 10%);
       }
+
+      &__clear {
+        background: transparent;
+      }
+
+      &--multiple &__choice {
+        color: #e8e8e8;
+        background-color: #323a43;
+        border: 1px solid #545454;
+      }
     }
 
     &-arrow {
@@ -1576,6 +1587,16 @@ body.dark-theme {
       &-active {
         background-color: darken(@dark-theme-component-background, 8%);
         color: @dark-theme-text-color;
+      }
+
+      & > .anticon svg {
+        fill: transparent;
+      }
+
+      &-selected {
+        & > .anticon svg {
+          fill: @dark-theme-text-color;
+        }
       }
     }
 
@@ -2109,14 +2130,13 @@ body.dark-theme {
     }
 
     &-danger {
-      color: @danger-color;
-      background-color: transparent;
-      border-color: @danger-color;
+      color: @white-color;
+      background-color: lighten(@danger-color, 3%);
+      border-color: lighten(@danger-color, 3%);
 
       &:hover,
       &:focus {
-        color: @white-color;
-        background-color: lighten(@danger-color, 5%);
+        background-color: @danger-color;
         border-color: @danger-color;
       }
     }
@@ -2501,6 +2521,10 @@ body.dark-theme {
 
     &-link-active > .ant-anchor-link-title {
       color: darken(@dark-theme-text-color, 10%);
+    }
+
+    &-ink-ball {
+      border-color: @dark-theme-text-color;
     }
   }
 
