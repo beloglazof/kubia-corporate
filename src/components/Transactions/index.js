@@ -30,20 +30,20 @@ const TRANS_ICONS = {
   WITHDRAWAL: 'fall'
 };
 const { TabPane } = Tabs;
-const MONTHS = {
-  1: 'January',
-  2: 'February',
-  3: 'March',
-  4: 'April',
-  5: 'May',
-  6: 'June',
-  7: 'July',
-  8: 'August',
-  9: 'September',
-  10: 'October',
-  11: 'November',
-  12: 'December'
-};
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
 
 const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
 const LINKED_ACC_TYPES = {
@@ -74,9 +74,7 @@ const Transactions = ({ transList, fetchList }) => {
 
   //  Transaction details modal toggler
   const handleClick = record => {
-    fillModal(
-      filteredData.filter(transaction => transaction.id === record.id)[0]
-    );
+    fillModal(filteredData.find(transaction => transaction.id === record.id));
     toggleModal(true);
   };
 
@@ -95,8 +93,8 @@ const Transactions = ({ transList, fetchList }) => {
   );
 
   //  Get each month's transactions
-  const monthlyTransactions = month =>
-    filteredData.filter(t => new Date(t.creationDate).getMonth() === month - 1);
+  const monthlyTransactions = monthNum =>
+    filteredData.filter(t => new Date(t.creationDate).getMonth() === monthNum);
 
   // Get each day's transactions
   const dailyTransactions = (transactions, day) =>
@@ -105,7 +103,7 @@ const Transactions = ({ transList, fetchList }) => {
   //  Return daily grouped transactions
   const transactionsOfADay = monthNum => {
     const group = [];
-    for (let i = 1; i <= MONTHS_LENGTH[monthNum - 1]; i++) {
+    for (let i = 0; i <= MONTHS_LENGTH[monthNum]; i++) {
       if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
         group.push(
           <div key={i} style={{ alignContent: 'center' }}>
@@ -159,7 +157,7 @@ const Transactions = ({ transList, fetchList }) => {
   //  Building anchors
   const anchorBuilder = monthNum => {
     const anchors = [];
-    for (let i = 1; i <= MONTHS_LENGTH[monthNum - 1]; i++) {
+    for (let i = 1; i <= MONTHS_LENGTH[monthNum]; i++) {
       if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
         anchors.push(
           <Link
@@ -276,15 +274,15 @@ const Transactions = ({ transList, fetchList }) => {
             {linkedAccounts()}
           </Select>
           <Tabs
-            defaultActiveKey={(new Date().getMonth() + 1).toString()}
+            defaultActiveKey={(new Date().getMonth()).toString()}
             size="small"
             tabBarGutter={15}
             // tabBarStyle={{ margin: '0' }}
             animated={false}
             /* onChange={(activeKey) => handleFilter(activeKey)} */
           >
-            {Object.keys(MONTHS).map(monthNum => (
-              <TabPane tab={MONTHS[monthNum]} key={monthNum}>
+            {MONTHS.map((_, monthInd) => (
+              <TabPane tab={MONTHS[monthInd]} key={monthInd}>
                 <Anchor
                   affix={false}
                   offsetTop={15}
@@ -293,9 +291,9 @@ const Transactions = ({ transList, fetchList }) => {
                     document.getElementsByClassName('ant-tabs-content')[0]
                   }
                 >
-                  {anchorBuilder(monthNum)}
+                  {anchorBuilder(monthInd)}
                 </Anchor>
-                {transactionsOfADay(monthNum)}
+                {transactionsOfADay(monthInd)}
               </TabPane>
             ))}
           </Tabs>
