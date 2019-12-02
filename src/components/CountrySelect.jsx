@@ -14,7 +14,7 @@ const CountrySelect = ({
   initialValue,
   ...selectProps
 }) => {
-  const countries = useAsync(getCountries);
+  const [countries] = useAsync(getCountries);
   const options = countries
     ? countries.map(c => ({ value: c.iso2, title: c.name }))
     : [];

@@ -178,9 +178,6 @@ const Settings = ({}) => {
             loading={!sessions}
             pagination={{ pageSize: 5 }}
             rowKey={'id'}
-            rowClassName={record => {
-              if (record.current) return styles.current;
-            }}
             bordered
           />
         )}

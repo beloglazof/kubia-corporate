@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-const useAsync = (asyncMethod, params, deps = []) => {
+const useAsync = (asyncMethod, deps = [], ...params) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedData = await asyncMethod(params);
+      const fetchedData = await asyncMethod(...params);
       if (fetchedData) {
         setData(fetchedData);
       }
@@ -13,7 +13,7 @@ const useAsync = (asyncMethod, params, deps = []) => {
     fetchData();
   }, deps);
 
-  return data;
+  return [data, setData];
 };
 
 export default useAsync;

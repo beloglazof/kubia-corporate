@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, List } from 'antd';
 import {
   deleteBeneficiary,
@@ -13,13 +13,8 @@ const Beneficiaries = ({ history }) => {
     history.push('beneficiaries/add');
   };
 
-  const fetchedBeneficiaries = useAsync(getBeneficiary);
-  const [beneficiaries, setBeneficiaries] = useState([]);
-  useLayoutEffect(() => {
-    if (fetchedBeneficiaries) {
-      setBeneficiaries(fetchedBeneficiaries);
-    }
-  }, [fetchedBeneficiaries]);
+  const [beneficiaries, setBeneficiaries] = useAsync(getBeneficiary);
+  
 
   const handleDelete = beneficiaryId => async () => {
     const deleted = await deleteBeneficiary(beneficiaryId);
@@ -43,7 +38,7 @@ const Beneficiaries = ({ history }) => {
     }
   };
 
-  const loading = !fetchedBeneficiaries;
+  const loading = !beneficiaries;
   const renderBeneficiary = beneficiary => {
     return (
       <List.Item key={beneficiary.id}>

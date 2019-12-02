@@ -6,9 +6,10 @@ const InputItem = ({
   id = 'input',
   label = 'Input',
   placeholder = 'Placeholder',
+  required = false,
   validationPattern,
   initialValue,
-  required = false,
+  formItemProps,
   disabled
 }) => {
   if (!form) return null;
@@ -32,7 +33,7 @@ const InputItem = ({
 
   const fieldDecorator = form && form.getFieldDecorator(id, fieldConfig);
   return (
-    <Form.Item label={label}>
+    <Form.Item label={label} {...formItemProps}>
       {fieldDecorator(<Input placeholder={placeholder} disabled={disabled} />)}
     </Form.Item>
   );

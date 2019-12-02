@@ -4,7 +4,7 @@ import SelectItem from './BeneficiaryAddForm/SelectItem';
 import React from 'react';
 
 const CurrencySelect = ({ form }) => {
-  const currencies = useAsync(getCurrencies);
+  const [currencies] = useAsync(getCurrencies);
   const options = currencies
     ? currencies.map(c => ({ value: c.code, title: c.name }))
     : [];

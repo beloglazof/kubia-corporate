@@ -6,17 +6,19 @@ import { useSelector } from 'react-redux';
 
 import Transactions from '../components/Transactions';
 import Accounts from './Accounts';
-import NewPayment from './NewPayment';
+import NewPayment from './Pay';
 import Settings from './Settings';
 import Beneficiaries from './Beneficiaries';
 import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
+import LinkedPeople from './LinkedPeople';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'dollar' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
-  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' }
+  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' },
+  { name: 'linkedPeople', path: '/linked-people', iconName: 'user' },
 ];
 
 export const renderNavigationItems = () => {
@@ -49,6 +51,7 @@ const App = () => {
         <Route path={`/transactions`} component={Transactions} />
         <Route exact path={`/beneficiaries`} component={Beneficiaries} />
         <Route path={`/beneficiaries/add`} component={BeneficiaryAddForm} />
+        <Route exact path={`/linked-people`} component={LinkedPeople} />
       </Switch>
     </div>
   );

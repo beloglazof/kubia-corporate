@@ -19,8 +19,8 @@ const renderFields = (fields, values) => {
 
 const CompanyInfoCard = props => {
   const user = useSelector(state => state.user);
-  const companyFields = useAsync(getCompanyFields);
-  const companies = useAsync(getCompanies);
+  const [companyFields] = useAsync(getCompanyFields);
+  const [companies] = useAsync(getCompanies);
   const currentCompany = companies && companies[0];
   const fieldValues = currentCompany?.fields;
   const titleStyles = {

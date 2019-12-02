@@ -27,7 +27,7 @@ import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
 import InputItem from '../BeneficiaryAddForm/InputItem';
 import SelectItem from '../BeneficiaryAddForm/SelectItem';
-import InternalRecipientFields from './InternalRecipientFields';
+import SearchUserByPhoneWrapper from './SearchUserByPhone';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -312,9 +312,7 @@ const PaymentInfoForm = ({
           <PaymentReference form={form} />
           <AccountField form={form} accounts={accounts} />
           <AmountField form={form} balance={balance} />
-          {paymentType === 'internal' && (
-            <InternalRecipientFields form={form} />
-          )}
+          {paymentType === 'internal' && <SearchUserByPhoneWrapper form={form} />}
           {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
           {/* purpose */}
           <PaymentPurpose form={form} />
@@ -399,7 +397,7 @@ const AmountField = ({ balance, form }) => {
 };
 
 const SelectBeneficiary = ({ form }) => {
-  const beneficiaries = useAsync(getBeneficiary);
+  const [beneficiaries] = useAsync(getBeneficiary);
   const options = beneficiaries
     ? beneficiaries
         .filter(counterparty => counterparty.accountNumber)
