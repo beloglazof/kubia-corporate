@@ -21,7 +21,8 @@ import {
   getBeneficiary,
   paymentsPay,
   usersCheck,
-  withdrawal
+  withdrawal,
+  getPeople
 } from '../../api';
 import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
@@ -312,7 +313,7 @@ const PaymentInfoForm = ({
           <PaymentReference form={form} />
           <AccountField form={form} accounts={accounts} />
           <AmountField form={form} balance={balance} />
-          {paymentType === 'internal' && <SearchUserByPhoneWrapper form={form} />}
+          {paymentType === 'internal' && <SelectLinkedUser form={form} />}
           {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
           {/* purpose */}
           <PaymentPurpose form={form} />
@@ -397,22 +398,20 @@ const AmountField = ({ balance, form }) => {
 };
 
 const SelectBeneficiary = ({ form }) => {
-  const [beneficiaries] = useAsync(getBeneficiary);
+  const [beneficiaries] = useAsync(getBeneficiary, []);
   const options = beneficiaries
-    ? beneficiaries
-        .filter(counterparty => counterparty.accountNumber)
-        .map(b => {
-          const { nickname, accountNumber, id, companyName } = b;
+    .filter(counterparty => counterparty.accountNumber)
+    .map(beneficiary => {
+      const { nickname, accountNumber, id, companyName } = beneficiary;
 
-          const option = {
-            value: id,
-            title: `${nickname || ''} ${companyName || ''} ${accountNumber ||
-              ''}`
-          };
+      const title = `${nickname || ''} ${companyName || ''} ${accountNumber || ''}`;
+      const option = {
+        value: id,
+        title
+      };
 
-          return option;
-        })
-    : [];
+      return option;
+    });
 
   return (
     <SelectItem
@@ -420,6 +419,30 @@ const SelectBeneficiary = ({ form }) => {
       label="Beneficiary"
       id="beneficiary"
       placeholder="Select beneficiary"
+      options={options}
+      required
+    />
+  );
+};
+const SelectLinkedUser = ({ form }) => {
+  const [people] = useAsync(getPeople, []);
+  const options = people.map(user => {
+    const { id, name } = user;
+
+    const option = {
+      value: id,
+      title: name
+    };
+
+    return option;
+  });
+
+  return (
+    <SelectItem
+      form={form}
+      label="Linked people"
+      id="linkedPeople"
+      placeholder="Select user"
       options={options}
       required
     />

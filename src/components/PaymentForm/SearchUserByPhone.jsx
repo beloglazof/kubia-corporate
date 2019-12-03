@@ -20,7 +20,9 @@ const SearchUserByPhoneWrapper = ({
     // const phone = form.getFieldValue('phone');
     if (hasErrors(form.getFieldsError(['phone']))) {
       setUser(null);
-      setFoundUser(null);
+      if (setFoundUser) {
+        setFoundUser(null);
+      }
     }
   });
   const hasCode = phone => phone.startsWith('65') || phone.startsWith('+65');
@@ -52,20 +54,34 @@ const SearchUserByPhoneWrapper = ({
         rules: [
           { required: true, message: 'Please input phone number!' },
           {
-            len: PHONE_NUMBER_LENGTH,
-            message: 'Not enough digits in phone number'
+            len: PHONE_NUMBER_LENGTH
           },
           { validator: checkPhone }
         ],
         normalize: normalizePhone,
         validateFirst: true
-      })(children || PhoneInput)}
+      })(
+        children || (
+          <Input
+            inputMode={'tel'}
+            addonBefore={'+65'}
+            pattern={'[0-9]*'}
+          />
+        )
+      )}
     </Form.Item>
   );
 };
 
 export default SearchUserByPhoneWrapper;
 
-const PhoneInput = () => {
-  return <Input inputMode={'tel'} addonBefore={'+65'} pattern={'[0-9]*'} />;
+export const PhoneInput = props => {
+  return (
+    <Input
+      inputMode={'tel'}
+      addonBefore={'+65'}
+      pattern={'[0-9]*'}
+      {...props}
+    />
+  );
 };

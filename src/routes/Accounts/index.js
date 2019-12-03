@@ -3,7 +3,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Account from '../../components/Account';
 import CompanyInfoCard from '../../components/CompanyInfoCard';
-import Transactions from '../../components/Transactions';
 import LastTransactions from '../../components/Transactions/LastTransactions';
 
 const Accounts = ({ history }) => {
@@ -25,7 +24,6 @@ const Accounts = ({ history }) => {
       </Row>
       <Row gutter={16}>
         <Col span={24} xl={12}>
-          {/* <Transactions /> */}
           <LastTransactions history={history} />
         </Col>
       </Row>
