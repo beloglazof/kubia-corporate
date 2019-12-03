@@ -59,7 +59,7 @@ const Beneficiaries = ({ history }) => {
       </Button>
       <List
         loading={loading}
-        dataSource={beneficiaries}
+        dataSource={loading ? [] : beneficiaries}
         renderItem={renderBeneficiary}
         grid={{
           gutter: 16,

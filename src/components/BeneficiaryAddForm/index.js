@@ -31,7 +31,6 @@ const BeneficiaryAddForm = ({ history, form }) => {
 
   const [mainFormFields, setMainFormFields] = useState();
 
-
   const goToBeneficiaries = () => {
     history.push('/beneficiaries');
   };
@@ -52,9 +51,9 @@ const BeneficiaryAddForm = ({ history, form }) => {
       <h1 style={{ marginBottom: '2em' }}>Add new beneficiary</h1>
 
       <Steps {...stepsProps}>
-        <Step title="First Step" />
-        <Step title="Second Step" />
-        <Step title="Success" />
+        <Step />
+        <Step />
+        <Step />
       </Steps>
 
       <Form {...formLayout} {...formProps} style={{ margin: '2em 0' }}>
