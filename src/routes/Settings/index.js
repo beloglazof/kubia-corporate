@@ -27,12 +27,12 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
   };
   return (
     <Popconfirm
-      title="Are you sure close all session until current?"
+      title="Are you sure to close all session but current?"
       onConfirm={handleClick}
       okText="Yes"
       cancelText="No"
     >
-      <Button type="primary" style={{ marginBottom: 0 }}>
+      <Button type="danger" style={{ marginBottom: 0 }}>
         Close
       </Button>
     </Popconfirm>

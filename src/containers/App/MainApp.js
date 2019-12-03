@@ -76,23 +76,7 @@ export class MainApp extends Component {
   };
 
   getSidebar = (navStyle, width) => {
-    if (width < TAB_SIZE) {
-      return <Sidebar location={this.props.location} />;
-    }
-    switch (navStyle) {
-      case NAV_STYLE_FIXED:
-        return <Sidebar />;
-      case NAV_STYLE_DRAWER:
-        return <Sidebar />;
-      case NAV_STYLE_MINI_SIDEBAR:
-        return <Sidebar />;
-      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR:
-        return <Sidebar />;
-      case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR:
-        return <Sidebar />;
-      default:
-        return null;
-    }
+    return <Sidebar location={this.props.location} />;
   };
 
   componentDidMount() {
@@ -132,7 +116,4 @@ const actions = {
   fetchMainScreen,
   fetchUser
 };
-export default connect(
-  mapStateToProps,
-  actions
-)(MainApp);
+export default connect(mapStateToProps, actions)(MainApp);
