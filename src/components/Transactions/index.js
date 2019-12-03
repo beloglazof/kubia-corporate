@@ -20,17 +20,17 @@ import styles from './Transactions.module.css';
 const { Link } = Anchor;
 const { Option } = Select;
 
-const COLORS = {
+export const COLORS = {
   DEPOSIT: 'limegreen',
   WITHDRAWAL: 'tomato',
   TRANSFER: '#28aaeb'
 };
-const TRANS_ICONS = {
+export const TRANS_ICONS = {
   DEPOSIT: 'rise',
   WITHDRAWAL: 'fall'
 };
 const { TabPane } = Tabs;
-const MONTHS = [
+export const MONTHS = [
   'January',
   'February',
   'March',
@@ -45,8 +45,8 @@ const MONTHS = [
   'December'
 ];
 
-const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
-const LINKED_ACC_TYPES = {
+export const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
+export const LINKED_ACC_TYPES = {
   DEPOSIT: 'Sender',
   WITHDRAWAL: 'Recipient'
 };
@@ -101,20 +101,20 @@ const Transactions = ({ transList, fetchList }) => {
     transactions.filter(t => new Date(t.creationDate).getDate() === day);
 
   //  Return daily grouped transactions
-  const transactionsOfADay = monthNum => {
+  const transactionsOfADay = monthInd => {
     const group = [];
-    for (let i = 0; i <= MONTHS_LENGTH[monthNum]; i++) {
-      if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
+    for (let i = 0; i <= MONTHS_LENGTH[monthInd]; i++) {
+      if (dailyTransactions(monthlyTransactions(monthInd), i).length) {
         group.push(
           <div key={i} style={{ alignContent: 'center' }}>
             <Divider
               // style={{ margin: '10px auto' }}
-              id={`${i}-${MONTHS[monthNum]}`}
+              id={`${i}-${MONTHS[monthInd]}`}
               className={styles.divider}
             >
-              {i} {MONTHS[monthNum]}
+              {i} {MONTHS[monthInd]}
             </Divider>
-            {dailyTransactions(monthlyTransactions(monthNum), i).map(t => (
+            {dailyTransactions(monthlyTransactions(monthInd), i).map(t => (
               <Card
                 key={t.id}
                 size="small"
@@ -274,7 +274,7 @@ const Transactions = ({ transList, fetchList }) => {
             {linkedAccounts()}
           </Select>
           <Tabs
-            defaultActiveKey={(new Date().getMonth()).toString()}
+            defaultActiveKey={new Date().getMonth().toString()}
             size="small"
             tabBarGutter={15}
             // tabBarStyle={{ margin: '0' }}

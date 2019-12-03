@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-const useAsync = (asyncMethod, deps = [], ...params) => {
-  const [data, setData] = useState(null);
+const useAsync = (asyncMethod, initialValue, deps = [], ...params) => {
+  const [data, setData] = useState(initialValue);
 
   useEffect(() => {
     const fetchData = async () => {
