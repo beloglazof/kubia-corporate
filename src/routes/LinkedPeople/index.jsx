@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SearchUserByPhoneWrapper from '../../components/PaymentForm/SearchUserByPhone';
-import { Form, Input, Button, Table, Popconfirm } from 'antd';
+import { Form, Input, Button, Table, Popconfirm, Row, Col } from 'antd';
 import { PHONE_NUMBER_LENGTH } from '../../constants';
 import { usersCheck, getPeople, addPeople, deletePeople } from '../../api';
 import InputItem from '../../components/BeneficiaryAddForm/InputItem';
@@ -21,12 +21,22 @@ const LinkedPeople = () => {
     }
   };
   return (
-    <>
-      <h1 style={{ marginBottom: '1em' }}>Linked People</h1>
-      {/* find user in our core */}
-      <WrappedAddUserForm handleAdd={handleAdd} />
-      <LinkedPeopleTable people={people} handleDelete={handleDelete} />
-    </>
+    <Row>
+      <Col span={24}>
+        <h1 style={{ marginBottom: '1em' }}>Linked People</h1>
+        <Row type="flex" justify="center">
+          <Col span={18}>
+            {/* find user in our core */}
+            <WrappedAddUserForm handleAdd={handleAdd} />
+          </Col>
+        </Row>
+        <Row type="flex" justify="center" style={{ marginTop: '1em' }}>
+          <Col span={24} lg={20}>
+            <LinkedPeopleTable people={people} handleDelete={handleDelete} />
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   );
 };
 
@@ -66,14 +76,15 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
     <Table
       dataSource={people}
       columns={columns}
-      size="small"
       rowKey="id"
       loading={!people}
+      tableLayout="auto"
+      bordered
     />
   );
 };
 
-const AddUserForm = ({ form, handleAdd }) => {
+const AddUserForm = ({ form, handleAdd, style }) => {
   const [foundUser, setFoundUser] = useState();
   const name = form.getFieldValue('name');
   const handleAddClick = () => {
@@ -84,31 +95,44 @@ const AddUserForm = ({ form, handleAdd }) => {
           name: values.name,
           userId: foundUser.id
         });
-        form.resetFields()
-        setFoundUser(null)
+        form.resetFields();
+        setFoundUser(null);
       }
-
     });
   };
+
+  const layoutProps = {
+    layout: 'horizontal',
+    wrapperCol: { xs: { span: 10 } },
+    labelCol: { xs: { span: 6 } }
+  };
+
+  const buttonLayoutProps = {
+    wrapperCol: { xs: { offset: layoutProps.labelCol.xs.span } }
+  };
   return (
-    <Form layout="inline" hideRequiredMark>
-      <h2>Add new people</h2>
-      <SearchUserInput form={form} setFoundUser={setFoundUser} />
-      {foundUser && (
-        <>
-          <InputItem
-            form={form}
-            id="name"
-            label="Name"
-            placeholder="John (SMM)"
-            required
-          />
-          <Button type="primary" disabled={!name} onClick={handleAddClick}>
-            Add
-          </Button>
-        </>
-      )}
-    </Form>
+    <>
+      <h2>Link new user</h2>
+      <Form layout="horizontal" style={style} {...layoutProps} hideRequiredMark>
+        <SearchUserInput form={form} setFoundUser={setFoundUser} />
+        {foundUser && (
+          <>
+            <InputItem
+              form={form}
+              id="name"
+              label="Name"
+              placeholder="John (SMM)"
+              required
+            />
+            <Form.Item {...buttonLayoutProps}>
+              <Button type="primary" disabled={!name} onClick={handleAddClick}>
+                Add
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form>
+    </>
   );
 };
 

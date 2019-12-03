@@ -3,6 +3,9 @@ import { Form, Input } from 'antd';
 import React, { useState, useLayoutEffect } from 'react';
 import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../../constants';
 
+const hasErrors = fieldsErrors => {
+  return Object.keys(fieldsErrors).some(field => fieldsErrors[field]);
+};
 const SearchUserByPhoneWrapper = ({
   form,
   setFoundUser,
@@ -14,9 +17,10 @@ const SearchUserByPhoneWrapper = ({
   const { getFieldDecorator } = form;
 
   useLayoutEffect(() => {
-    const phone = form.getFieldValue('phone');
-    if (!phone || !phone.length) {
+    // const phone = form.getFieldValue('phone');
+    if (hasErrors(form.getFieldsError(['phone']))) {
       setUser(null);
+      setFoundUser(null);
     }
   });
   const hasCode = phone => phone.startsWith('65') || phone.startsWith('+65');

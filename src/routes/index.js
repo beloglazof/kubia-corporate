@@ -13,12 +13,12 @@ import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
 import LinkedPeople from './LinkedPeople';
 
 export const navItems = [
-  { name: 'accounts', path: '/accounts', iconName: 'dollar' },
+  { name: 'accounts', path: '/accounts', iconName: 'wallet' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
-  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'user' },
-  { name: 'linkedPeople', path: '/linked-people', iconName: 'user' },
+  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
+  { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
 ];
 
 export const renderNavigationItems = () => {
