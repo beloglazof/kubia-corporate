@@ -53,7 +53,7 @@ class SidebarLogo extends Component {
           width >= TAB_SIZE ? (
             <MainLogo />
           ) : themeType === THEME_TYPE_LITE ? (
-            <img alt="" src={require('assets/images/main-logo-black.png')} />
+            <img alt="Kubia" src={require('assets/images/main-logo-black.png')} />
           ) : (
             <MainLogo />
           )}

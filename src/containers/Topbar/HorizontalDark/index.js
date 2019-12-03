@@ -1,30 +1,16 @@
+import { Layout, Menu, message, Select } from 'antd';
 import React, { Component } from 'react';
-import {
-  Button,
-  Dropdown,
-  Icon,
-  Layout,
-  Menu,
-  message,
-  Popover,
-  Select
-} from 'antd';
 import { connect } from 'react-redux';
-import CustomScrollbars from 'util/CustomScrollbars';
-
-import languageData from '../languageData';
-import SearchBox from 'templateComponents/SearchBox';
-import UserInfo from 'templateComponents/UserInfo';
-import AppNotification from 'templateComponents/AppNotification';
-import MailNotification from 'templateComponents/MailNotification';
 import { NavLink as Link } from 'react-router-dom';
-import HorizontalNav from '../HorizontalNav';
+import UserInfo from 'templateComponents/UserInfo';
+import CustomScrollbars from 'util/CustomScrollbars';
+import MainLogo from '../../../components/MainLogo';
 import {
   switchLanguage,
   toggleCollapsedNav
 } from '../../../redux/features/settings/themeSettingsSlice';
-import IntlMessages from '../../../util/IntlMessages';
-import MainLogo from '../../../components/MainLogo';
+import HorizontalNav from '../HorizontalNav';
+import languageData from '../languageData';
 
 const { Header } = Layout;
 
