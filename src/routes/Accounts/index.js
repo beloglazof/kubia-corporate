@@ -24,7 +24,7 @@ const Accounts = ({ history }) => {
         </Col>
       </Row>
       <Row gutter={16}>
-        <Col xl={12}>
+        <Col span={24} xl={12}>
           {/* <Transactions /> */}
           <LastTransactions history={history} />
         </Col>
