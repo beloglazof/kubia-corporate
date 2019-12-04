@@ -303,10 +303,10 @@ const Transactions = ({ transList, fetchList }) => {
         >
           {anchorBuilder(monthInd)}
         </Anchor>
-        {Object.entries(monthTransactions).map(v =>
+        {/* {Object.entries(monthTransactions).map(v =>
           renderMonthTransactions(v, month)
-        )}
-        {/* {transactionsOfADay(monthInd)} */}
+        )} */}
+        {transactionsOfADay(monthInd)}
       </TabPane>
     );
   };
