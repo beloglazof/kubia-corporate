@@ -342,7 +342,7 @@ const Transactions = ({ transList, fetchList }) => {
             {linkedAccounts()}
           </Select>
           <Tabs
-            defaultActiveKey={MONTHS[new Date().getMonth().toString()]}
+            defaultActiveKey={MONTHS[new Date().getMonth()]}
             size="small"
             tabBarGutter={15}
             // tabBarStyle={{ margin: '0' }}
