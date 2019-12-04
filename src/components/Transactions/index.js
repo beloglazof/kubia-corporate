@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { groupBy, mapValues } from 'lodash';
 
 import {
   Anchor,
@@ -16,6 +17,7 @@ import {
 import TransactionDetails from './TransactionDetails/TransactionDetails';
 import { fetchList } from '../../redux/actions';
 import styles from './Transactions.module.css';
+import { formatISODate } from '../../util';
 
 const { Link } = Anchor;
 const { Option } = Select;
@@ -51,6 +53,60 @@ export const LINKED_ACC_TYPES = {
   WITHDRAWAL: 'Recipient'
 };
 
+//  Currency with tooltip
+const currencyTooltip = currency => (
+  <Tooltip title={currency?.name}>
+    <span>{currency?.symbol}</span>
+  </Tooltip>
+);
+
+//  Amount styled with tooltip
+const amountTooltip = amount => (
+  <Tooltip title="Amount">
+    <span>{amount}</span>
+  </Tooltip>
+);
+
+const TransactionCard = ({ transaction, handleClick }) => {
+  return (
+    <Card
+      key={transaction.id}
+      size="small"
+      title={
+        <span>
+          {currencyTooltip(transaction.currency)}{' '}
+          {amountTooltip(transaction.amount)}
+        </span>
+      }
+      extra={
+        <span style={{ color: COLORS[transaction.type] }}>
+          {transaction.type}
+        </span>
+      }
+      hoverable
+      style={{ margin: 'auto auto 10px', width: '350px' }}
+      headStyle={{ textAlign: 'left' }}
+      bodyStyle={{
+        display: 'flex',
+        alignItems: 'center',
+        textAlign: 'center'
+      }}
+      onClick={() => handleClick(transaction)}
+    >
+      <Icon
+        type={TRANS_ICONS[transaction.type]}
+        style={{ color: COLORS[transaction.type] }}
+      />
+      <Tooltip title="Account number">
+        <span style={{ flex: '1' }}>{transaction.account.number}</span>
+      </Tooltip>
+      <Tooltip title={LINKED_ACC_TYPES[transaction.type]}>
+        {transaction.linked_account.name}
+      </Tooltip>
+    </Card>
+  );
+};
+
 const Transactions = ({ transList, fetchList }) => {
   //  Fetching full list of transactions
   useEffect(() => {
@@ -62,9 +118,9 @@ const Transactions = ({ transList, fetchList }) => {
     type: 'ALL',
     linkedAccounts: []
   });
-  const [filteredData, updateData] = useState(transList); //  Filtered list of transactions
+  const [filteredTransactions, setFilteredTransactions] = useState(transList); //  Filtered list of transactions
   useEffect(() => {
-    updateData(transList);
+    setFilteredTransactions(transList);
     linkedAccounts();
   }, [transList]);
 
@@ -74,27 +130,17 @@ const Transactions = ({ transList, fetchList }) => {
 
   //  Transaction details modal toggler
   const handleClick = record => {
-    fillModal(filteredData.find(transaction => transaction.id === record.id));
+    fillModal(
+      filteredTransactions.find(transaction => transaction.id === record.id)
+    );
     toggleModal(true);
   };
 
-  //  Currency with tooltip
-  const currencyTooltip = currency => (
-    <Tooltip title={currency.name}>
-      <span>{currency.symbol}</span>
-    </Tooltip>
-  );
-
-  //  Amount styled with tooltip
-  const amountTooltip = amount => (
-    <Tooltip title="Amount">
-      <span>{amount}</span>
-    </Tooltip>
-  );
-
   //  Get each month's transactions
   const monthlyTransactions = monthNum =>
-    filteredData.filter(t => new Date(t.creationDate).getMonth() === monthNum);
+    filteredTransactions.filter(
+      t => new Date(t.creationDate).getMonth() === monthNum
+    );
 
   // Get each day's transactions
   const dailyTransactions = (transactions, day) =>
@@ -115,36 +161,7 @@ const Transactions = ({ transList, fetchList }) => {
               {i} {MONTHS[monthInd]}
             </Divider>
             {dailyTransactions(monthlyTransactions(monthInd), i).map(t => (
-              <Card
-                key={t.id}
-                size="small"
-                title={
-                  <span>
-                    {currencyTooltip(t.currency)} {amountTooltip(t.amount)}
-                  </span>
-                }
-                extra={<span style={{ color: COLORS[t.type] }}>{t.type}</span>}
-                hoverable
-                style={{ margin: 'auto auto 10px', width: '350px' }}
-                headStyle={{ textAlign: 'left' }}
-                bodyStyle={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  textAlign: 'center'
-                }}
-                onClick={() => handleClick(t)}
-              >
-                <Icon
-                  type={TRANS_ICONS[t.type]}
-                  style={{ color: COLORS[t.type] }}
-                />
-                <Tooltip title="Account number">
-                  <span style={{ flex: '1' }}>{t.account.number}</span>
-                </Tooltip>
-                <Tooltip title={LINKED_ACC_TYPES[t.type]}>
-                  {t.linked_account.name}
-                </Tooltip>
-              </Card>
+              <TransactionCard handleClick={handleClick} transaction={t} />
             ))}
             <BackTop />
           </div>
@@ -153,6 +170,19 @@ const Transactions = ({ transList, fetchList }) => {
     }
     return group;
   };
+
+  const transactionsGroupedByMonth = groupBy(
+    filteredTransactions,
+    transaction => formatISODate(transaction.creationDate, 'MMMM')
+  );
+
+  const transactionsGroupedByMonthAndDay = mapValues(
+    transactionsGroupedByMonth,
+    monthTransactions =>
+      groupBy(monthTransactions, transaction =>
+        formatISODate(transaction.creationDate, 'd')
+      )
+  );
 
   //  Building anchors
   const anchorBuilder = monthNum => {
@@ -226,7 +256,7 @@ const Transactions = ({ transList, fetchList }) => {
         break;
       }
     }
-    updateData(newData);
+    setFilteredTransactions(newData);
   };
 
   //  Map all linked accounts
@@ -243,21 +273,59 @@ const Transactions = ({ transList, fetchList }) => {
     return uniqueAccs.map(acc => <Option key={acc.id}>{acc.name}</Option>);
   };
 
+  const renderMonthTransactions = ([day, transactions], month) => {
+    return (
+      <div key={day} style={{ alignContent: 'center' }}>
+        <Divider
+          id={`${day}-${month}`}
+          className={styles.divider}
+        >
+          {day} {month}
+        </Divider>
+        {transactions.map(t => (
+          <TransactionCard handleClick={handleClick} transaction={t} />
+        ))}
+        <BackTop />
+      </div>
+    );
+  };
+
+  const renderMonthTabPane = ([month, monthTransactions]) => {
+    const monthInd = MONTHS.indexOf(month);
+    return (
+      <TabPane tab={month} key={month}>
+        <Anchor
+          offsetTop={15}
+          style={{ position: 'absolute', margin: '15px 0 0 0' }}
+          getContainer={() =>
+            document.getElementsByClassName('ant-tabs-content')[0]
+          }
+        >
+          {anchorBuilder(monthInd)}
+        </Anchor>
+        {/* {Object.entries(monthTransactions).map(v =>
+          renderMonthTransactions(v, month)
+        )} */}
+        {transactionsOfADay(monthInd)}
+      </TabPane>
+    );
+  };
+
+  const renderTransactions = transactions => {
+    return Object.entries(transactions).map(renderMonthTabPane).reverse();
+  };
+
   return (
     <>
       <div
         style={{
-          padding: '10px 10px 10px 10px',
+          padding: '10px',
           margin: 'auto',
           maxWidth: '550px',
           textAlign: 'center'
         }}
       >
-        <Spin
-          spinning={!transList.length}
-          size="large"
-          tip="loading transactions..."
-        >
+        <Spin spinning={!transList} size="large" tip="loading transactions...">
           <Radio.Group defaultValue="ALL" onChange={handleFilter}>
             <Radio.Button value="ALL">All</Radio.Button>
             <Radio.Button value="DEPOSIT">Deposit</Radio.Button>
@@ -274,28 +342,14 @@ const Transactions = ({ transList, fetchList }) => {
             {linkedAccounts()}
           </Select>
           <Tabs
-            defaultActiveKey={new Date().getMonth().toString()}
+            defaultActiveKey={MONTHS[new Date().getMonth().toString()]}
             size="small"
             tabBarGutter={15}
             // tabBarStyle={{ margin: '0' }}
             animated={false}
             /* onChange={(activeKey) => handleFilter(activeKey)} */
           >
-            {MONTHS.map((_, monthInd) => (
-              <TabPane tab={MONTHS[monthInd]} key={monthInd}>
-                <Anchor
-                  affix={false}
-                  offsetTop={15}
-                  style={{ position: 'absolute', margin: '15px 0 0 0' }}
-                  getContainer={() =>
-                    document.getElementsByClassName('ant-tabs-content')[0]
-                  }
-                >
-                  {anchorBuilder(monthInd)}
-                </Anchor>
-                {transactionsOfADay(monthInd)}
-              </TabPane>
-            ))}
+            {renderTransactions(transactionsGroupedByMonthAndDay)}
           </Tabs>
         </Spin>
       </div>
