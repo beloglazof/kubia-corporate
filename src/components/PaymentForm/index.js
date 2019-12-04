@@ -28,7 +28,6 @@ import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
 import InputItem from '../BeneficiaryAddForm/InputItem';
 import SelectItem from '../BeneficiaryAddForm/SelectItem';
-import SearchUserByPhoneWrapper from './SearchUserByPhone';
 
 const FormItem = Form.Item;
 const { Step } = Steps;
@@ -404,7 +403,8 @@ const SelectBeneficiary = ({ form }) => {
     .map(beneficiary => {
       const { nickname, accountNumber, id, companyName } = beneficiary;
 
-      const title = `${nickname || ''} ${companyName || ''} ${accountNumber || ''}`;
+      const title = `${nickname || ''} ${companyName || ''} ${accountNumber ||
+        ''}`;
       const option = {
         value: id,
         title

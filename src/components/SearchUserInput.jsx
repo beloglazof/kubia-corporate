@@ -1,15 +1,16 @@
-import { usersCheck } from '../../api';
+import { usersCheck } from '../api';
 import { Form, Input } from 'antd';
 import React, { useState, useLayoutEffect } from 'react';
-import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../../constants';
+import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../constants';
+
+const { Search } = Input;
 
 const hasErrors = fieldsErrors => {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field]);
 };
-const SearchUserByPhoneWrapper = ({
+const SearchUserInput = ({
   form,
   setFoundUser,
-  children,
   label = 'Phone number',
   formItemProps
 }) => {
@@ -61,27 +62,15 @@ const SearchUserByPhoneWrapper = ({
         normalize: normalizePhone,
         validateFirst: true
       })(
-        children || (
-          <Input
-            inputMode={'tel'}
-            addonBefore={'+65'}
-            pattern={'[0-9]*'}
-          />
-        )
+        <Search
+          inputMode="tel"
+          addonBefore="+65"
+          pattern="[0-9]*"
+          placeholder="Search people by phone"
+        />
       )}
     </Form.Item>
   );
 };
 
-export default SearchUserByPhoneWrapper;
-
-export const PhoneInput = props => {
-  return (
-    <Input
-      inputMode={'tel'}
-      addonBefore={'+65'}
-      pattern={'[0-9]*'}
-      {...props}
-    />
-  );
-};
+export default SearchUserInput;

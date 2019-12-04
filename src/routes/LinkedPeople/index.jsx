@@ -1,12 +1,10 @@
+import { Button, Col, Form, Popconfirm, Row, Table } from 'antd';
 import React, { useState } from 'react';
-import SearchUserByPhoneWrapper from '../../components/PaymentForm/SearchUserByPhone';
-import { Form, Input, Button, Table, Popconfirm, Row, Col } from 'antd';
-import { PHONE_NUMBER_LENGTH } from '../../constants';
-import { usersCheck, getPeople, addPeople, deletePeople } from '../../api';
+import { addPeople, deletePeople, getPeople } from '../../api';
 import InputItem from '../../components/BeneficiaryAddForm/InputItem';
+import SearchUserInput from '../../components/SearchUserInput';
 import useAsync from '../../hooks/useAsync';
 
-const { Search } = Input;
 const LinkedPeople = () => {
   const [people, setPeople] = useAsync(getPeople);
   const handleAdd = async userInfo => {
@@ -137,16 +135,3 @@ const AddUserForm = ({ form, handleAdd, style }) => {
 };
 
 const WrappedAddUserForm = Form.create()(AddUserForm);
-
-const SearchUserInput = ({ form, setFoundUser }) => {
-  return (
-    <SearchUserByPhoneWrapper form={form} setFoundUser={setFoundUser}>
-      <Search
-        inputMode="tel"
-        addonBefore="+65"
-        pattern="[0-9]*"
-        placeholder="Search people by phone"
-      />
-    </SearchUserByPhoneWrapper>
-  );
-};
