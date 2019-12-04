@@ -1,5 +1,5 @@
 import { ConfigProvider } from 'antd';
-import AppLocale from 'lngProvider';
+import AppLocale from '../../lngProvider';
 import React, { Component } from 'react';
 import { IntlProvider } from 'react-intl';
 import { connect, useSelector } from 'react-redux';

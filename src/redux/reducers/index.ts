@@ -21,9 +21,13 @@ const reducers = combineReducers({
 
 const RESET_STATE = 'RESET_STATE';
 
-export const resetState = () => ({ type: RESET_STATE });
+interface ResetStateAction {
+  type: typeof RESET_STATE;
+}
 
-const rootReducer = (state, action) => {
+export const resetState = () => ({ type: RESET_STATE });
+export type RootState = ReturnType<typeof rootReducer>;
+const rootReducer = (state: any, action: ResetStateAction) => {
   if (action.type === RESET_STATE) {
     state = undefined;
   }
