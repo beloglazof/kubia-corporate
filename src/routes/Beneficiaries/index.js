@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import { Button, List } from 'antd';
-import {
-  deleteBeneficiary,
-  getBeneficiary,
-  updateBeneficiary
-} from '../../api';
+import React from 'react';
+import { deleteBeneficiary, getBeneficiary, updateBeneficiary } from '../../api';
 import BeneficiaryCard from '../../components/BeneficiaryCard';
 import useAsync from '../../hooks/useAsync';
 

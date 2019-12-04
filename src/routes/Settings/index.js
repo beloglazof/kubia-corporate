@@ -1,25 +1,23 @@
-import React, { useEffect, useState } from 'react';
 import {
   Button,
   Descriptions,
   Divider,
   Form,
+  Popconfirm,
   Radio,
   Select,
-  Switch,
-  Table,
-  Popconfirm
+  Table
 } from 'antd';
-
-import { getSessions, killSession } from '../../api';
-import styles from './settings.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
-import { navItems } from '../index';
 import { startCase } from 'lodash/string';
-import { formatISODate } from '../../util';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSessions, killSession } from '../../api';
 import { THEME_TYPE_DARK, THEME_TYPE_LITE } from '../../constants/ThemeSetting';
+import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { setThemeType } from '../../redux/features/settings/themeSettingsSlice';
+import { formatISODate } from '../../util';
+import { navItems } from '../index';
+import styles from './settings.module.css';
 
 const CloseSessionButton = ({ sessionId, handleClose }) => {
   const handleClick = () => {
@@ -39,7 +37,7 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
   );
 };
 
-const Settings = ({}) => {
+const Settings = () => {
   const [sessions, setSessions] = useState([]);
   const [currentSession, setCurrentSession] = useState(null);
   useEffect(() => {
@@ -199,9 +197,12 @@ const CurrentSession = ({ session }) => {
           ? formatISODate(fieldValue)
           : fieldValue;
         return (
-          <Descriptions.Item label={fieldName} key={fieldName}> {value}</Descriptions.Item>
+          <Descriptions.Item label={fieldName} key={fieldName}>
+            {value}
+          </Descriptions.Item>
         );
       }
+      return null;
     });
   };
   return (

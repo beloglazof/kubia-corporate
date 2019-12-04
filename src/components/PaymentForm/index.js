@@ -5,13 +5,13 @@ import {
   Descriptions,
   Form,
   Icon,
+  Input,
   message,
+  Radio,
+  Result,
   Row,
   Steps,
-  Upload,
-  Input,
-  Result,
-  Radio
+  Upload
 } from 'antd';
 import { startCase } from 'lodash/string';
 import React, { useState } from 'react';
@@ -19,10 +19,10 @@ import { useSelector } from 'react-redux';
 import {
   fetchPaymentDetails,
   getBeneficiary,
+  getPeople,
   paymentsPay,
   usersCheck,
-  withdrawal,
-  getPeople
+  withdrawal
 } from '../../api';
 import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
@@ -110,7 +110,7 @@ const PaymentForm = ({ form, history }) => {
     gotoNextStep();
   };
 
-  const { current, gotoStep, stepsProps, formProps, submit } = useStepsForm({
+  const { current, gotoStep, stepsProps, formProps } = useStepsForm({
     submit: handleSubmit,
     form,
     total: 3
@@ -186,7 +186,7 @@ const PaymentForm = ({ form, history }) => {
   );
 };
 
-export default PaymentForm;
+export default Form.create()(PaymentForm);
 
 const PaymentDetails = ({ form, details, gotoNextStep }) => {
   const renderFields = fields => {
@@ -293,9 +293,6 @@ const PaymentInfoForm = ({
   }
   const account = getFieldValue('account');
   const balance = account ? account.amount : 0;
-  const amount = getFieldValue('amount');
-  const recipientField = paymentType === 'internal' ? 'phone' : 'beneficiary';
-  const recipient = getFieldValue(recipientField);
 
   const handleCreateClick = async () => {
     const values = getFieldsValue();

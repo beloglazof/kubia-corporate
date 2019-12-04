@@ -1,10 +1,9 @@
+import { Button, Form, Result, Steps } from 'antd';
 import React, { useState } from 'react';
 import { useStepsForm } from 'sunflower-antd';
-import { Button, Form, Result, Steps } from 'antd';
-import { getCountries, getCurrencies, createBeneficiary } from '../../api';
-import ClarifyingStepForm from './ClarifyingStepForm';
+import { createBeneficiary } from '../../api';
 import BeneficiaryInfoStepForm from './BeneficiaryInfoStepForm';
-import useAsync from '../../hooks/useAsync';
+import ClarifyingStepForm from './ClarifyingStepForm';
 
 const { Step } = Steps;
 

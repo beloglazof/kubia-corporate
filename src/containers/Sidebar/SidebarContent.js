@@ -1,22 +1,17 @@
+import { Menu } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu } from 'antd';
-import { Link } from 'react-router-dom';
-
-import CustomScrollbars from 'util/CustomScrollbars';
-import SidebarLogo from './SidebarLogo';
-
 import Auxiliary from 'util/Auxiliary';
-import UserProfile from './UserProfile';
-import AppsNavigation from './AppsNavigation';
+import CustomScrollbars from 'util/CustomScrollbars';
 import {
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
   NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
   THEME_TYPE_LITE
 } from '../../constants/ThemeSetting';
-import IntlMessages from '../../util/IntlMessages';
 import { renderNavigationItems } from '../../routes';
 import UserInfo from '../../templateComponents/UserInfo';
+import AppsNavigation from './AppsNavigation';
+import SidebarLogo from './SidebarLogo';
 
 class SidebarContent extends Component {
   getNoHeaderClass = navStyle => {

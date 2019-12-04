@@ -1,6 +1,5 @@
-import React from 'react';
-import SelectItem from './SelectItem';
 import { Button, Form, message } from 'antd';
+import React from 'react';
 import { getBeneficiaryFields } from '../../api';
 import CountrySelect from '../CountrySelect';
 import CurrencySelect from '../CurrencySelect';
@@ -17,10 +16,6 @@ const ClarifyingStepForm = ({ form, setMainFormFields, gotoStep, current }) => {
         message.error('We do not support selected configuration.', 5);
       }
     });
-  };
-
-  const countrySelectProps = {
-    form
   };
 
   return (
@@ -54,21 +49,21 @@ const getMainFormFields = async values => {
 
 export default ClarifyingStepForm;
 
-const TypeSelect = ({ form }) => {
-  const options = [
-    { value: 'company', title: 'Company' },
-    { value: 'individual', title: 'Individual' }
-  ];
-  return (
-    <SelectItem
-      form={form}
-      label="Type"
-      id="entityType"
-      options={options}
-      required
-    />
-  );
-};
+// const TypeSelect = ({ form }) => {
+//   const options = [
+//     { value: 'company', title: 'Company' },
+//     { value: 'individual', title: 'Individual' }
+//   ];
+//   return (
+//     <SelectItem
+//       form={form}
+//       label="Type"
+//       id="entityType"
+//       options={options}
+//       required
+//     />
+//   );
+// };
 
 const BankAccountCountrySelect = ({ form }) => (
   <CountrySelect

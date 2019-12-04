@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const useAsync = (asyncMethod, initialValue, deps = [], ...params) => {
   const [data, setData] = useState(initialValue);

@@ -1,18 +1,10 @@
+import { Button, Collapse, Form, Input, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Collapse,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal
-} from 'antd';
-import CardInfo from '../CardInfo';
 import { useDispatch, useSelector } from 'react-redux';
 import { cardsNew, getCardsNew, getNewOTP, patchCardsOTP } from '../../../api';
 import cardStates from '../../../constants/cardStates';
 import { fetchMainScreen } from '../../../redux/features/screens/screensSlice';
+import CardInfo from '../CardInfo';
 
 const InputOTP = Form.create({ name: 'input-otp' })(
   // eslint-disable-next-line
@@ -31,9 +23,6 @@ const InputOTP = Form.create({ name: 'input-otp' })(
     };
     render() {
       const {
-        visible,
-        onCancel,
-        onCreate,
         form,
         handleGetNewCode
       } = this.props;
@@ -102,12 +91,6 @@ const InactiveVirtualCard = () => {
   const typeId = 1;
   const accountId = useSelector(state => state?.accounts[0]?.id);
 
-  let watcherIntervalId;
-  const stateWatcher = id => {
-    watcherIntervalId = setInterval(async () => {
-      const response = await getCardsNew(id);
-    }, 10000);
-  };
   const activateCard = async () => {
     const params = {
       account_id: accountId,

@@ -1,17 +1,6 @@
-import React, { Component } from 'react';
 import { Layout } from 'antd';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
-import Sidebar from '../Sidebar/index';
-import HorizontalDefault from '../Topbar/HorizontalDefault/index';
-import HorizontalDark from '../Topbar/HorizontalDark/index';
-import InsideHeader from '../Topbar/InsideHeader/index';
-import AboveHeader from '../Topbar/AboveHeader/index';
-import BelowHeader from '../Topbar/BelowHeader/index';
-
-import Topbar from '../Topbar/index';
-import { footerText } from '../../util/config';
-import Routes from '../../routes/index';
 import {
   NAV_STYLE_ABOVE_HEADER,
   NAV_STYLE_BELOW_HEADER,
@@ -22,12 +11,20 @@ import {
   NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
   NAV_STYLE_MINI_SIDEBAR,
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
-  NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
-  TAB_SIZE
+  NAV_STYLE_NO_HEADER_MINI_SIDEBAR
 } from '../../constants/ThemeSetting';
-import NoHeaderNotification from '../Topbar/NoHeaderNotification/index';
 import { fetchMainScreen } from '../../redux/features/screens/screensSlice';
 import { fetchUser } from '../../redux/features/user/userSlice';
+import Routes from '../../routes/index';
+import { footerText } from '../../util/config';
+import Sidebar from '../Sidebar/index';
+import AboveHeader from '../Topbar/AboveHeader/index';
+import BelowHeader from '../Topbar/BelowHeader/index';
+import HorizontalDark from '../Topbar/HorizontalDark/index';
+import HorizontalDefault from '../Topbar/HorizontalDefault/index';
+import Topbar from '../Topbar/index';
+import InsideHeader from '../Topbar/InsideHeader/index';
+import NoHeaderNotification from '../Topbar/NoHeaderNotification/index';
 
 const { Content, Footer } = Layout;
 

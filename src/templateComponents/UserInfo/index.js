@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect, useSelector } from 'react-redux';
 import { Avatar, Popover } from 'antd';
+import { connect } from 'react-redux';
 import { signOut } from '../../redux/features/session/sessionSlice';
 
 const mapStateToProps = ({ user }) => {
@@ -34,7 +34,4 @@ class UserInfo extends Component {
 }
 
 const actions = { signOut };
-export default connect(
-  mapStateToProps,
-  actions
-)(UserInfo);
+export default connect(mapStateToProps, actions)(UserInfo);

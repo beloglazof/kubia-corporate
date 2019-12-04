@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios from '../../../util/Api';
-import { setAccounts } from '../accounts/accountsSlice';
 import { getDesktopMainScreen } from '../../../api';
+import { setAccounts } from '../accounts/accountsSlice';
 
 const storageMainString = localStorage.getItem('main');
 const screensSlice = createSlice({

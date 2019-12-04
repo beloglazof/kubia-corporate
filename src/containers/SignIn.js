@@ -1,12 +1,10 @@
 import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-
 import IntlMessages from 'util/IntlMessages';
-import InfoView from '../templateComponents/InfoView';
-import { signIn } from '../redux/features/session/sessionSlice';
 import MainLogo from '../components/MainLogo';
+import { signIn } from '../redux/features/session/sessionSlice';
+import InfoView from '../templateComponents/InfoView';
 
 const FormItem = Form.Item;
 

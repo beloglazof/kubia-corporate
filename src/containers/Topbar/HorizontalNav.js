@@ -1,8 +1,6 @@
+import { Menu } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Icon } from 'antd';
-import { Link } from 'react-router-dom';
-import IntlMessages from '../../util/IntlMessages';
 import {
   NAV_STYLE_ABOVE_HEADER,
   NAV_STYLE_BELOW_HEADER,
@@ -11,7 +9,7 @@ import {
 } from '../../constants/ThemeSetting';
 import { renderNavigationItems } from '../../routes';
 
-const SubMenu = Menu.SubMenu;
+// const SubMenu = Menu.SubMenu;
 
 class HorizontalNav extends Component {
   getNavStyleSubMenuClass = navStyle => {

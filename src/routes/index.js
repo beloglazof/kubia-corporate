@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 
 import Transactions from '../components/Transactions';
 import Accounts from './Accounts';
-import NewPayment from './Pay';
 import Settings from './Settings';
 import Beneficiaries from './Beneficiaries';
 import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
 import LinkedPeople from './LinkedPeople';
+import PaymentForm from '../components/PaymentForm';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
@@ -46,7 +46,7 @@ const App = () => {
       <Switch>
         <Redirect exact from="/" to={firstPagePath} />
         <Route path={`/accounts`} component={Accounts} />
-        <Route path={`/new-payment`} component={NewPayment} />
+        <Route path={`/new-payment`} component={PaymentForm} />
         <Route path={`/settings`} component={Settings} />
         <Route path={`/transactions`} component={Transactions} />
         <Route exact path={`/beneficiaries`} component={Beneficiaries} />

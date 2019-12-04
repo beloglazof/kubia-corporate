@@ -1,4 +1,4 @@
-import { Layout, Menu, message, Select } from 'antd';
+import { Layout } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink as Link } from 'react-router-dom';
@@ -14,22 +14,22 @@ import languageData from '../languageData';
 
 const { Header } = Layout;
 
-const Option = Select.Option;
-const menu = (
-  <Menu onClick={handleMenuClick}>
-    <Menu.Item key="1">Products</Menu.Item>
-    <Menu.Item key="2">Apps</Menu.Item>
-    <Menu.Item key="3">Blogs</Menu.Item>
-  </Menu>
-);
+// const Option = Select.Option;
+// const menu = (
+//   <Menu onClick={handleMenuClick}>
+//     <Menu.Item key="1">Products</Menu.Item>
+//     <Menu.Item key="2">Apps</Menu.Item>
+//     <Menu.Item key="3">Blogs</Menu.Item>
+//   </Menu>
+// );
 
-function handleMenuClick(e) {
-  message.info('Click on menu item.');
-}
+// function handleMenuClick(e) {
+//   message.info('Click on menu item.');
+// }
 
-function handleChange(value) {
-  console.log(`selected ${value}`);
-}
+// function handleChange(value) {
+//   console.log(`selected ${value}`);
+// }
 
 class HorizontalDark extends Component {
   state = {
@@ -60,7 +60,7 @@ class HorizontalDark extends Component {
   };
 
   render() {
-    const { locale, navCollapsed } = this.props;
+    const { navCollapsed } = this.props;
 
     return (
       <div className="gx-header-horizontal gx-header-horizontal-dark">

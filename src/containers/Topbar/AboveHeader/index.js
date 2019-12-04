@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import {
   Button,
   Dropdown,
@@ -9,24 +8,22 @@ import {
   Popover,
   Select
 } from 'antd';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import CustomScrollbars from 'util/CustomScrollbars';
-
-import languageData from '../languageData';
-import SearchBox from 'templateComponents/SearchBox';
-import UserInfo from 'templateComponents/UserInfo';
+import { Link } from 'react-router-dom';
 import AppNotification from 'templateComponents/AppNotification';
 import MailNotification from 'templateComponents/MailNotification';
+import SearchBox from 'templateComponents/SearchBox';
+import UserInfo from 'templateComponents/UserInfo';
+import CustomScrollbars from 'util/CustomScrollbars';
+import MainLogo from '../../../components/MainLogo';
+import { TAB_SIZE } from '../../../constants/ThemeSetting';
 import {
   switchLanguage,
   toggleCollapsedNav
 } from '../../../redux/features/settings/themeSettingsSlice';
-
-import { TAB_SIZE } from '../../../constants/ThemeSetting';
 import HorizontalNav from '../HorizontalNav';
-import { Link } from 'react-router-dom';
-import IntlMessages from '../../../util/IntlMessages';
-import MainLogo from '../../../components/MainLogo';
+import languageData from '../languageData';
 
 const { Header } = Layout;
 
