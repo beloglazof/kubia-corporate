@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { groupBy, mapValues } from 'lodash';
+import { groupBy, mapValues, uniqBy } from 'lodash';
 
 import {
   Anchor,
@@ -29,7 +29,8 @@ export const COLORS = {
 };
 export const TRANS_ICONS = {
   DEPOSIT: 'rise',
-  WITHDRAWAL: 'fall'
+  WITHDRAWAL: 'fall',
+  TRANSFER: 'fall'
 };
 const { TabPane } = Tabs;
 export const MONTHS = [
@@ -53,6 +54,12 @@ export const LINKED_ACC_TYPES = {
   WITHDRAWAL: 'Recipient'
 };
 
+const TRANSACTION_TYPES = [
+  { name: 'ALL', label: 'All' },
+  { name: 'DEPOSIT', label: 'Deposit' },
+  { name: 'WITHDRAWAL', label: 'Withdrawal' }
+];
+
 //  Currency with tooltip
 const currencyTooltip = currency => (
   <Tooltip title={currency?.name}>
@@ -70,7 +77,6 @@ const amountTooltip = amount => (
 const TransactionCard = ({ transaction, handleClick }) => {
   return (
     <Card
-      key={transaction.id}
       size="small"
       title={
         <span>
@@ -121,7 +127,7 @@ const Transactions = ({ transList, fetchList }) => {
   const [filteredTransactions, setFilteredTransactions] = useState(transList); //  Filtered list of transactions
   useEffect(() => {
     setFilteredTransactions(transList);
-    linkedAccounts();
+    getLinkedAccounts();
   }, [transList]);
 
   const [modalShown, toggleModal] = useState(false); //  Modal state
@@ -139,7 +145,7 @@ const Transactions = ({ transList, fetchList }) => {
   //  Get each month's transactions
   const monthlyTransactions = monthNum =>
     filteredTransactions.filter(
-      t => new Date(t.creationDate).getMonth() === monthNum
+      t => new Date(t.creationDate).getMonth().toString() === monthNum
     );
 
   // Get each day's transactions
@@ -161,7 +167,11 @@ const Transactions = ({ transList, fetchList }) => {
               {i} {MONTHS[monthInd]}
             </Divider>
             {dailyTransactions(monthlyTransactions(monthInd), i).map(t => (
-              <TransactionCard handleClick={handleClick} transaction={t} />
+              <TransactionCard
+                handleClick={handleClick}
+                transaction={t}
+                key={t.id}
+              />
             ))}
             <BackTop />
           </div>
@@ -185,19 +195,24 @@ const Transactions = ({ transList, fetchList }) => {
   );
 
   //  Building anchors
-  const anchorBuilder = monthNum => {
+  const anchorBuilder = monthInd => {
     const anchors = [];
-    for (let i = 1; i <= MONTHS_LENGTH[monthNum]; i++) {
-      if (dailyTransactions(monthlyTransactions(monthNum), i).length) {
+    console.log(monthInd);
+    const monthTransactions = monthlyTransactions(monthInd);
+    console.log(monthTransactions);
+    for (let i = 1; i <= MONTHS_LENGTH[monthInd]; i++) {
+      const dayTransactions = dailyTransactions(monthTransactions, i);
+      if (dayTransactions.length) {
         anchors.push(
           <Link
-            key={`#${i}-${MONTHS[monthNum]}`}
-            href={`#${i}-${MONTHS[monthNum]}`}
+            key={`#${i}-${MONTHS[monthInd]}`}
+            href={`#${i}-${MONTHS[monthInd]}`}
             title={i}
           />
         );
       }
     }
+    // console.log(anchors);
     return anchors;
   };
 
@@ -211,36 +226,20 @@ const Transactions = ({ transList, fetchList }) => {
     } else {
       filter = e;
     }
-    if (filter === 'DEPOSIT' || filter === 'WITHDRAWAL' || filter === 'ALL') {
-      updateFilters({
-        ...filters,
-        type: filter
-      });
-      if (filters.linkedAccounts.length) {
-        //  Linked account refiltering
-        filters.linkedAccounts.map(f =>
-          transList
-            .filter(t => t.linked_account.id.toString() === f)
-            .map(t => newData.push(t))
-        );
-        dataToProcess = newData;
-      } else {
-        dataToProcess = transList;
-      }
+
+    updateFilters({ linkedAccounts: filter });
+    //  Linked account filtering
+    filter.map(f =>
+      transList
+        .filter(t => t.linked_account.id.toString() === f)
+        .map(t => newData.push(t))
+    );
+    if (filter.length) {
+      dataToProcess = newData;
     } else {
-      updateFilters({ linkedAccounts: filter });
-      //  Linked account filtering
-      filter.map(f =>
-        transList
-          .filter(t => t.linked_account.id.toString() === f)
-          .map(t => newData.push(t))
-      );
-      if (filter.length) {
-        dataToProcess = newData;
-      } else {
-        dataToProcess = transList;
-      }
+      dataToProcess = transList;
     }
+
     //  Type filtering
     switch (filter) {
       case 'DEPOSIT': {
@@ -260,40 +259,47 @@ const Transactions = ({ transList, fetchList }) => {
   };
 
   //  Map all linked accounts
-  const linkedAccounts = () => {
-    const accs = transList.map(t => ({
+  const getLinkedAccounts = () => {
+    const allLinkedAccs = transList.map(t => ({
       id: t.linked_account.id,
       name: t.linked_account.name
     }));
-    const uniqueAccs = accs
-      .map(e => e['id'])
-      .map((e, i, final) => final.indexOf(e) === i && i)
-      .filter(e => accs[e])
-      .map(e => accs[e]);
-    return uniqueAccs.map(acc => <Option key={acc.id}>{acc.name}</Option>);
+
+    const uniqueAccs = uniqBy(allLinkedAccs, 'id');
+    return uniqueAccs;
   };
+
+  const linkedAccounts = getLinkedAccounts();
 
   const renderMonthTransactions = ([day, transactions], month) => {
     return (
       <div key={day} style={{ alignContent: 'center' }}>
-        <Divider
-          id={`${day}-${month}`}
-          className={styles.divider}
-        >
+        <Divider id={`${day}-${month}`} className={styles.divider}>
           {day} {month}
         </Divider>
         {transactions.map(t => (
-          <TransactionCard handleClick={handleClick} transaction={t} />
+          <TransactionCard
+            handleClick={handleClick}
+            transaction={t}
+            key={t.id}
+          />
         ))}
-        <BackTop />
       </div>
     );
   };
 
-  const renderMonthTabPane = ([month, monthTransactions]) => {
-    const monthInd = MONTHS.indexOf(month);
+  const renderAnchorLink = (day, month) => {
+    const href = `#${day}-${month}`;
+    return <Link key={href} href={href} title={day} />;
+  };
+
+  const renderMonthTabPane = ([month, monthTransactionsByDay]) => {
+    const monthInd = MONTHS.indexOf(month).toString();
+    const monthTransactionsByDayEntries = Object.entries(
+      monthTransactionsByDay
+    );
     return (
-      <TabPane tab={month} key={month}>
+      <TabPane tab={month} key={monthInd}>
         <Anchor
           offsetTop={15}
           style={{ position: 'absolute', margin: '15px 0 0 0' }}
@@ -301,18 +307,43 @@ const Transactions = ({ transList, fetchList }) => {
             document.getElementsByClassName('ant-tabs-content')[0]
           }
         >
-          {anchorBuilder(monthInd)}
+          {/* {anchorBuilder(monthInd)} */}
+          {monthTransactionsByDayEntries.map(([day]) =>
+            renderAnchorLink(day, month)
+          )}
         </Anchor>
-        {/* {Object.entries(monthTransactions).map(v =>
-          renderMonthTransactions(v, month)
-        )} */}
-        {transactionsOfADay(monthInd)}
+        {monthTransactionsByDayEntries.map(entry =>
+          renderMonthTransactions(entry, month)
+        )}
+        {/* {transactionsOfADay(monthInd)} */}
       </TabPane>
     );
   };
 
   const renderTransactions = transactions => {
-    return Object.entries(transactions).map(renderMonthTabPane).reverse();
+    const transactionsEntries = Object.entries(transactions).reverse();
+    return transactionsEntries.map(renderMonthTabPane);
+  };
+
+  const defaultActiveKey = new Date().getMonth().toString();
+  const [activeKey, setActiveKey] = useState(defaultActiveKey);
+
+  const defaultType = TRANSACTION_TYPES[0];
+  const [transactionTypeFilter, setTransactionTypeFilter] = useState(
+    defaultType
+  );
+  useEffect(() => {
+    if (transactionTypeFilter === 'ALL') {
+      return setFilteredTransactions(transList);
+    }
+    const filteredList = transList.filter(
+      transaction => transaction.type === transactionTypeFilter
+    );
+    setFilteredTransactions(filteredList);
+  }, [transactionTypeFilter]);
+  const handleTypeChange = ({ target }) => {
+    const newType = target.value;
+    setTransactionTypeFilter(newType);
   };
 
   return (
@@ -326,28 +357,30 @@ const Transactions = ({ transList, fetchList }) => {
         }}
       >
         <Spin spinning={!transList} size="large" tip="loading transactions...">
-          <Radio.Group defaultValue="ALL" onChange={handleFilter}>
-            <Radio.Button value="ALL">All</Radio.Button>
-            <Radio.Button value="DEPOSIT">Deposit</Radio.Button>
-            <Radio.Button value="WITHDRAWAL">Withdrawal</Radio.Button>
+          <Radio.Group defaultValue="ALL" onChange={handleTypeChange}>
+            {TRANSACTION_TYPES.map(type => (
+              <Radio.Button value={type.name} key={type.name}>{type.label}</Radio.Button>
+            ))}
           </Radio.Group>
           <br />
           <Select
             mode="multiple"
             style={{ width: '100%' }}
             placeholder="Select recipient(s)/reciever(s)"
+            // defaultValue={[]}
             onChange={handleFilter}
             allowClear
           >
-            {linkedAccounts()}
+            {linkedAccounts.map(account => (
+              <Option key={account.id}>{account.name}</Option>
+            ))}
           </Select>
           <Tabs
-            defaultActiveKey={MONTHS[new Date().getMonth()]}
+            activeKey={activeKey}
             size="small"
             tabBarGutter={15}
-            // tabBarStyle={{ margin: '0' }}
             animated={false}
-            /* onChange={(activeKey) => handleFilter(activeKey)} */
+            onTabClick={activeKey => setActiveKey(activeKey)}
           >
             {renderTransactions(transactionsGroupedByMonthAndDay)}
           </Tabs>
