@@ -14,6 +14,7 @@
     "axios": "^0.18.0",
     "date-fns": "^2.6.0",
     "draftjs-to-html": "^0.8.4",
+    "git-branch-is": "^3.1.0",
     "instantsearch.css": "^7.1.0",
     "js-cookie": "^2.2.1",
     "less": "2.7.3",
@@ -63,14 +64,16 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "deploy:corporate": "cp -r build/* /var/www/dev.account3.quancy.com.sg/public_html",
-    "deploy:person": "cp -r build/* /var/www/dev.account2.quancy.com.sg/public_html",
+    "deploy:corporate": "ssh -i /home/bvd/.ssh/id_ed25519 slava@dev.quancy.com.sg 'bash -s' < deploy.sh",
+    "copy-build:corporate": "cp -r build/* /var/www/dev.account3.quancy.com.sg/public_html",
+    "copy-build:person": "cp -r build/* /var/www/dev.account2.quancy.com.sg/public_html",
     "test": "react-app-rewired --env=jsdom"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "add": "^2.0.6",
     "customize-cra": "^0.2.10",
+    "husky": "^3.1.0",
     "react-app-rewired": "^2.0.2",
     "yarn": "^1.7.0"
   },
@@ -79,5 +82,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "post-update": "if git-branch-is corporate; then npm run deploy:corporate; fi"
+    }
+  }
 }
