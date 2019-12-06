@@ -3,7 +3,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import Account from '../../components/Account';
 import CompanyInfoCard from '../../components/CompanyInfoCard';
-import LastTransactions from '../../components/Transactions/LastTransactions';
 
 const Accounts = () => {
   const accounts = useSelector(state => state.accounts);

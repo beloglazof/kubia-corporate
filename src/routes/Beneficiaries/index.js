@@ -1,6 +1,10 @@
 import { Button, List } from 'antd';
 import React from 'react';
-import { deleteBeneficiary, getBeneficiary, updateBeneficiary } from '../../api';
+import {
+  deleteBeneficiary,
+  getBeneficiary,
+  updateBeneficiary
+} from '../../api';
 import BeneficiaryCard from '../../components/BeneficiaryCard';
 import useAsync from '../../hooks/useAsync';
 
@@ -10,7 +14,6 @@ const Beneficiaries = ({ history }) => {
   };
 
   const [beneficiaries, setBeneficiaries] = useAsync(getBeneficiary);
-  
 
   const handleDelete = beneficiaryId => async () => {
     const deleted = await deleteBeneficiary(beneficiaryId);
