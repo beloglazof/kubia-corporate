@@ -1,36 +1,9 @@
-import InputItem from './InputItem';
+import InputItem from '../InputItem';
 import { startCase } from 'lodash';
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Button, Form } from 'antd';
-
-const BeneficiaryInfoStepForm = ({ form, fields, submit }) => {
-  return (
-    <>
-      <InputItem
-        form={form}
-        label="Beneficiary alias"
-        id="nickname"
-        placeholder="New Partner"
-        required
-      />
-      <InputItem
-        form={form}
-        label="Email"
-        id="email"
-        placeholder="Email"
-        required
-      />
-      {renderFields(fields, form)}
-      <Form.Item wrapperCol={{offset: 6}}>
-        <Button type="primary" htmlType="submit" onClick={() => submit()}>
-          Submit
-        </Button>
-      </Form.Item>
-    </>
-  );
-};
-
-export default BeneficiaryInfoStepForm;
 
 const renderFields = (fields, form) => {
   if (!fields || typeof fields !== 'object') return null;
@@ -71,3 +44,36 @@ const renderFields = (fields, form) => {
     .filter(filterFields)
     .map(renderField);
 };
+
+const BeneficiaryInfoStepForm = ({ form, fields, submit }) => (
+  <>
+    <InputItem
+      form={form}
+      label="Beneficiary alias"
+      id="nickname"
+      placeholder="New Partner"
+      required
+    />
+    <InputItem
+      form={form}
+      label="Email"
+      id="email"
+      placeholder="Email"
+      required
+    />
+    {renderFields(fields, form)}
+    <Form.Item wrapperCol={{ offset: 6 }}>
+      <Button type="primary" htmlType="submit" onClick={() => submit()}>
+        Submit
+      </Button>
+    </Form.Item>
+  </>
+);
+
+BeneficiaryInfoStepForm.propTypes = {
+  form: PropTypes.object.isRequired,
+  fields: PropTypes.object.isRequired,
+  submit: PropTypes.func.isRequired
+};
+
+export default BeneficiaryInfoStepForm;

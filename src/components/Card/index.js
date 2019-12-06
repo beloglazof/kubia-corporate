@@ -10,11 +10,11 @@ import PhysicalCardActivationModal from '../PhysicalCardActivationModal';
 
 const MastercardIcon = props => {
   const mastercardIconStyle = { fontSize: '2.5em', marginLeft: '0.4em' };
-
   return (
     <Icon component={MastercardSymbol} style={mastercardIconStyle} {...props} />
   );
 };
+
 const CardShortInfo = ({
   number,
   typeName,

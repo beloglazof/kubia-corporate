@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { groupBy, mapValues, uniqBy } from 'lodash';
+import PropTypes from 'prop-types';
 
 import {
   Anchor,
@@ -124,61 +125,20 @@ const Transactions = ({ transList, fetchList }) => {
     type: 'ALL',
     linkedAccounts: []
   });
-  const [filteredTransactions, setFilteredTransactions] = useState(transList); //  Filtered list of transactions
+  const [filteredTransactions, setFilteredTransactions] = useState(transList);
   useEffect(() => {
     setFilteredTransactions(transList);
     getLinkedAccounts();
   }, [transList]);
 
-  const [modalShown, toggleModal] = useState(false); //  Modal state
-  const [modalData, fillModal] = useState(''); // Modal content state
-  // Transaction type colors
+  const [modalShown, toggleModal] = useState(false);
+  const [modalData, fillModal] = useState('');
 
-  //  Transaction details modal toggler
-  const handleClick = record => {
+  const showTransactionDetails = record => {
     fillModal(
       filteredTransactions.find(transaction => transaction.id === record.id)
     );
     toggleModal(true);
-  };
-
-  //  Get each month's transactions
-  const monthlyTransactions = monthNum =>
-    filteredTransactions.filter(
-      t => new Date(t.creationDate).getMonth().toString() === monthNum
-    );
-
-  // Get each day's transactions
-  const dailyTransactions = (transactions, day) =>
-    transactions.filter(t => new Date(t.creationDate).getDate() === day);
-
-  //  Return daily grouped transactions
-  const transactionsOfADay = monthInd => {
-    const group = [];
-    for (let i = 0; i <= MONTHS_LENGTH[monthInd]; i++) {
-      if (dailyTransactions(monthlyTransactions(monthInd), i).length) {
-        group.push(
-          <div key={i} style={{ alignContent: 'center' }}>
-            <Divider
-              // style={{ margin: '10px auto' }}
-              id={`${i}-${MONTHS[monthInd]}`}
-              className={styles.divider}
-            >
-              {i} {MONTHS[monthInd]}
-            </Divider>
-            {dailyTransactions(monthlyTransactions(monthInd), i).map(t => (
-              <TransactionCard
-                handleClick={handleClick}
-                transaction={t}
-                key={t.id}
-              />
-            ))}
-            <BackTop />
-          </div>
-        );
-      }
-    }
-    return group;
   };
 
   const transactionsGroupedByMonth = groupBy(
@@ -193,28 +153,6 @@ const Transactions = ({ transList, fetchList }) => {
         formatISODate(transaction.creationDate, 'd')
       )
   );
-
-  //  Building anchors
-  const anchorBuilder = monthInd => {
-    const anchors = [];
-    console.log(monthInd);
-    const monthTransactions = monthlyTransactions(monthInd);
-    console.log(monthTransactions);
-    for (let i = 1; i <= MONTHS_LENGTH[monthInd]; i++) {
-      const dayTransactions = dailyTransactions(monthTransactions, i);
-      if (dayTransactions.length) {
-        anchors.push(
-          <Link
-            key={`#${i}-${MONTHS[monthInd]}`}
-            href={`#${i}-${MONTHS[monthInd]}`}
-            title={i}
-          />
-        );
-      }
-    }
-    // console.log(anchors);
-    return anchors;
-  };
 
   //  Handle transaction type filter
   const handleFilter = e => {
@@ -279,7 +217,7 @@ const Transactions = ({ transList, fetchList }) => {
         </Divider>
         {transactions.map(t => (
           <TransactionCard
-            handleClick={handleClick}
+            handleClick={showTransactionDetails}
             transaction={t}
             key={t.id}
           />
@@ -359,7 +297,9 @@ const Transactions = ({ transList, fetchList }) => {
         <Spin spinning={!transList} size="large" tip="loading transactions...">
           <Radio.Group defaultValue="ALL" onChange={handleTypeChange}>
             {TRANSACTION_TYPES.map(type => (
-              <Radio.Button value={type.name} key={type.name}>{type.label}</Radio.Button>
+              <Radio.Button value={type.name} key={type.name}>
+                {type.label}
+              </Radio.Button>
             ))}
           </Radio.Group>
           <br />
@@ -396,6 +336,11 @@ const Transactions = ({ transList, fetchList }) => {
       />
     </>
   );
+};
+
+Transactions.propTypes = {
+  transList: PropTypes.array.isRequired,
+  fetchList: PropTypes.func.isRequired
 };
 
 // Mapping store state to component props

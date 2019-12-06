@@ -5,9 +5,13 @@ const useAsync = (asyncMethod, initialValue, deps = [], ...params) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedData = await asyncMethod(...params);
-      if (fetchedData) {
-        setData(fetchedData);
+      try {
+        const fetchedData = await asyncMethod(...params);
+        if (fetchedData) {
+          setData(fetchedData);
+        }
+      } catch (e) {
+        console.log(e);
       }
     };
     fetchData();

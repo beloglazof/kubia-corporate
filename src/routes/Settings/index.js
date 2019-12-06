@@ -11,6 +11,8 @@ import {
 import { startCase } from 'lodash/string';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { getSessions, killSession } from '../../api';
 import { THEME_TYPE_DARK, THEME_TYPE_LITE } from '../../constants/ThemeSetting';
 import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
@@ -18,6 +20,60 @@ import { setThemeType } from '../../redux/features/settings/themeSettingsSlice';
 import { formatISODate } from '../../util';
 import { navItems } from '../index';
 import styles from './settings.module.css';
+import useAsync from '../../hooks/useAsync';
+
+const CurrentSession = ({ session }) => {
+  if (!session) return null;
+  const visibleFields = new Set(['created', 'expire', 'ip']);
+  const dateFields = new Set(['created', 'expire']);
+  const renderSession = fields => {
+    return Object.entries(fields).map(([fieldName, fieldValue]) => {
+      if (visibleFields.has(fieldName)) {
+        const value = dateFields.has(fieldName)
+          ? formatISODate(fieldValue)
+          : fieldValue;
+        return (
+          <Descriptions.Item label={fieldName} key={fieldName}>
+            {value}
+          </Descriptions.Item>
+        );
+      }
+      return null;
+    });
+  };
+  return (
+    <Descriptions
+      title="Current session"
+      column={1}
+      size="small"
+      style={{ marginBottom: '2em' }}
+      bordered
+    >
+      {renderSession(session)}
+    </Descriptions>
+  );
+};
+
+CurrentSession.propTypes = {
+  session: PropTypes.object.isRequired
+};
+
+const CloseAllSessionsButton = ({ handler }) => {
+  return (
+    <Popconfirm
+      title="Are you sure close all session until current?"
+      onConfirm={handler}
+      okText="Yes"
+      cancelText="No"
+    >
+      <Button type="danger">Close All</Button>
+    </Popconfirm>
+  );
+};
+
+CloseAllSessionsButton.propTypes = {
+  handler: PropTypes.func.isRequired
+};
 
 const CloseSessionButton = ({ sessionId, handleClose }) => {
   const handleClick = () => {
@@ -37,23 +93,19 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
   );
 };
 
+CloseSessionButton.propTypes = {
+  sessionId: PropTypes.number.isRequired,
+  handleClose: PropTypes.func.isRequired
+};
+
 const Settings = () => {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useAsync(getSessions, []);
   const [currentSession, setCurrentSession] = useState(null);
   useEffect(() => {
-    async function fetchSessions() {
-      const fetchedSessions = await getSessions();
-      if (fetchedSessions) {
-        const current = fetchedSessions.find(session => session.current);
-        const otherSessions = fetchedSessions.filter(
-          session => !session.current
-        );
-        setCurrentSession(current);
-        setSessions(otherSessions);
-      }
-    }
-
-    fetchSessions();
+    const current = sessions.find(session => session.current);
+    const otherSessions = sessions.filter(session => !session.current);
+    setCurrentSession(current);
+    setSessions(otherSessions);
   }, []);
 
   const closeSession = async sessionId => {
@@ -185,48 +237,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-const CurrentSession = ({ session }) => {
-  if (!session) return null;
-  const visibleFields = new Set(['created', 'expire', 'ip']);
-  const dateFields = new Set(['created', 'expire']);
-  const renderSession = fields => {
-    return Object.entries(fields).map(([fieldName, fieldValue]) => {
-      if (visibleFields.has(fieldName)) {
-        const value = dateFields.has(fieldName)
-          ? formatISODate(fieldValue)
-          : fieldValue;
-        return (
-          <Descriptions.Item label={fieldName} key={fieldName}>
-            {value}
-          </Descriptions.Item>
-        );
-      }
-      return null;
-    });
-  };
-  return (
-    <Descriptions
-      title="Current session"
-      column={1}
-      size="small"
-      style={{ marginBottom: '2em' }}
-      bordered
-    >
-      {renderSession(session)}
-    </Descriptions>
-  );
-};
-
-const CloseAllSessionsButton = ({ handler }) => {
-  return (
-    <Popconfirm
-      title="Are you sure close all session until current?"
-      onConfirm={handler}
-      okText="Yes"
-      cancelText="No"
-    >
-      <Button type="danger">Close All</Button>
-    </Popconfirm>
-  );
-};
