@@ -1073,7 +1073,11 @@ body.dark-theme {
     }
 
     &-tbody > tr > td {
-      border-bottom-color: @dark-theme-border-color;
+      border-bottom-color: lighten(@dark-theme-border-color, 5%);
+      &:first-child {
+      border-left: 1px solid lighten(@dark-theme-border-color, 5%);
+
+      }
     }
 
     &-thead > tr,
@@ -1191,11 +1195,11 @@ body.dark-theme {
 
     &-bordered .ant-table-thead > tr > th,
     &-bordered .ant-table-tbody > tr > td {
-      border-right-color: @dark-theme-border-color;
+      border-right-color: lighten(@dark-theme-border-color, 5%);
     }
 
     &-bordered .ant-table-thead > tr:not(:last-child) > th {
-      border-bottom-color: @dark-theme-border-color;
+      border-bottom-color: lighten(@dark-theme-border-color, 5%);
     }
 
     &-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body {
@@ -2164,6 +2168,21 @@ body.dark-theme {
         }
       }
     }
+
+    &-link {
+      background-color: transparent;
+      border: none;
+      color: lightskyblue;
+      &:hover,
+      &:focus {
+        background-color: transparent;
+        border: none;
+        color: lighten(@dark-theme-text-color, 10%);
+        & > span {
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
   & .@{class-prefix}-header-search {
@@ -2443,7 +2462,7 @@ body.dark-theme {
 
     &-content {
       color: @dark-theme-text-color;
-      background-color: lighten(@dark-theme-component-background, 12%);
+      background-color: lighten(@dark-theme-component-background, 2%); 
       border-top-color: lighten(@dark-theme-component-background, 10%);
     }
 

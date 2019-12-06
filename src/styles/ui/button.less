@@ -1,7 +1,7 @@
 /*Button Styles*/
 .ant-btn {
-
   line-height: @btn-height-base - 2px;
+  margin-bottom: 0;
 
   &-sm {
     line-height: @btn-height-sm;
@@ -240,7 +240,8 @@ fieldset[disabled] a.@{class-prefix}-btn {
   .border-radius(50px) !important;
 }
 
-.@{class-prefix}-btn-link {
+.@{class-prefix}-btn-link,
+.ant-btn-link {
   font-size: @font-size-base;
   font-weight: @btn-font-weight;
   color: @primary-color;
@@ -358,7 +359,6 @@ fieldset[disabled] a.@{class-prefix}-btn {
   }
 
   &-news {
-
     @media screen and (max-width: @screen-xs-max) {
       .flex-display(flex, row, wrap);
     }
@@ -393,4 +393,3 @@ fieldset[disabled] a.@{class-prefix}-btn {
     }
   }
 }
-
