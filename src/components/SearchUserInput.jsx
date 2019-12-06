@@ -11,62 +11,13 @@ const { Option } = Select;
 const hasErrors = fieldsErrors => {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field]);
 };
-const SearchUserInput = ({
-  form,
-  setFoundUser,
-  label = 'Phone number',
-  formItemProps
-}) => {
-  const [user, setUser] = useState();
-  const { getFieldDecorator } = form;
 
-  useLayoutEffect(() => {
-    // const phone = form.getFieldValue('phone');
-    if (hasErrors(form.getFieldsError(['phone']))) {
-      setUser(null);
-      if (setFoundUser) {
-        setFoundUser(null);
-      }
-    }
-  });
-  const hasCode = phone => phone.startsWith('65') || phone.startsWith('+65');
-
-  const normalizePhone = value => value && value.replace(/^\+65|65/g, '');
-  const getPhoneWithCode = (code, phone) => {
-    if (hasCode(phone)) return phone;
-
-    return `${code}${phone}`;
-  };
-
-  const checkPhone = async () => {
-    const code = form.getFieldValue('phoneCode');
-    const phone = form.getFieldValue('phone');
-    const phoneWithCode = getPhoneWithCode(code, phone);
-
-    const userInfo = await usersCheck(phoneWithCode);
-
-    await setUser(userInfo);
-
-    if (setFoundUser) {
-      await setFoundUser(userInfo);
-    }
-    return userInfo;
-  };
-
-  const validatePhone = async (rule, value, callback) => {
-    const userInfo = await checkPhone();
-    if (userInfo && userInfo.phone === value) {
-      callback();
-    } else {
-      callback('Phone not found');
-    }
-  };
-
+const PhoneCodeSelector = ({ form }) => {
   const [countries] = useAsync(getCountries, []);
   const countryCodes = uniq(countries.map(({ dial }) => dial.toString()));
-  const codeSelector = getFieldDecorator('phoneCode', {
-    initialValue: SINGAPORE_CALLING_CODE,
-    rules: [{ validator: validatePhone }]
+  const { getFieldDecorator } = form;
+  return getFieldDecorator('phoneCode', {
+    initialValue: SINGAPORE_CALLING_CODE
   })(
     <Select style={{ width: '70px' }}>
       {countryCodes.map(code => {
@@ -78,6 +29,55 @@ const SearchUserInput = ({
       })}
     </Select>
   );
+};
+const SearchUserInput = ({
+  form,
+  setFoundUser,
+  label = 'Phone number',
+  formItemProps
+}) => {
+  const [user, setUser] = useState();
+  const { getFieldDecorator } = form;
+
+  useLayoutEffect(() => {
+    const phone = form.getFieldValue('phone');
+    const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
+    if (!phone || fieldHasErrors || phone.length < 0) {
+      setUser(null);
+      if (setFoundUser) {
+        setFoundUser(null);
+      }
+    }
+  });
+
+  const normalizePhone = value => {
+    if (!value) {
+      return;
+    }
+    const code = form.getFieldValue('phoneCode');
+
+    const pattern = new RegExp(`^\\+${code}|${code}`, 'g');
+    return value.replace(pattern, '');
+  };
+
+  const checkPhone = async () => {
+    const code = form.getFieldValue('phoneCode');
+    const phone = form.getFieldValue('phone');
+    if (!code || !phone) {
+      return null;
+    }
+    const phoneWithCode = `${code}${phone}`;
+
+    const userInfo = await usersCheck(phoneWithCode);
+
+    await setUser(userInfo);
+
+    if (setFoundUser) {
+      await setFoundUser(userInfo);
+    }
+    return userInfo;
+  };
+
   return (
     <Form.Item label={label} extra={user ? user.name : null} {...formItemProps}>
       {getFieldDecorator('phone', {
@@ -85,17 +85,19 @@ const SearchUserInput = ({
           { required: true, message: 'Please input phone number!' },
           {
             len: PHONE_NUMBER_LENGTH
-          },
-          { validator: validatePhone }
+          }
         ],
         normalize: normalizePhone,
-        validateFirst: true
+        validateFirst: true,
+        validateTrigger: ['onSearch']
       })(
         <Search
           inputMode="tel"
-          addonBefore={codeSelector}
+          addonBefore={<PhoneCodeSelector form={form} />}
           pattern="[0-9]*"
           placeholder="Search people by phone"
+          onSearch={checkPhone}
+          enterButton
         />
       )}
     </Form.Item>

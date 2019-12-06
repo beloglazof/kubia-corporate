@@ -1075,8 +1075,7 @@ body.dark-theme {
     &-tbody > tr > td {
       border-bottom-color: lighten(@dark-theme-border-color, 5%);
       &:first-child {
-      border-left: 1px solid lighten(@dark-theme-border-color, 5%);
-
+        border-left: 1px solid lighten(@dark-theme-border-color, 5%);
       }
     }
 
@@ -1393,6 +1392,10 @@ body.dark-theme {
     &-extra {
       color: @dark-theme-text-color;
     }
+  }
+
+  .has-error .ant-input-group-addon {
+    background-color: transparent;
   }
 
   & .ant-input {
@@ -2462,7 +2465,7 @@ body.dark-theme {
 
     &-content {
       color: @dark-theme-text-color;
-      background-color: lighten(@dark-theme-component-background, 2%); 
+      background-color: lighten(@dark-theme-component-background, 2%);
       border-top-color: lighten(@dark-theme-component-background, 10%);
     }
 
