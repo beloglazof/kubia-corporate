@@ -1,6 +1,8 @@
+// @ts-check
 import React, { useState, useLayoutEffect } from 'react';
 import { Form, Input, Select } from 'antd';
 import { uniq } from 'lodash';
+import PropTypes from 'prop-types';
 import { usersCheck, getCountries } from '../api';
 import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../constants';
 import useAsync from '../hooks/useAsync';
@@ -34,7 +36,7 @@ const SearchUserInput = ({
   form,
   setFoundUser,
   label = 'Phone number',
-  formItemProps
+  formItemProps = {}
 }) => {
   const [user, setUser] = useState();
   const { getFieldDecorator } = form;
@@ -63,7 +65,9 @@ const SearchUserInput = ({
   const checkPhone = async () => {
     const code = form.getFieldValue('phoneCode');
     const phone = form.getFieldValue('phone');
-    if (!code || !phone) {
+    const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
+
+    if (!code || !phone || fieldHasErrors) {
       return null;
     }
     const phoneWithCode = `${code}${phone}`;
@@ -102,6 +106,10 @@ const SearchUserInput = ({
       )}
     </Form.Item>
   );
+};
+
+SearchUserInput.propTypes = {
+  form: PropTypes.object.isRequired
 };
 
 export default SearchUserInput;

@@ -1,5 +1,6 @@
 import { Form, Input } from 'antd';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const InputItem = ({
   form,
@@ -7,10 +8,10 @@ const InputItem = ({
   label = 'Input',
   placeholder = 'Placeholder',
   required = false,
-  validationPattern,
-  initialValue,
-  formItemProps,
-  disabled
+  validationPattern = null,
+  initialValue = null,
+  formItemProps = {},
+  disabled = false
 }) => {
   if (!form) return null;
   const rules = [];
@@ -37,6 +38,18 @@ const InputItem = ({
       {fieldDecorator(<Input placeholder={placeholder} disabled={disabled} />)}
     </Form.Item>
   );
+};
+
+InputItem.propTypes = {
+  form: PropTypes.object.isRequired,
+  id: PropTypes.string,
+  label: PropTypes.string,
+  placeholder: PropTypes.string,
+  required: PropTypes.bool,
+  validationPattern: PropTypes.string,
+  initialValue: PropTypes.string,
+  formItemProps: PropTypes.object,
+  disabled: PropTypes.bool
 };
 
 export default InputItem;

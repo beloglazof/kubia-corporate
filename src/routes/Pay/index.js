@@ -8,8 +8,8 @@ import {
   withdrawal
 } from '../../api';
 import getRandomString from '../../util/getRandomString';
-import { PaymentInfoForm } from '../../components/PaymentInfoForm';
-import { PaymentDetails } from '../../components/PaymentDetails';
+import PaymentInfoForm from '../../components/PaymentInfoForm';
+import PaymentDetails from '../../components/PaymentDetails';
 
 export const FormItem = Form.Item;
 const { Step } = Steps;

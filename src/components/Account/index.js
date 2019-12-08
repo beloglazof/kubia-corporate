@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import styles from './account.module.css';
 import LastTransactions from '../Transactions/LastTransactions';
+import PropTypes from 'prop-types';
 
 const Account = ({ account }) => {
   const user = useSelector(({ user }) => user);
@@ -17,14 +18,9 @@ const Account = ({ account }) => {
     history.push('/transactions');
   };
 
-  const headerPanelStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
   return (
     <List.Item key={id}>
-      <UiCard title="Account info" bodyStyle={{paddingBottom: '10px'}}>
+      <UiCard title="Account info" bodyStyle={{ paddingBottom: '10px' }}>
         <div className={styles.name}>{name}</div>
         <Row className={styles.row}>
           <Col span={8} className={styles.infoParam}>
@@ -68,6 +64,21 @@ const Account = ({ account }) => {
       </UiCard>
     </List.Item>
   );
+};
+
+Account.propTypes = {
+  account: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    number: PropTypes.string.isRequired,
+    currency_info: PropTypes.object,
+    amount: PropTypes.number,
+    balance: PropTypes.object,
+    created: PropTypes.string,
+    updated: PropTypes.string,
+    bank_deposit: PropTypes.object,
+    cards: PropTypes.array,
+    transactions: PropTypes.object
+  }).isRequired
 };
 
 export default Account;

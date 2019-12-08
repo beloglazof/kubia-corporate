@@ -1,13 +1,14 @@
 import { Button, Form, Radio, Input, Upload, Icon } from 'antd';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import InputItem from './BeneficiaryAddForm/InputItem';
-import SelectItem from './BeneficiaryAddForm/SelectItem';
+import InputItem from './InputItem';
+import SelectItem from './SelectItem';
 import useAsync from '../hooks/useAsync';
 import { getBeneficiary, getPeople } from '../api';
 import { submitButtonLayoutProps } from '../routes/Pay';
+import PropTypes from 'prop-types';
 
-export const PaymentTypeField = ({ form }) => {
+const PaymentTypeField = ({ form }) => {
   const { getFieldDecorator } = form;
 
   return (
@@ -24,6 +25,10 @@ export const PaymentTypeField = ({ form }) => {
   );
 };
 
+PaymentTypeField.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
 const accountToOption = account => {
   const { number, amount } = account;
   const title = `${number} | Balance: S$ ${amount}`;
@@ -32,21 +37,29 @@ const accountToOption = account => {
     value: account
   };
 };
-export const AccountField = ({ accounts, form }) => {
+const AccountField = ({ accounts, form }) => {
   const options = accounts.map(accountToOption);
+  const selectProps = {
+    placeholder: 'Select account'
+  };
   return (
     <SelectItem
       form={form}
-      options={options}
-      id="account"
       label="Account"
-      placeholder="Select account"
+      id="account"
+      options={options}
       required
+      selectProps={selectProps}
     />
   );
 };
 
-export const AmountField = ({ balance, form }) => {
+AccountField.propType = {
+  accounts: PropTypes.array.isRequired,
+  form: PropTypes.object.isRequired
+};
+
+const AmountField = ({ balance, form }) => {
   const { getFieldDecorator } = form;
   const greaterThanZero = (rule, value, callback) => {
     if (value > 0) {
@@ -74,7 +87,12 @@ export const AmountField = ({ balance, form }) => {
   );
 };
 
-export const SelectBeneficiary = ({ form }) => {
+AmountField.propType = {
+  balance: PropTypes.number.isRequired,
+  form: PropTypes.object.isRequired
+};
+
+const SelectBeneficiary = ({ form }) => {
   const [beneficiaries] = useAsync(getBeneficiary, []);
   const options = beneficiaries
     .filter(counterparty => counterparty.accountNumber)
@@ -91,18 +109,27 @@ export const SelectBeneficiary = ({ form }) => {
       return option;
     });
 
+  const selectProps = {
+    placeholder: 'Select beneficiary'
+  };
+
   return (
     <SelectItem
       form={form}
       label="Beneficiary"
       id="beneficiary"
-      placeholder="Select beneficiary"
       options={options}
       required
+      selectProps={selectProps}
     />
   );
 };
-export const SelectLinkedUser = ({ form }) => {
+
+SelectBeneficiary.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
+const SelectLinkedUser = ({ form }) => {
   const [people] = useAsync(getPeople, []);
   const options = people.map(user => {
     const { id, name } = user;
@@ -115,42 +142,58 @@ export const SelectLinkedUser = ({ form }) => {
     return option;
   });
 
+  const selectProps = {
+    placeholder: 'Select user'
+  };
+
   return (
     <SelectItem
       form={form}
       label="Linked people"
       id="linkedPeople"
-      placeholder="Select user"
       options={options}
       required
+      selectProps={selectProps}
     />
   );
 };
 
-export const PaymentPurpose = ({ form }) => {
+SelectLinkedUser.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
+const PaymentPurpose = ({ form }) => {
+  // TODO
   const options = [];
   return (
     <SelectItem
       form={form}
-      options={options}
       label="Payment Purpose"
       id="paymentPurpose"
+      options={options}
     />
   );
 };
 
-export const PaymentReference = ({ form }) => {
-  return (
-    <InputItem
-      form={form}
-      label="Payment Reference"
-      placeholder="For family"
-      id="paymentRefrence"
-    />
-  );
+PaymentPurpose.propTypes = {
+  form: PropTypes.object.isRequired
 };
 
-export const UploadInvoice = ({ form }) => {
+const PaymentReference = ({ form }) => (
+  <InputItem
+    form={form}
+    id="paymentRefrence"
+    label="Payment Reference"
+    placeholder="For family"
+  />
+);
+
+PaymentReference.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
+const UploadInvoice = ({ form }) => {
+  // TODO
   const normFile = e => {
     console.log('Upload event:', e);
     if (Array.isArray(e)) {
@@ -181,7 +224,11 @@ export const UploadInvoice = ({ form }) => {
   );
 };
 
-export const NoteField = ({ form }) => {
+UploadInvoice.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
+const NoteField = ({ form }) => {
   const { getFieldDecorator } = form;
   return (
     <Form.Item label="Note">
@@ -190,7 +237,11 @@ export const NoteField = ({ form }) => {
   );
 };
 
-export const PaymentInfoForm = ({
+NoteField.propTypes = {
+  form: PropTypes.object.isRequired
+};
+
+const PaymentInfoForm = ({
   form,
   setPaymentType,
   gotoNextStep,
@@ -219,9 +270,7 @@ export const PaymentInfoForm = ({
           <AmountField form={form} balance={balance} />
           {paymentType === 'internal' && <SelectLinkedUser form={form} />}
           {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
-
           <PaymentPurpose form={form} />
-
           <UploadInvoice form={form} />
           <NoteField form={form} />
           <Form.Item {...submitButtonLayoutProps}>
@@ -234,3 +283,12 @@ export const PaymentInfoForm = ({
     </>
   );
 };
+
+PaymentInfoForm.propTypes = {
+  form: PropTypes.object.isRequired,
+  setPaymentType: PropTypes.func.isRequired,
+  gotoNextStep: PropTypes.func.isRequired,
+  getDetails: PropTypes.func.isRequired
+};
+
+export default PaymentInfoForm;

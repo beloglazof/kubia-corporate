@@ -1,68 +1,10 @@
-import { Button, Card, Icon, List, Tooltip, Table } from 'antd';
+import { Table } from 'antd';
 import { take } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
 import useAsync from '../../hooks/useAsync';
-import { formatISODate } from '../../util/index.js';
-import { COLORS, LINKED_ACC_TYPES, TRANS_ICONS } from './index.js';
-import { useHistory } from 'react-router-dom';
 import { singaporeDateTimeFormat } from '../../util/config';
-
-const currencyTooltip = currency => (
-  <Tooltip title={currency.name}>
-    <span>{currency.symbol}</span>
-  </Tooltip>
-);
-
-const amountTooltip = amount => (
-  <Tooltip title="Amount">
-    <span>{amount}</span>
-  </Tooltip>
-);
-
-const Transaction = ({ transaction }) => {
-  const { creationDate } = transaction;
-  const dateTitle = formatISODate(creationDate, 'd MMMM');
-  return (
-    <>
-      <div style={{ textAlign: 'center', marginBottom: '0.5em' }}>
-        {dateTitle}
-      </div>
-      <Card
-        size="small"
-        title={
-          <span>
-            {currencyTooltip(transaction.currency)}
-            {amountTooltip(transaction.amount)}
-          </span>
-        }
-        extra={
-          <span style={{ color: COLORS[transaction.type] }}>
-            {transaction.type}
-          </span>
-        }
-        style={{ margin: 'auto auto 10px', width: '350px' }}
-        headStyle={{ textAlign: 'left' }}
-        bodyStyle={{
-          display: 'flex',
-          alignItems: 'center',
-          textAlign: 'center'
-        }}
-      >
-        <Icon
-          type={TRANS_ICONS[transaction.type]}
-          style={{ color: COLORS[transaction.type] }}
-        />
-        <Tooltip title="Account number">
-          <span style={{ flex: '1' }}>{transaction.account.number}</span>
-        </Tooltip>
-        <Tooltip title={LINKED_ACC_TYPES[transaction.type]}>
-          {transaction.linked_account.name}
-        </Tooltip>
-      </Card>
-    </>
-  );
-};
+import { formatISODate } from '../../util/index.js';
 
 const lastTransactionsNumber = 5;
 
@@ -101,6 +43,7 @@ const LastTransactions = () => {
       rowKey="id"
       size="small"
       bordered
+      pagination={false}
     >
       <Column
         title="Amount"
@@ -116,7 +59,7 @@ const LastTransactions = () => {
       />
 
       <Column
-        title="From"
+        title="From/To"
         dataIndex="linked_account"
         key="linkedAccount"
         render={renderFromField}

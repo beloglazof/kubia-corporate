@@ -1,6 +1,9 @@
 import { Form, Select } from 'antd';
 import React from 'react';
+import PropTypes from 'prop-types';
+
 const { Option } = Select;
+
 const renderOption = ({ value, title }) => (
   <Option value={value} key={value}>
     {title}
@@ -13,11 +16,12 @@ const SelectItem = ({
   id,
   options,
   initialValue,
-  ...selectProps
+  required,
+  selectProps
 }) => {
   if (!form) return null;
   const rules = [];
-  if (selectProps.required) {
+  if (required) {
     const requiredRule = { required: true, message: `Please select ${label}` };
     rules.push(requiredRule);
   }
@@ -30,5 +34,13 @@ const SelectItem = ({
     </Form.Item>
   );
 };
+
+SelectItem.propTypes = {
+  form: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  options: PropTypes.array.isRequired,
+  initialValue: PropTypes.string,
+}
 
 export default SelectItem;

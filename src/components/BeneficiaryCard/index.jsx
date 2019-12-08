@@ -1,63 +1,10 @@
 import { startCase } from 'lodash';
 import { Button, Card, Descriptions, Form, Modal, Popconfirm } from 'antd';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useForm, useModal } from 'sunflower-antd';
-import InputItem from '../BeneficiaryAddForm/InputItem';
+import InputItem from '../InputItem';
 import CountrySelect from '../CountrySelect';
-
-const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
-  const { modalProps: detailsModalProps, show: showDetails } = useModal({
-    defaultVisible: false
-  });
-  const {
-    modalProps: editModalProps,
-    show: showEditModal,
-    close: closeEditModal
-  } = useModal({
-    defaultVisible: false
-  });
-
-  const fieldsSet = new Set([
-    'accountNumber',
-    'companyName',
-    'email',
-    'firstName',
-    'lastName',
-    'country'
-  ]);
-  const details = Object.entries(beneficiary).filter(
-    ([fieldName]) => fieldName !== 'id'
-  );
-  const fields = details.filter(([name]) => fieldsSet.has(name));
-  const cardTitle = startCase(beneficiary?.nickname) || null;
-
-  const actions = getCardActions(showDetails, onDelete, showEditModal);
-  return (
-    <Card
-      title={cardTitle}
-      headStyle={{
-        fontSize: '1.6em',
-        marginLeft: '1em',
-        lineHeight: '1.5em'
-      }}
-      actions={actions}
-      size='small'
-    >
-      <Descriptions bordered column={2} layout="vertical">
-        {renderFields(fields)}
-      </Descriptions>
-      <DetailsModal {...detailsModalProps} details={details} />
-      <EditFormModal
-        {...editModalProps}
-        close={closeEditModal}
-        details={details}
-        onEdit={onEdit}
-      />
-    </Card>
-  );
-};
-
-export default BeneficiaryCard;
 
 const getCardActions = (showDetails, onDelete, showEditModal) => {
   const editBeneficiary = () => {
@@ -209,3 +156,63 @@ const EditBeneficiaryFormModal = ({
 };
 
 const EditFormModal = Form.create()(EditBeneficiaryFormModal);
+
+const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
+  const { modalProps: detailsModalProps, show: showDetails } = useModal({
+    defaultVisible: false
+  });
+  const {
+    modalProps: editModalProps,
+    show: showEditModal,
+    close: closeEditModal
+  } = useModal({
+    defaultVisible: false
+  });
+
+  const fieldsSet = new Set([
+    'accountNumber',
+    'companyName',
+    'email',
+    'firstName',
+    'lastName',
+    'country'
+  ]);
+  const details = Object.entries(beneficiary).filter(
+    ([fieldName]) => fieldName !== 'id'
+  );
+  const fields = details.filter(([name]) => fieldsSet.has(name));
+  const cardTitle = startCase(beneficiary?.nickname) || null;
+
+  const actions = getCardActions(showDetails, onDelete, showEditModal);
+  return (
+    <Card
+      title={cardTitle}
+      headStyle={{
+        fontSize: '1.6em',
+        marginLeft: '1em',
+        lineHeight: '1.5em'
+      }}
+      actions={actions}
+      size="small"
+    >
+      <Descriptions bordered column={2} layout="vertical">
+        {renderFields(fields)}
+      </Descriptions>
+      <DetailsModal {...detailsModalProps} details={details} />
+      <EditFormModal
+        {...editModalProps}
+        close={closeEditModal}
+        details={details}
+        onEdit={onEdit}
+      />
+    </Card>
+  );
+};
+
+BeneficiaryCard.propTypes = {
+  beneficiary: PropTypes.object.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired
+};
+
+export default BeneficiaryCard;
