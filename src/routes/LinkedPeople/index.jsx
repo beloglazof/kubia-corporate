@@ -101,7 +101,7 @@ const AddUserForm = ({ form, handleAdd, style }) => {
 
   const layoutProps = {
     layout: 'horizontal',
-    wrapperCol: { xs: { span: 10 } },
+    wrapperCol: { xs: { span: 14 } },
     labelCol: { xs: { span: 6 } }
   };
 

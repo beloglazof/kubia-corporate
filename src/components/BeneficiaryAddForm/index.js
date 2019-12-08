@@ -1,6 +1,7 @@
 import { Button, Form, Result, Steps } from 'antd';
 import React, { useState } from 'react';
 import { useStepsForm } from 'sunflower-antd';
+import { mapValues } from 'lodash';
 import { createBeneficiary } from '../../api';
 import BeneficiaryInfoStepForm from './BeneficiaryInfoStepForm';
 import ClarifyingStepForm from './ClarifyingStepForm';
@@ -8,13 +9,32 @@ import ClarifyingStepForm from './ClarifyingStepForm';
 const { Step } = Steps;
 
 const BeneficiaryAddForm = ({ history, form }) => {
-  const handleSubmit = async values => {
+  const handleSubmit = async inputedFields => {
     form.validateFields(async errors => {
       if (errors) return;
+      const mapFieldValues = fieldsObj => {
+        const fields = Object.entries(fieldsObj).reduce(
+          (acc, [fieldName, fieldPattern]) => {
+            if (typeof fieldPattern === 'object') {
+              const newAcc = {
+                ...acc,
+                [fieldName]: mapFieldValues(fieldPattern)
+              };
+              return newAcc;
+            } else {
+              return { ...acc, [fieldName]: inputedFields[fieldName] };
+            }
+          },
+          {}
+        );
+        return fields;
+      };
+      const structuredFields = mapFieldValues(mainFormFields);
       const params = {
-        ...values,
+        ...structuredFields,
         entityType: 'company'
       };
+      console.log(params);
       const id = await createBeneficiary(params);
       if (id) {
         gotoStep(current + 1);
