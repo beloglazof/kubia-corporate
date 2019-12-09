@@ -1201,6 +1201,10 @@ body.dark-theme {
       border-bottom-color: lighten(@dark-theme-border-color, 5%);
     }
 
+    &-bordered.ant-table-empty .ant-table-placeholder {
+      border: none;
+    }
+
     &-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body {
       background: @dark-theme-component-background;
     }
@@ -2547,6 +2551,17 @@ body.dark-theme {
 
     &-ink-ball {
       border-color: @dark-theme-text-color;
+    }
+  }
+
+  & .ant-page-header {
+    color: @dark-theme-text-color;
+    &-heading-title {
+      color: @dark-theme-text-color;
+      font-size: 1.8em;
+    }
+    &-back-button {
+      color: @dark-theme-text-color;
     }
   }
 
