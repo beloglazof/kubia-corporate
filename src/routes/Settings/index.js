@@ -215,7 +215,7 @@ const Settings = () => {
           Active sessions
         </Divider>
         <CurrentSession session={currentSession} />
-        <div style={{ display: 'flex', flexFlow: 'row-reverse' }}>
+        <div style={{ display: 'flex', flexFlow: 'row-reverse', marginBottom: '1em' }}>
           {showCloseAllButton && (
             <CloseAllSessionsButton handler={handleCloseAllClick} />
           )}
