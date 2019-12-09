@@ -53,7 +53,7 @@ const Beneficiaries = ({ history }) => {
   return (
     <>
       <h1>Beneficiaries</h1>
-      <Button onClick={handleAddClick} type="primary">
+      <Button onClick={handleAddClick} type="primary" style={{marginBottom: '1em'}}>
         Add
       </Button>
       <List
