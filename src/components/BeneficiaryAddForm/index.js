@@ -1,7 +1,6 @@
 import { Button, Form, Result, Steps } from 'antd';
 import React, { useState } from 'react';
 import { useStepsForm } from 'sunflower-antd';
-import { mapValues } from 'lodash';
 import { createBeneficiary } from '../../api';
 import BeneficiaryInfoStepForm from './BeneficiaryInfoStepForm';
 import ClarifyingStepForm from './ClarifyingStepForm';

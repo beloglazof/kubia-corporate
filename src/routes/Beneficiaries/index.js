@@ -1,4 +1,4 @@
-import { Button, List } from 'antd';
+import { Button, List, PageHeader } from 'antd';
 import React from 'react';
 import {
   deleteBeneficiary,
@@ -52,8 +52,16 @@ const Beneficiaries = ({ history }) => {
 
   return (
     <>
-      <h1>Beneficiaries</h1>
-      <Button onClick={handleAddClick} type="primary" style={{marginBottom: '1em'}}>
+      <PageHeader
+        title="Beneficiaries"
+        style={{ marginBottom: '1em' }}
+        onBack={() => history.goBack()}
+      />
+      <Button
+        onClick={handleAddClick}
+        type="primary"
+        style={{ marginBottom: '1em' }}
+      >
         Add
       </Button>
       <List

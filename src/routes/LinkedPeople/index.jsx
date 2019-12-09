@@ -1,5 +1,14 @@
 //@ts-check
-import { Button, Col, Form, Popconfirm, Row, Table, message } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Popconfirm,
+  Row,
+  Table,
+  message,
+  PageHeader
+} from 'antd';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { addPeople, deletePeople, getPeople } from '../../api';
@@ -28,7 +37,7 @@ const DeleteButton = ({ peopleId, handleDelete }) => {
 DeleteButton.propTypes = {
   peopleId: PropTypes.number.isRequired,
   handleDelete: PropTypes.func.isRequired
-}
+};
 
 const LinkedPeopleTable = ({ people, handleDelete }) => {
   const columns = [
@@ -57,7 +66,7 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
 LinkedPeopleTable.propTypes = {
   people: PropTypes.array.isRequired,
   handleDelete: PropTypes.func.isRequired
-}
+};
 
 const AddUserForm = ({ form, handleAdd }) => {
   const [foundUser, setFoundUser] = useState();
@@ -114,15 +123,14 @@ const AddUserForm = ({ form, handleAdd }) => {
   );
 };
 
-
 AddUserForm.propTypes = {
   form: PropTypes.object.isRequired,
   handleAdd: PropTypes.func.isRequired
-}
+};
 const WrappedAddUserForm = Form.create()(AddUserForm);
 
-const LinkedPeople = () => {
-  const [people, setPeople] = useAsync(getPeople);
+const LinkedPeople = ({ history }) => {
+  const [people, setPeople] = useAsync(getPeople, []);
   const handleAdd = async userInfo => {
     const userAdded = people.find(user => user.phone === userInfo.phone);
     if (userAdded) {
@@ -138,10 +146,16 @@ const LinkedPeople = () => {
       setPeople(people.filter(people => people.id !== peopleId));
     }
   };
+
   return (
     <Row>
       <Col span={24}>
-        <h1 style={{ marginBottom: '1em' }}>Linked People</h1>
+        <PageHeader
+          title="Linked People"
+          style={{ marginBottom: '1em' }}
+          onBack={() => history.goBack()}
+        />
+        {/* <h1 style={{ marginBottom: '1em' }}>Linked People</h1> */}
         <Row type="flex" justify="center">
           <Col span={18}>
             {/* find user in our core */}

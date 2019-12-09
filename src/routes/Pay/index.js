@@ -1,5 +1,5 @@
 import { useStepsForm } from '@sunflower-antd/steps-form';
-import { Button, Col, Form, message, Result, Row, Steps } from 'antd';
+import { Button, Col, Form, message, Result, Row, Steps, PageHeader } from 'antd';
 import React, { useState } from 'react';
 import {
   fetchPaymentDetails,
@@ -122,8 +122,11 @@ const NewPayment = ({ form, history }) => {
   return (
     <Row>
       <Col span={24}>
-        <h2 style={{ marginBottom: '2em' }}>New Payment Request</h2>
-
+      <PageHeader
+          title="New Payment Request"
+          style={{ marginBottom: '1em' }}
+          onBack={() => history.goBack()}
+        />
         <Steps {...stepsProps}>
           <Step title="Create" />
           <Step title="Submit" />

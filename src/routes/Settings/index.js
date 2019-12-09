@@ -23,6 +23,7 @@ import styles from './settings.module.css';
 import useAsync from '../../hooks/useAsync';
 
 const CurrentSession = ({ session }) => {
+  console.log(session);
   if (!session) return null;
   const visibleFields = new Set(['created', 'expire', 'ip']);
   const dateFields = new Set(['created', 'expire']);
@@ -102,11 +103,14 @@ const Settings = () => {
   const [sessions, setSessions] = useAsync(getSessions, []);
   const [currentSession, setCurrentSession] = useState(null);
   useEffect(() => {
+    console.log(sessions);
     const current = sessions.find(session => session.current);
     const otherSessions = sessions.filter(session => !session.current);
-    setCurrentSession(current);
+    if (!currentSession && current) {
+      setCurrentSession(current);
+    }
     setSessions(otherSessions);
-  }, []);
+  }, [sessions.length]);
 
   const closeSession = async sessionId => {
     const killed = await killSession(sessionId);
@@ -215,7 +219,13 @@ const Settings = () => {
           Active sessions
         </Divider>
         <CurrentSession session={currentSession} />
-        <div style={{ display: 'flex', flexFlow: 'row-reverse', marginBottom: '1em' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'row-reverse',
+            marginBottom: '1em'
+          }}
+        >
           {showCloseAllButton && (
             <CloseAllSessionsButton handler={handleCloseAllClick} />
           )}
