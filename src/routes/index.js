@@ -14,11 +14,11 @@ import NewPayment from './Pay';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
-  { name: 'settings', path: '/settings', iconName: 'setting' },
   { name: 'pay', path: '/new-payment', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
+  { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
 export const renderNavigationItems = () => {
