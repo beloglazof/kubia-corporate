@@ -1,10 +1,11 @@
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import { take } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
 import useAsync from '../../hooks/useAsync';
 import { singaporeDateTimeFormat } from '../../util/config';
 import { formatISODate } from '../../util/index.js';
+import { useHistory } from 'react-router-dom';
 
 const lastTransactionsNumber = 5;
 
@@ -36,14 +37,27 @@ const LastTransactions = () => {
   };
   const isLoading = !lastTransactions.length;
   const { Column } = Table;
+  const history = useHistory();
+  const handleMoreClick = () => {
+    history.push('/transactions');
+  };
   return (
     <Table
       loading={isLoading}
       dataSource={lastTransactions}
       rowKey="id"
       size="small"
-      bordered
       pagination={false}
+      footer={() =>
+        <Button
+          type="primary"
+          onClick={handleMoreClick}
+          block
+        >
+          More
+        </Button>
+      }
+      bordered
     >
       <Column
         title="Amount"
