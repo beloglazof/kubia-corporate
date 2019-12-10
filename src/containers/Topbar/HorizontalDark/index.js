@@ -1,4 +1,4 @@
-import { Layout } from 'antd';
+import { Layout, Button } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavLink as Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ import {
 } from '../../../redux/features/settings/themeSettingsSlice';
 import HorizontalNav from '../HorizontalNav';
 import languageData from '../languageData';
+import { signOut } from '../../../redux/features/session/sessionSlice';
 
 const { Header } = Layout;
 
@@ -190,7 +191,10 @@ class HorizontalDark extends Component {
                 {/*  </Popover>*/}
                 {/*</li>*/}
                 <li className="gx-user-nav">
-                  <UserInfo />
+                  {/* <UserInfo /> */}
+                  <Button icon="logout" type="link" onClick={() => this.props.signOut()}>
+                    Sign out
+                  </Button>
                 </li>
               </ul>
             </div>
@@ -231,6 +235,8 @@ const mapStateToProps = ({ themeSettings }) => {
   const { locale, navCollapsed } = themeSettings;
   return { locale, navCollapsed };
 };
-export default connect(mapStateToProps, { toggleCollapsedNav, switchLanguage })(
-  HorizontalDark
-);
+export default connect(mapStateToProps, {
+  toggleCollapsedNav,
+  switchLanguage,
+  signOut
+})(HorizontalDark);
