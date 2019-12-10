@@ -13,11 +13,6 @@ const Account = ({ account }) => {
 
   const { number, amount, currency_info, id } = account;
 
-  const history = useHistory();
-  const handleMoreClick = () => {
-    history.push('/transactions');
-  };
-
   return (
     <List.Item key={id}>
       <UiCard title="Account info" bodyStyle={{ paddingBottom: '10px' }}>
@@ -45,15 +40,6 @@ const Account = ({ account }) => {
             <Collapse expandIconPosition="right">
               <Collapse.Panel
                 header="Last transactions"
-                extra={
-                  <Button
-                    type="link"
-                    onClick={handleMoreClick}
-                    style={{ lineHeight: 1, height: 'auto' }}
-                  >
-                    More
-                  </Button>
-                }
                 className={styles.panel}
               >
                 <LastTransactions />
