@@ -1,5 +1,14 @@
 import { useStepsForm } from '@sunflower-antd/steps-form';
-import { Button, Col, Form, message, Result, Row, Steps, PageHeader } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  message,
+  Result,
+  Row,
+  Steps,
+  PageHeader
+} from 'antd';
 import React, { useState } from 'react';
 import {
   fetchPaymentDetails,
@@ -76,11 +85,25 @@ const sendPaymentRequest = async (values, paymentType, history) => {
   }
 };
 
+const formLayoutProps = {
+  labelCol: {
+    xs: { span: 8 },
+    sm: { span: 8 },
+    md: { span: 3 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+    md: { span: 12 }
+  },
+  labelAlign: 'left'
+};
+
 export const submitButtonLayoutProps = {
   wrapperCol: {
-    xs: { span: 24, offset: 8 },
-    sm: { span: 12 },
-    md: { span: 8, offset: 6 }
+    xs: { offset: formLayoutProps.labelCol.xs.span },
+    sm: { offset: formLayoutProps.labelCol.sm.span },
+    md: { offset: formLayoutProps.labelCol.md.span }
   }
 };
 
@@ -105,24 +128,10 @@ const NewPayment = ({ form, history }) => {
     if (fetchedDetails) setPaymentDetails(fetchedDetails);
   };
 
-  const formLayoutProps = {
-    labelCol: {
-      xs: { span: 8 },
-      sm: { span: 8 },
-      md: { span: 8 }
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 12 },
-      md: { span: 12 }
-    },
-    labelAlign: 'right'
-  };
-
   return (
     <Row>
       <Col span={24}>
-      <PageHeader
+        <PageHeader
           title="New Payment Request"
           style={{ marginBottom: '1em' }}
           onBack={() => history.goBack()}
