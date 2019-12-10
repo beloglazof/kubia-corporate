@@ -243,41 +243,6 @@
     background-color: @nav-dark-bg;
     color: @menu-dark-highlight-color;
 
-    &:before {
-      content: '';
-      position: absolute;
-      right: 169px;
-      top: -212px;
-      background-color: fade(@white-color, 20%);
-      width: 280px;
-      height: 350px;
-      .border-radius(0 0 135px 135px);
-      .rotate(45deg);
-      z-index: 1;
-
-      @media screen and (max-width: (@screen-lg-max - 150px)) {
-        right: 110px;
-      }
-
-      @media screen and (max-width: @screen-lg-max) {
-        top: -184px;
-        right: 80px;
-        height: 300px;
-      }
-
-      @media screen and (max-width: @screen-md-max) {
-        top: -200px;
-        right: 140px;
-        height: 240px;
-        width: 200px;
-      }
-
-      @media screen and (max-width: @screen-xs-max) {
-        right: 60px;
-        display: none;
-      }
-    }
-
     & > div {
       position: relative;
       z-index: 2;

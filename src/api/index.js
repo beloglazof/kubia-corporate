@@ -70,7 +70,7 @@ export const getTransactions = async () => await get('/transactions');
 export const getBeneficiary = async id => {
   const fetched = await get('/beneficiary', { id });
   if (fetched) {
-    const filtered = fetched.filter(counterparty => counterparty.accountNumber);
+    const filtered = fetched.filter(counterparty => counterparty.bankAccount);
     return filtered;
   } else {
     return [];
@@ -92,7 +92,7 @@ export const updateBeneficiary = async (id, updatedFields) =>
   await patch(`/beneficiary/${id}`, updatedFields);
 
 export const deleteBeneficiary = async id =>
-  await httpDelete(`/beneficiary`, { id });
+  await httpDelete(`/beneficiary/${id}`);
 
 export const getCountries = async () => await get('/countries');
 

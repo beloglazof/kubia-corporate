@@ -63,7 +63,7 @@ const BeneficiaryInfoStepForm = ({ form, fields, submit }) => (
     />
     {renderFields(fields, form)}
     <Form.Item wrapperCol={{ offset: 6 }}>
-      <Button type="primary" htmlType="submit" onClick={() => submit()}>
+      <Button type="primary" htmlType="submit">
         Submit
       </Button>
     </Form.Item>

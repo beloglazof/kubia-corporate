@@ -42,7 +42,7 @@ class SidebarContent extends Component {
               navStyle
             )}`}
           >
-            <UserInfo />
+            {/* <UserInfo /> */}
             <AppsNavigation />
           </div>
           <CustomScrollbars className="gx-layout-sider-scrollbar">
