@@ -1,4 +1,4 @@
-import { Button, Form, Result, Steps } from 'antd';
+import { Button, Form, Result, Steps, PageHeader } from 'antd';
 import React, { useState } from 'react';
 import { useStepsForm } from 'sunflower-antd';
 import { createBeneficiary } from '../../api';
@@ -28,10 +28,13 @@ const BeneficiaryAddForm = ({ history, form }) => {
         );
         return fields;
       };
+      const { nickname, email } = inputedFields;
       const structuredFields = mapFieldValues(mainFormFields);
       const params = {
         ...structuredFields,
-        entityType: 'company'
+        entityType: 'company',
+        nickname,
+        email
       };
       console.log(params);
       const id = await createBeneficiary(params);
@@ -66,7 +69,11 @@ const BeneficiaryAddForm = ({ history, form }) => {
   };
   return (
     <>
-      <h1 style={{ marginBottom: '2em' }}>Add new beneficiary</h1>
+      <PageHeader
+        title="Add new beneficiary"
+        style={{ marginBottom: '2em' }}
+        onBack={() => history.goBack()}
+      />
 
       <Steps {...stepsProps}>
         <Step />

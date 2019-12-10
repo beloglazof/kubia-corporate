@@ -49,7 +49,11 @@ const renderAction = ({ name, handler, icon }) => {
 };
 
 const renderFields = fields => {
-  return fields.map(([name, value]) => {
+  const renderField = ([name, value]) => {
+    if (typeof value === 'object') {
+      const nestedFields = renderFields(Object.entries(value));
+      return nestedFields;
+    }
     const label = startCase(name);
     const span = name === 'email' ? 2 : 1;
     return (
@@ -57,7 +61,9 @@ const renderFields = fields => {
         <span style={{ fontWeight: 'bold' }}>{value}</span>
       </Descriptions.Item>
     );
-  });
+  };
+  const mapped = fields.map(renderField);
+  return mapped;
 };
 
 const DetailsModal = ({ details, ...props }) => {
@@ -78,6 +84,9 @@ const DetailsModal = ({ details, ...props }) => {
 
 const renderFormFields = (form, fields) => {
   const renderField = ([fieldName, value]) => {
+    if (typeof value === 'object') {
+      return renderFormFields(form, Object.entries(value));
+    }
     const disabledFields = new Set(['entityType']);
     const disabled = disabledFields.has(fieldName);
 
@@ -171,6 +180,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
 
   const fieldsSet = new Set([
     'accountNumber',
+    'bankAccount',
     'companyName',
     'email',
     'firstName',
@@ -180,7 +190,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
   const details = Object.entries(beneficiary).filter(
     ([fieldName]) => fieldName !== 'id'
   );
-  const fields = details.filter(([name]) => fieldsSet.has(name));
+  const cardFields = details.filter(([name]) => fieldsSet.has(name));
   const cardTitle = startCase(beneficiary?.nickname) || null;
 
   const actions = getCardActions(showDetails, onDelete, showEditModal);
@@ -196,7 +206,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
       size="small"
     >
       <Descriptions bordered column={2} layout="vertical">
-        {renderFields(fields)}
+        {renderFields(cardFields)}
       </Descriptions>
       <DetailsModal {...detailsModalProps} details={details} />
       <EditFormModal
