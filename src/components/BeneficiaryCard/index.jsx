@@ -16,7 +16,6 @@ const getCardActions = (showDetails, onDelete, showEditModal) => {
   const handleDelete = async () => await onDelete();
 
   const cardActions = [
-    { name: 'edit', handler: editBeneficiary, icon: 'edit' },
     { name: 'details', handler: beneficiaryDetails, icon: 'profile' },
     { name: 'delete', handler: handleDelete, icon: 'delete' }
   ];
