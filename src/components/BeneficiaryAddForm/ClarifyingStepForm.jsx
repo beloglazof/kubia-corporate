@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { getBeneficiaryFields } from '../../api';
 import CountrySelect from '../CountrySelect';
 import CurrencySelect from '../CurrencySelect';
-import { submitButtonLayoutProps } from '../../routes/Pay';
 
 const BankAccountCountrySelect = ({ form }) => (
   <CountrySelect
@@ -34,7 +33,8 @@ const ClarifyingStepForm = ({
   setMainFormFields,
   setClarifiedInfo,
   gotoStep,
-  current
+  current,
+  submitButtonLayoutProps
 }) => {
   const handleNext = async () => {
     form.validateFields(async (errors, values) => {
