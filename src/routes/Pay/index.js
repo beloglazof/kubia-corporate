@@ -1,15 +1,27 @@
 import { useStepsForm } from '@sunflower-antd/steps-form';
-import { Button, Col, Form, message, Result, Row, Steps, PageHeader } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  message,
+  Result,
+  Row,
+  Steps,
+  PageHeader
+} from 'antd';
 import React, { useState } from 'react';
 import {
   fetchPaymentDetails,
   paymentsPay,
   usersCheck,
-  withdrawal
+  withdrawal,
+  getCompanies,
+  getBeneficiary
 } from '../../api';
 import getRandomString from '../../util/getRandomString';
 import PaymentInfoForm from '../../components/PaymentInfoForm';
 import PaymentDetails from '../../components/PaymentDetails';
+import { useSelector } from 'react-redux';
 
 export const FormItem = Form.Item;
 const { Step } = Steps;
@@ -76,11 +88,25 @@ const sendPaymentRequest = async (values, paymentType, history) => {
   }
 };
 
+const formLayoutProps = {
+  labelCol: {
+    xs: { span: 8 },
+    sm: { span: 8 },
+    md: { span: 6 }
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 12 },
+    md: { span: 12 }
+  },
+  labelAlign: 'left'
+};
+
 export const submitButtonLayoutProps = {
   wrapperCol: {
-    xs: { span: 24, offset: 8 },
-    sm: { span: 12 },
-    md: { span: 8, offset: 6 }
+    xs: { offset: formLayoutProps.labelCol.xs.span },
+    sm: { offset: formLayoutProps.labelCol.sm.span },
+    md: { offset: formLayoutProps.labelCol.md.span }
   }
 };
 
@@ -100,29 +126,41 @@ const NewPayment = ({ form, history }) => {
 
   const [paymentDetails, setPaymentDetails] = useState();
 
-  const getDetails = async () => {
-    const fetchedDetails = await fetchPaymentDetails();
-    if (fetchedDetails) setPaymentDetails(fetchedDetails);
-  };
-
-  const formLayoutProps = {
-    labelCol: {
-      xs: { span: 8 },
-      sm: { span: 8 },
-      md: { span: 8 }
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 12 },
-      md: { span: 12 }
-    },
-    labelAlign: 'right'
+  const accounts = useSelector(state => state.accounts);
+  const getDetails = async fieldsValues => {
+    const {
+      amount,
+      beneficiary: beneficiary_id,
+      account: account_id
+    } = fieldsValues;
+    const companies = await getCompanies();
+    const company_id = companies[0].id;
+    const account = accounts.find(acc => acc.id === account_id);
+    const sellCurrency = account.currency_info.code;
+    const beneficiaries = await getBeneficiary();
+    const beneficiary = beneficiaries.find(b => b.id === beneficiary_id);
+    const buyCurrency = beneficiary.bankAccount.currency;
+    const params = {
+      amount,
+      beneficiary_id,
+      account_id,
+      company_id,
+      buyCurrency,
+      sellCurrency
+    };
+    console.log(beneficiary);
+    console.log(params);
+    const fetchedDetails = await fetchPaymentDetails(params);
+    if (fetchedDetails) {
+      setPaymentDetails(fetchedDetails);
+      gotoNextStep();
+    }
   };
 
   return (
     <Row>
       <Col span={24}>
-      <PageHeader
+        <PageHeader
           title="New Payment Request"
           style={{ marginBottom: '1em' }}
           onBack={() => history.goBack()}

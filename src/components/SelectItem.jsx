@@ -14,6 +14,7 @@ const SelectItem = ({
   form,
   label,
   id,
+  placeholder,
   options,
   initialValue,
   required,
@@ -29,7 +30,7 @@ const SelectItem = ({
   return (
     <Form.Item label={label}>
       {form.getFieldDecorator(id, { rules, initialValue })(
-        <Select {...selectProps}>{options.map(renderOption)}</Select>
+        <Select placeholder={placeholder} {...selectProps}>{options.map(renderOption)}</Select>
       )}
     </Form.Item>
   );

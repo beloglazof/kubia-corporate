@@ -45,7 +45,7 @@ const renderFields = (fields, form) => {
     .map(renderField);
 };
 
-const BeneficiaryInfoStepForm = ({ form, fields, submit }) => (
+const BeneficiaryInfoStepForm = ({ form, fields, submitButtonLayoutProps }) => (
   <>
     <InputItem
       form={form}
@@ -62,7 +62,7 @@ const BeneficiaryInfoStepForm = ({ form, fields, submit }) => (
       required
     />
     {renderFields(fields, form)}
-    <Form.Item wrapperCol={{ offset: 6 }}>
+    <Form.Item {...submitButtonLayoutProps}>
       <Button type="primary" htmlType="submit">
         Submit
       </Button>

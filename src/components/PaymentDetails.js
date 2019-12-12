@@ -43,7 +43,7 @@ const PaymentDetails = ({ details, gotoNextStep }) => {
       setSubmitState('OTP');
     }
   };
-  const [, setOTP] = useState();
+  const [_, setOTP] = useState();
   const handleOTPSendClick = async () => {
     // -> send otp and payment id
     const submitted = await new Promise(resolve =>
@@ -56,13 +56,15 @@ const PaymentDetails = ({ details, gotoNextStep }) => {
   };
   return (
     <>
-      <Descriptions bordered column={1}>
+      <Descriptions bordered column={2} style={{ marginBottom: '1em' }}>
         {renderFields(details)}
       </Descriptions>
       {submitState === 'pending' && (
-        <Button type="primary" onClick={handleSubmitClick}>
-          Submit payment
-        </Button>
+        <Form.Item>
+          <Button type="primary" onClick={handleSubmitClick}>
+            Submit payment
+          </Button>
+        </Form.Item>
       )}
       {submitState === 'OTP' && (
         <>
@@ -89,4 +91,4 @@ const PaymentDetails = ({ details, gotoNextStep }) => {
   // -> send otp and payment id
 };
 
-export default PaymentDetails
+export default PaymentDetails;

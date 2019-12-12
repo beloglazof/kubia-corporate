@@ -1,10 +1,15 @@
 import { Button, Form, Radio, Input, Upload, Icon } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import InputItem from './InputItem';
 import SelectItem from './SelectItem';
 import useAsync from '../hooks/useAsync';
-import { getBeneficiary, getPeople } from '../api';
+import {
+  getBeneficiary,
+  getPeople,
+  getWallexInfo,
+  uploadInvoice
+} from '../api';
 import { submitButtonLayoutProps } from '../routes/Pay';
 import PropTypes from 'prop-types';
 
@@ -34,7 +39,7 @@ const accountToOption = account => {
   const title = `${number} | Balance: S$ ${amount}`;
   return {
     title,
-    value: account
+    value: account.id
   };
 };
 const AccountField = ({ accounts, form }) => {
@@ -95,12 +100,12 @@ AmountField.propType = {
 const SelectBeneficiary = ({ form }) => {
   const [beneficiaries] = useAsync(getBeneficiary, []);
   const options = beneficiaries
-    .filter(counterparty => counterparty.accountNumber)
+    .filter(counterparty => counterparty.bankAccount)
     .map(beneficiary => {
-      const { nickname, accountNumber, id, companyName } = beneficiary;
+      const { nickname, bankAccount, id, companyName } = beneficiary;
 
-      const title = `${nickname || ''} ${companyName || ''} ${accountNumber ||
-        ''}`;
+      const title = `${nickname || ''} ${companyName ||
+        ''} ${bankAccount.accountNumber || ''}`;
       const option = {
         value: id,
         title
@@ -162,21 +167,46 @@ SelectLinkedUser.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const PaymentPurpose = ({ form }) => {
-  // TODO
-  const options = [];
+const PaymentPurpose = ({ form, purposes = [] }) => {
+  const options = purposes.map(purpose => ({
+    value: purpose.name,
+    title: purpose.description
+  }));
   return (
     <SelectItem
       form={form}
       label="Payment Purpose"
-      id="paymentPurpose"
+      id="purposeOfTransfer"
+      placeholder="Select purpose"
       options={options}
     />
   );
 };
 
 PaymentPurpose.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
+  purposes: PropTypes.array.isRequired
+};
+
+const FundingSource = ({ form, sources = [] }) => {
+  const options = sources.map(purpose => ({
+    value: purpose.name,
+    title: purpose.description
+  }));
+  return (
+    <SelectItem
+      form={form}
+      label="Funding source"
+      id="fundingSource"
+      placeholder="Select funding source"
+      options={options}
+    />
+  );
+};
+
+FundingSource.propTypes = {
+  form: PropTypes.object.isRequired,
+  sources: PropTypes.array.isRequired
 };
 
 const PaymentReference = ({ form }) => (
@@ -201,6 +231,15 @@ const UploadInvoice = ({ form }) => {
     }
     return e && e.fileList;
   };
+  const upload = async ({ file, onProgress, onError, onSuccess }) => {
+    console.log(file);
+    const uploaded = await uploadInvoice(file);
+    if (uploaded) {
+      onSuccess();
+    } else {
+      onError();
+    }
+  };
   return (
     <Form.Item label="Upload Invoice">
       {form.getFieldDecorator('invoice', {
@@ -208,7 +247,7 @@ const UploadInvoice = ({ form }) => {
         getValueFromEvent: normFile,
         rules: [{ required: false, message: 'Please upload invoice' }]
       })(
-        <Upload.Dragger name="files" action="/upload.do">
+        <Upload.Dragger name="files" customRequest={upload}>
           <p className="ant-upload-drag-icon">
             <Icon type="inbox" />
           </p>
@@ -248,6 +287,8 @@ const PaymentInfoForm = ({
   getDetails
 }) => {
   const { getFieldsValue, getFieldValue } = form;
+  const [wallexInfo] = useAsync(getWallexInfo, {});
+  const { fundingSource, purposeOfTransfer } = wallexInfo;
   const accounts = useSelector(state => state.accounts);
   const paymentType = getFieldValue('paymentType');
   if (paymentType) {
@@ -255,26 +296,33 @@ const PaymentInfoForm = ({
   }
   const account = getFieldValue('account');
   const balance = account ? account.amount : 0;
-  const handleCreateClick = async () => {
+
+  const [loading, setLoading] = useState(false);
+  const handleCreateClick = () => {
+    setLoading(true);
     const values = getFieldsValue();
     getDetails(values);
-    gotoNextStep();
   };
   return (
     <>
       <PaymentTypeField form={form} />
       {paymentType && (
         <>
-          <PaymentReference form={form} />
+          {/* <PaymentReference form={form} /> */}
           <AccountField form={form} accounts={accounts} />
+          <FundingSource form={form} sources={fundingSource} />
           <AmountField form={form} balance={balance} />
           {paymentType === 'internal' && <SelectLinkedUser form={form} />}
           {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
-          <PaymentPurpose form={form} />
+          <PaymentPurpose form={form} purposes={purposeOfTransfer} />
           <UploadInvoice form={form} />
           <NoteField form={form} />
           <Form.Item {...submitButtonLayoutProps}>
-            <Button type="primary" onClick={handleCreateClick}>
+            <Button
+              type="primary"
+              onClick={handleCreateClick}
+              loading={loading}
+            >
               Create Payment Request
             </Button>
           </Form.Item>

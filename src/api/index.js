@@ -1,4 +1,4 @@
-import { get, httpDelete, patch, post } from './config';
+import { get, httpDelete, patch, post, postFile } from './config';
 export const getDesktopMainScreen = async () =>
   await get('compose/desktop-main-screen');
 export const usersCheck = async (phone, notifyError) =>
@@ -70,7 +70,9 @@ export const getTransactions = async () => await get('/transactions');
 export const getBeneficiary = async id => {
   const fetched = await get('/beneficiary', { id });
   if (fetched) {
-    const filtered = fetched.filter(counterparty => counterparty.bankAccount);
+    const filtered = fetched.filter(
+      counterparty => counterparty?.bankAccount?.currency
+    );
     return filtered;
   } else {
     return [];
@@ -98,38 +100,25 @@ export const getCountries = async () => await get('/countries');
 
 export const getCurrencies = async () => await get('/currencies');
 
-export const fetchPaymentDetails = async () =>
-  await new Promise(resolve =>
-    setTimeout(() =>
-      resolve(
-        {
-          deliveryDate: '2018-09-27',
-          buyCurrency: 'IDR',
-          sellCurrency: 'SGD',
-          buyAmount: 1000,
-          sellAmount: 0.1,
-          rate: 10898,
-          feeRate: 0,
-          totalAmount: 0.1,
-          quoteId: '5595393c-9294-4a60-a1e7-97fb4981b9a3',
-          conversionDate: '2018-09-27',
-          conversionFee: 0,
-          paymentFee: 0,
-          totalFee: 0,
-          conversionFeeRate: 0,
-          paymentFeeRate: 0,
-          totalFeeRate: 0,
-          expiresAt: '2018-09-27T00:35:45Z'
-        },
-        1000
-      )
-    )
-  );
+export const fetchPaymentDetails = async (
+  params = {
+    company_id: 0,
+    beneficiary_id: 0,
+    account_id: 0,
+    buyCurrency: 'SGD',
+    sellCurrency: 'SGD',
+    amount: 0
+  }
+) => await post('remittance/request/wallex', params);
 
+export const getWallexInfo = async () =>
+  await get('remittance/request/wallex/info');
+export const uploadInvoice = async invoice =>
+  await postFile('remittance/upload/wallex', invoice);
 export const getCompanyFields = async () => await get('/company/fields');
 export const getCompanies = async () => await get('/company');
 export const getCompany = async id => await get('/company', { id });
 
 export const getPeople = async id => await get('/people', { id });
-export const addPeople = async people => await post('/people', people)
-export const deletePeople = async id => await httpDelete('/people', {id})
+export const addPeople = async people => await post('/people', people);
+export const deletePeople = async id => await httpDelete('/people', { id });
