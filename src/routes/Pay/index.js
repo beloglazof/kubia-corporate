@@ -14,11 +14,14 @@ import {
   fetchPaymentDetails,
   paymentsPay,
   usersCheck,
-  withdrawal
+  withdrawal,
+  getCompanies,
+  getBeneficiary
 } from '../../api';
 import getRandomString from '../../util/getRandomString';
 import PaymentInfoForm from '../../components/PaymentInfoForm';
 import PaymentDetails from '../../components/PaymentDetails';
+import { useSelector } from 'react-redux';
 
 export const FormItem = Form.Item;
 const { Step } = Steps;
@@ -89,7 +92,7 @@ const formLayoutProps = {
   labelCol: {
     xs: { span: 8 },
     sm: { span: 8 },
-    md: { span: 3 }
+    md: { span: 6 }
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -123,9 +126,35 @@ const NewPayment = ({ form, history }) => {
 
   const [paymentDetails, setPaymentDetails] = useState();
 
-  const getDetails = async () => {
-    const fetchedDetails = await fetchPaymentDetails();
-    if (fetchedDetails) setPaymentDetails(fetchedDetails);
+  const accounts = useSelector(state => state.accounts);
+  const getDetails = async fieldsValues => {
+    const {
+      amount,
+      beneficiary: beneficiary_id,
+      account: account_id
+    } = fieldsValues;
+    const companies = await getCompanies();
+    const company_id = companies[0].id;
+    const account = accounts.find(acc => acc.id === account_id);
+    const sellCurrency = account.currency_info.code;
+    const beneficiaries = await getBeneficiary();
+    const beneficiary = beneficiaries.find(b => b.id === beneficiary_id);
+    const buyCurrency = beneficiary.bankAccount.currency;
+    const params = {
+      amount,
+      beneficiary_id,
+      account_id,
+      company_id,
+      buyCurrency,
+      sellCurrency
+    };
+    console.log(beneficiary);
+    console.log(params);
+    const fetchedDetails = await fetchPaymentDetails(params);
+    if (fetchedDetails) {
+      setPaymentDetails(fetchedDetails);
+      gotoNextStep();
+    }
   };
 
   return (

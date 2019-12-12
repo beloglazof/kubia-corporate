@@ -62,7 +62,7 @@ export const get = async (url, params, notifyError = true) => {
 };
 export const httpDelete = async (url, params, notifyError = true) => {
   try {
-    const response = await instance.delete(url, {params});
+    const response = await instance.delete(url, { params });
     const { data } = response;
     return data;
   } catch (e) {
@@ -70,12 +70,29 @@ export const httpDelete = async (url, params, notifyError = true) => {
       showErrorMessage(e);
     }
   }
-}
-
+};
 
 export const post = async (url, params, notifyError = true) => {
   try {
     const response = await instance.post(url, params);
+    const { data } = response;
+    return data;
+  } catch (e) {
+    if (notifyError) {
+      showErrorMessage(e);
+    }
+  }
+};
+
+export const postFile = async (url, file, notifyError = true) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await instance.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     const { data } = response;
     return data;
   } catch (e) {
@@ -95,7 +112,5 @@ export const patch = async (url, params, notifyError = true) => {
     }
   }
 };
-
-
 
 export default instance;

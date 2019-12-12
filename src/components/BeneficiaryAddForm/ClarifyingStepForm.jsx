@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { getBeneficiaryFields } from '../../api';
 import CountrySelect from '../CountrySelect';
 import CurrencySelect from '../CurrencySelect';
+import { submitButtonLayoutProps } from '../../routes/Pay';
 
 const BankAccountCountrySelect = ({ form }) => (
   <CountrySelect
@@ -28,10 +29,17 @@ const getMainFormFields = async values => {
   return fields;
 };
 
-const ClarifyingStepForm = ({ form, setMainFormFields, gotoStep, current }) => {
+const ClarifyingStepForm = ({
+  form,
+  setMainFormFields,
+  setClarifiedInfo,
+  gotoStep,
+  current
+}) => {
   const handleNext = async () => {
     form.validateFields(async (errors, values) => {
       if (errors) return;
+      setClarifiedInfo(values);
       const mainFormFields = await getMainFormFields(values);
       if (mainFormFields) {
         setMainFormFields(mainFormFields);
@@ -47,7 +55,7 @@ const ClarifyingStepForm = ({ form, setMainFormFields, gotoStep, current }) => {
       <CountrySelect form={form} />
       <BankAccountCountrySelect form={form} />
       <CurrencySelect form={form} />
-      <Form.Item wrapperCol={{ offset: 6 }}>
+      <Form.Item {...submitButtonLayoutProps}>
         <Button type="primary" onClick={handleNext}>
           Next
         </Button>

@@ -8,6 +8,8 @@ import ClarifyingStepForm from './ClarifyingStepForm';
 const { Step } = Steps;
 
 const BeneficiaryAddForm = ({ history, form }) => {
+  const [clarifiedInfo, setClarifiedInfo] = useState();
+
   const handleSubmit = async inputedFields => {
     form.validateFields(async errors => {
       if (errors) return;
@@ -29,14 +31,20 @@ const BeneficiaryAddForm = ({ history, form }) => {
         return fields;
       };
       const { nickname, email } = inputedFields;
+      const { bankAccountCountry, currency } = clarifiedInfo;
       const structuredFields = mapFieldValues(mainFormFields);
       const params = {
         ...structuredFields,
+        bankAccount: {
+          ...structuredFields.bankAccount,
+          country: bankAccountCountry,
+          currency
+        },
         entityType: 'company',
         nickname,
         email
       };
-      console.log(params);
+      // console.log(params);
       const id = await createBeneficiary(params);
       if (id) {
         gotoStep(current + 1);
@@ -56,7 +64,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
     history.push('/beneficiaries');
   };
 
-  const formLayout = {
+  const formLayoutProps = {
     labelCol: {
       xs: { span: 6 },
       sm: { span: 6 }
@@ -66,6 +74,13 @@ const BeneficiaryAddForm = ({ history, form }) => {
       sm: { span: 12 }
     },
     labelAlign: 'left'
+  };
+
+  const submitButtonLayoutProps = {
+    wrapperCol: {
+      xs: { offset: formLayoutProps.labelCol.xs.span },
+      sm: { offset: formLayoutProps.labelCol.sm.span }
+    }
   };
   return (
     <>
@@ -81,13 +96,20 @@ const BeneficiaryAddForm = ({ history, form }) => {
         <Step />
       </Steps>
 
-      <Form {...formLayout} {...formProps} style={{ margin: '2em 0' }}>
+      <Form
+        {...formLayoutProps}
+        {...formProps}
+        style={{ margin: '2em 0' }}
+        hideRequiredMark
+      >
         {current === 0 && (
           <ClarifyingStepForm
             form={form}
             setMainFormFields={setMainFormFields}
+            setClarifiedInfo={setClarifiedInfo}
             gotoStep={gotoStep}
             current={current}
+            submitButtonLayoutProps={submitButtonLayoutProps}
           />
         )}
         {current === 1 && (
@@ -95,6 +117,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
             form={form}
             fields={mainFormFields}
             submit={submit}
+            submitButtonLayoutProps={submitButtonLayoutProps}
           />
         )}
       </Form>

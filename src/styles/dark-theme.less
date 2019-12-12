@@ -1409,7 +1409,7 @@ body.dark-theme {
 
     &:focus,
     &:hover {
-      border-color: fade(@grey-3, 10%);
+      border-color: @grey-6;
       .box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1));
     }
 
@@ -1426,7 +1426,7 @@ body.dark-theme {
     }
 
     &-affix-wrapper:hover .ant-input:not(.ant-input-disabled) {
-      border-color: @dark-theme-border-color;
+      border-color: @grey-6;
     }
 
     &-group-addon {
@@ -1550,13 +1550,15 @@ body.dark-theme {
 
   & .ant-select {
     color: @dark-theme-text-color;
-
+    &:hover {
+      border: #ffffff;
+    }
     &-selection {
       background-color: fade(@grey-2, 10%);
       border-color: fade(@grey-2, 10%);
 
       &:hover {
-        border-color: fade(@grey-2, 10%);
+        border-color: @grey-6;
       }
 
       &__clear {
@@ -1577,7 +1579,7 @@ body.dark-theme {
     &-focused .ant-select-selection,
     &-selection:focus,
     &-selection:active {
-      border-color: fade(@grey-3, 10%);
+      border-color: @grey-6;
       .box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1));
     }
 
@@ -2237,6 +2239,16 @@ body.dark-theme {
     &-list-item-info .anticon-loading,
     &-list-item-info .anticon-paper-clip {
       color: @dark-theme-text-color;
+      & > i{
+        color: @dark-theme-text-color;
+      }
+    }
+
+    &-list-item-error .ant-upload-list-item-name {
+      color: @red-6
+    }
+    &-list-item-name {
+      color: @dark-theme-text-color;  
     }
 
     &-list-item:hover .ant-upload-list-item-info {
