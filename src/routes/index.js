@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
-import { Icon, Menu } from 'antd';
+import { NavLink, Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { Button, Icon, Menu, Result } from 'antd';
 import { startCase } from 'lodash/string';
 import { useSelector } from 'react-redux';
 
@@ -18,7 +18,7 @@ export const navItems = [
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
-  { name: 'settings', path: '/settings', iconName: 'setting' },
+  { name: 'settings', path: '/settings', iconName: 'setting' }
 ];
 
 export const renderNavigationItems = () => {
@@ -40,7 +40,7 @@ export const renderNavigationItems = () => {
 };
 const App = () => {
   const { firstPagePath } = useSelector(state => state.settings);
-
+  let history = useHistory();
   return (
     <div className="gx-main-content-wrapper">
       <Switch>
@@ -52,6 +52,21 @@ const App = () => {
         <Route exact path={`/beneficiaries`} component={Beneficiaries} />
         <Route path={`/beneficiaries/add`} component={BeneficiaryAddForm} />
         <Route exact path={`/linked-people`} component={LinkedPeople} />
+        <Route path="*">
+          <Result
+            status="404"
+            title="404"
+            subTitle="Sorry, the page you visited does not exist."
+            extra={
+              <Button
+                type="primary"
+                onClick={() => history.push(firstPagePath)}
+              >
+                Back Home
+              </Button>
+            }
+          />
+        </Route>
       </Switch>
     </div>
   );

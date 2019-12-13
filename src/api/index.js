@@ -110,11 +110,22 @@ export const fetchPaymentDetails = async (
     amount: 0
   }
 ) => await post('remittance/request/wallex', params);
-
 export const getWallexInfo = async () =>
   await get('remittance/request/wallex/info');
 export const uploadInvoice = async invoice =>
   await postFile('remittance/upload/wallex', invoice);
+export const submitRemittance = async (
+  params = {
+    quote_id: '',
+    fundingSource: '',
+    paymentReference: '',
+    purposeOfTransfer: '',
+    purposeOfTransferDescription: ''
+  }
+) => await post('/remittance/wallex', params);
+export const getWallexOTP = async quote_id =>
+  await post('remittance/otp/wallex', { quote_id });
+
 export const getCompanyFields = async () => await get('/company/fields');
 export const getCompanies = async () => await get('/company');
 export const getCompany = async id => await get('/company', { id });

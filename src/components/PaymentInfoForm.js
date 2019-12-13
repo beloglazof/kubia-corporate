@@ -64,7 +64,7 @@ AccountField.propType = {
   form: PropTypes.object.isRequired
 };
 
-const AmountField = ({ balance, form }) => {
+const AmountField = ({ balance, form, currency }) => {
   const { getFieldDecorator } = form;
   const greaterThanZero = (rule, value, callback) => {
     if (value > 0) {
@@ -87,7 +87,7 @@ const AmountField = ({ balance, form }) => {
           { validator: greaterThanZero },
           { validator: lessOrEqualBalance }
         ]
-      })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={'S$'} />)}
+      })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={currency} />)}
     </Form.Item>
   );
 };
@@ -97,8 +97,7 @@ AmountField.propType = {
   form: PropTypes.object.isRequired
 };
 
-const SelectBeneficiary = ({ form }) => {
-  const [beneficiaries] = useAsync(getBeneficiary, []);
+const SelectBeneficiary = ({ form, beneficiaries }) => {
   const options = beneficiaries
     .filter(counterparty => counterparty.bankAccount)
     .map(beneficiary => {
@@ -222,8 +221,7 @@ PaymentReference.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const UploadInvoice = ({ form }) => {
-  // TODO
+const UploadInvoice = ({ form, setFileId }) => {
   const normFile = e => {
     console.log('Upload event:', e);
     if (Array.isArray(e)) {
@@ -235,6 +233,8 @@ const UploadInvoice = ({ form }) => {
     console.log(file);
     const uploaded = await uploadInvoice(file);
     if (uploaded) {
+      const { file_id } = uploaded;
+      setFileId(file_id);
       onSuccess();
     } else {
       onError();
@@ -245,7 +245,7 @@ const UploadInvoice = ({ form }) => {
       {form.getFieldDecorator('invoice', {
         valuePropName: 'fileList',
         getValueFromEvent: normFile,
-        rules: [{ required: false, message: 'Please upload invoice' }]
+        rules: [{ required: true, message: 'Please upload invoice' }]
       })(
         <Upload.Dragger name="files" customRequest={upload}>
           <p className="ant-upload-drag-icon">
@@ -280,12 +280,7 @@ NoteField.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const PaymentInfoForm = ({
-  form,
-  setPaymentType,
-  gotoNextStep,
-  getDetails
-}) => {
+const PaymentInfoForm = ({ form, setPaymentType, getDetails, setFileId }) => {
   const { getFieldsValue, getFieldValue } = form;
   const [wallexInfo] = useAsync(getWallexInfo, {});
   const { fundingSource, purposeOfTransfer } = wallexInfo;
@@ -298,24 +293,39 @@ const PaymentInfoForm = ({
   const balance = account ? account.amount : 0;
 
   const [loading, setLoading] = useState(false);
-  const handleCreateClick = () => {
+  const handleCreateClick = async () => {
     setLoading(true);
     const values = getFieldsValue();
-    getDetails(values);
+    const success = await getDetails(values);
+    if (!success) {
+      setLoading(false);
+    }
   };
+
+  const [beneficiaries] = useAsync(getBeneficiary, []);
+  const beneficiaryId = form.getFieldValue('beneficiary');
+  const selectedBeneficiary = beneficiaries.find(b => b.id === beneficiaryId);
+  const beneficiaryCurrency = selectedBeneficiary?.bankAccount?.currency;
+
   return (
     <>
       <PaymentTypeField form={form} />
       {paymentType && (
         <>
+          {paymentType === 'internal' && <SelectLinkedUser form={form} />}
+          {paymentType === 'remittance' && (
+            <SelectBeneficiary form={form} beneficiaries={beneficiaries} />
+          )}
           {/* <PaymentReference form={form} /> */}
           <AccountField form={form} accounts={accounts} />
           <FundingSource form={form} sources={fundingSource} />
-          <AmountField form={form} balance={balance} />
-          {paymentType === 'internal' && <SelectLinkedUser form={form} />}
-          {paymentType === 'remittance' && <SelectBeneficiary form={form} />}
+          <AmountField
+            form={form}
+            balance={balance}
+            currency={beneficiaryCurrency}
+          />
           <PaymentPurpose form={form} purposes={purposeOfTransfer} />
-          <UploadInvoice form={form} />
+          <UploadInvoice form={form} setFileId={setFileId} />
           <NoteField form={form} />
           <Form.Item {...submitButtonLayoutProps}>
             <Button
@@ -335,7 +345,6 @@ const PaymentInfoForm = ({
 PaymentInfoForm.propTypes = {
   form: PropTypes.object.isRequired,
   setPaymentType: PropTypes.func.isRequired,
-  gotoNextStep: PropTypes.func.isRequired,
   getDetails: PropTypes.func.isRequired
 };
 
