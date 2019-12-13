@@ -23,7 +23,8 @@ body.dark-theme {
   background-color: @dark-theme-primary-color;
 
   & .ant-result {
-    &-title {
+    &-title,
+    &-subtitle {
       color: @dark-theme-text-color;
     }
   }
@@ -2239,16 +2240,16 @@ body.dark-theme {
     &-list-item-info .anticon-loading,
     &-list-item-info .anticon-paper-clip {
       color: @dark-theme-text-color;
-      & > i{
+      & > i {
         color: @dark-theme-text-color;
       }
     }
 
     &-list-item-error .ant-upload-list-item-name {
-      color: @red-6
+      color: @red-6;
     }
     &-list-item-name {
-      color: @dark-theme-text-color;  
+      color: @dark-theme-text-color;
     }
 
     &-list-item:hover .ant-upload-list-item-info {

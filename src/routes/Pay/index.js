@@ -10,18 +10,20 @@ import {
   PageHeader
 } from 'antd';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   fetchPaymentDetails,
   paymentsPay,
   usersCheck,
   withdrawal,
   getCompanies,
-  getBeneficiary
+  getBeneficiary,
+  submitRemittance
 } from '../../api';
 import getRandomString from '../../util/getRandomString';
 import PaymentInfoForm from '../../components/PaymentInfoForm';
 import PaymentDetails from '../../components/PaymentDetails';
-import { useSelector } from 'react-redux';
 
 export const FormItem = Form.Item;
 const { Step } = Steps;
@@ -92,7 +94,8 @@ const formLayoutProps = {
   labelCol: {
     xs: { span: 8 },
     sm: { span: 8 },
-    md: { span: 6 }
+    md: { span: 6 },
+    lg: { span: 3 }
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -106,16 +109,28 @@ export const submitButtonLayoutProps = {
   wrapperCol: {
     xs: { offset: formLayoutProps.labelCol.xs.span },
     sm: { offset: formLayoutProps.labelCol.sm.span },
-    md: { offset: formLayoutProps.labelCol.md.span }
+    md: { offset: formLayoutProps.labelCol.md.span },
+    lg: { offset: formLayoutProps.labelCol.lg.span }
   }
 };
 
 const NewPayment = ({ form, history }) => {
   const [paymentType, setPaymentType] = useState();
   const gotoNextStep = () => gotoStep(current + 1);
-  const handleSubmit = async values => {
-    sendPaymentRequest(values, paymentType, history);
-    gotoNextStep();
+  const handleSubmit = async ({ otp }) => {
+    // sendPaymentRequest(values, paymentType, history);
+    // console.log(otp, paymentDetails, infoFieldValues);
+    const { quoteId: quote_id } = paymentDetails;
+    const { purposeOfTransfer, fundingSource } = infoFieldValues;
+    const submitted = await submitRemittance({
+      purposeOfTransfer,
+      quote_id,
+      fundingSource,
+      otp
+    });
+    if (submitted) {
+      gotoNextStep();
+    }
   };
 
   const { current, gotoStep, stepsProps, formProps } = useStepsForm({
@@ -125,14 +140,18 @@ const NewPayment = ({ form, history }) => {
   });
 
   const [paymentDetails, setPaymentDetails] = useState();
+  const [fileId, setFileId] = useState();
+  const [infoFieldValues, setInfoFieldValues] = useState();
 
   const accounts = useSelector(state => state.accounts);
-  const getDetails = async fieldsValues => {
+
+  const getDetails = async fieldValues => {
+    setInfoFieldValues(fieldValues);
     const {
       amount,
       beneficiary: beneficiary_id,
       account: account_id
-    } = fieldsValues;
+    } = fieldValues;
     const companies = await getCompanies();
     const company_id = companies[0].id;
     const account = accounts.find(acc => acc.id === account_id);
@@ -141,12 +160,14 @@ const NewPayment = ({ form, history }) => {
     const beneficiary = beneficiaries.find(b => b.id === beneficiary_id);
     const buyCurrency = beneficiary.bankAccount.currency;
     const params = {
+      file_id: [fileId],
       amount,
       beneficiary_id,
       account_id,
       company_id,
       buyCurrency,
-      sellCurrency
+      sellCurrency,
+      fixedSide: 'buy'
     };
     console.log(beneficiary);
     console.log(params);
@@ -154,6 +175,9 @@ const NewPayment = ({ form, history }) => {
     if (fetchedDetails) {
       setPaymentDetails(fetchedDetails);
       gotoNextStep();
+    } else {
+      console.log('no fetched data');
+      return false;
     }
   };
 
@@ -181,8 +205,9 @@ const NewPayment = ({ form, history }) => {
             <PaymentInfoForm
               form={form}
               setPaymentType={setPaymentType}
-              gotoNextStep={gotoNextStep}
               getDetails={getDetails}
+              setFileId={setFileId}
+              setInfoFieldValues={setInfoFieldValues}
             />
           )}
           {current === 1 && (
@@ -190,6 +215,7 @@ const NewPayment = ({ form, history }) => {
               form={form}
               details={paymentDetails}
               gotoNextStep={gotoNextStep}
+              onSubmit={handleSubmit}
             />
           )}
         </Form>
