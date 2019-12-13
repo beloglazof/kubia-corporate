@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { logout, tokenObtain, tokenRefresh } from '../../../api';
 import { setUser } from '../user/userSlice';
 import { resetState } from '../../reducers';
+import { message } from 'antd';
 
 const storageToken = Cookies.get('token');
 const storageRefreshToken = Cookies.get('refreshToken');
@@ -38,6 +39,10 @@ export default sessionSlice.reducer;
 export const signIn = credentials => async dispatch => {
   const session = await tokenObtain(credentials);
   const { user, ...tokens } = session;
+  if (user?.type?.toLowerCase() === 'customer') {
+    message.info('You are not corporate user');
+    return;
+  }
   dispatch(setSession(tokens));
   dispatch(setUser(user));
 };
