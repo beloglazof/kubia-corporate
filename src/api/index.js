@@ -83,7 +83,7 @@ export const getBeneficiaryFields = async (
   bank_account_country,
   beneficiary_country
 ) =>
-  await get('/beneficiary/fields', {
+  await get('/remittance/requirements/wallex', {
     currency,
     bank_account_country,
     beneficiary_country

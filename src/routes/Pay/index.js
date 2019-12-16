@@ -95,7 +95,7 @@ const formLayoutProps = {
     xs: { span: 8 },
     sm: { span: 8 },
     md: { span: 6 },
-    lg: { span: 3 }
+    lg: { span: 4 }
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -105,7 +105,7 @@ const formLayoutProps = {
   labelAlign: 'left'
 };
 
-export const submitButtonLayoutProps = {
+const submitButtonLayoutProps = {
   wrapperCol: {
     xs: { offset: formLayoutProps.labelCol.xs.span },
     sm: { offset: formLayoutProps.labelCol.sm.span },
@@ -119,8 +119,9 @@ const NewPayment = ({ form, history }) => {
   const gotoNextStep = () => gotoStep(current + 1);
   const handleSubmit = async ({ otp }) => {
     // sendPaymentRequest(values, paymentType, history);
-    // console.log(otp, paymentDetails, infoFieldValues);
-    const { quoteId: quote_id } = paymentDetails;
+    const {
+      request: { quoteId: quote_id }
+    } = paymentDetails;
     const { purposeOfTransfer, fundingSource } = infoFieldValues;
     const submitted = await submitRemittance({
       purposeOfTransfer,
@@ -186,55 +187,55 @@ const NewPayment = ({ form, history }) => {
       <Col span={24}>
         <PageHeader
           title="New Payment Request"
-          style={{ marginBottom: '1em' }}
           onBack={() => history.goBack()}
         />
-        <Steps {...stepsProps}>
-          <Step title="Create" />
-          <Step title="Submit" />
-          <Step title="Success" />
-        </Steps>
-
-        <Form
-          {...formLayoutProps}
-          {...formProps}
-          hideRequiredMark
-          style={{ marginTop: '2em' }}
-        >
-          {current === 0 && (
-            <PaymentInfoForm
-              form={form}
-              setPaymentType={setPaymentType}
-              getDetails={getDetails}
-              setFileId={setFileId}
-              setInfoFieldValues={setInfoFieldValues}
-            />
-          )}
-          {current === 1 && (
-            <PaymentDetails
-              form={form}
-              details={paymentDetails}
-              gotoNextStep={gotoNextStep}
-              onSubmit={handleSubmit}
-            />
-          )}
-        </Form>
-        {current === 2 && (
-          <Result
-            status="success"
-            title="Request succefully submitted!"
-            extra={
-              <>
-                <Button type="primary" onClick={() => gotoStep(0)}>
-                  Make new payment
-                </Button>
-                {/* <Button onClick={() => }>
+        {/* <Steps {...stepsProps}>
+          <Step />
+          <Step />
+          <Step />
+        </Steps> */}
+        <div style={{ paddingLeft: '3em' }}>
+          <Form
+            {...formLayoutProps}
+            {...formProps}
+            style={{ marginTop: '1em' }}
+          >
+            {current === 0 && (
+              <PaymentInfoForm
+                form={form}
+                setPaymentType={setPaymentType}
+                getDetails={getDetails}
+                setFileId={setFileId}
+                setInfoFieldValues={setInfoFieldValues}
+                submitButtonLayoutProps={submitButtonLayoutProps}
+              />
+            )}
+            {current === 1 && (
+              <PaymentDetails
+                form={form}
+                details={paymentDetails}
+                gotoNextStep={gotoNextStep}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </Form>
+          {current === 2 && (
+            <Result
+              status="success"
+              title="Request succefully submitted!"
+              extra={
+                <>
+                  <Button type="primary" onClick={() => gotoStep(0)}>
+                    Make new payment
+                  </Button>
+                  {/* <Button onClick={() => }>
                   Go home
                 </Button> */}
-              </>
-            }
-          />
-        )}
+                </>
+              }
+            />
+          )}
+        </div>
       </Col>
     </Row>
   );

@@ -5,68 +5,76 @@ import { getWallexOTP, submitRemittance } from '../api';
 import InputItem from './InputItem';
 import { formatISODate } from '../util';
 
+const renderFields = fields => {
+  if (!fields) return null;
+  return Object.entries(fields).map(field => {
+    const [fieldName, fieldValue] = field;
+    let label = startCase(fieldName);
+    let value;
+    switch (fieldName) {
+      case 'account':
+        value = fieldValue.number;
+        break;
+      case 'amount':
+        value = `S$ ${fieldValue}`;
+        break;
+      case 'paymentType':
+        value = startCase(fieldValue);
+        break;
+      case 'phone':
+        value = `+65 ${fieldValue}`;
+        break;
+      case 'kubia':
+        label = 'Total Fee';
+        value = fieldValue;
+        break;
+      // case 'total':
+      //   label = 'Total Amount';
+      //   value = fieldValue;
+      //   break;
+      case 'expiresAt':
+        value = formatISODate(fieldValue);
+        break;
+      default:
+        value = fieldValue;
+        break;
+    }
+    return (
+      <Descriptions.Item label={label} key={label}>
+        <span style={{ fontWeight: '600' }}>{value}</span>
+      </Descriptions.Item>
+    );
+  });
+};
+
 const PaymentDetails = ({ form, details, gotoNextStep, onSubmit }) => {
-  const fieldsSet = new Set([
+  const visibleRequestFieldSet = new Set([
     'sellCurrency',
     'buyCurrency',
-    'expiresAt',
-    'kubia',
-    'total'
+    'expiresAt'
   ]);
-  const { sellCurrency, buyCurrency } = details;
+  const { request, fees } = details;
+  const { sellCurrency, buyCurrency, totalAmount: amount } = request;
   if (sellCurrency !== buyCurrency) {
-    fieldsSet.add('buyAmount');
-    fieldsSet.add('sellAmount');
-    fieldsSet.add('rate');
+    visibleRequestFieldSet.add('buyAmount');
+    visibleRequestFieldSet.add('sellAmount');
+    visibleRequestFieldSet.add('rate');
   }
-  const renderFields = fields => {
-    if (!fields) return null;
-    return Object.entries(fields)
-      .filter(([fieldName]) => fieldsSet.has(fieldName))
-      .map(field => {
-        const [fieldName, fieldValue] = field;
-        let label = startCase(fieldName);
-        let value;
-        switch (fieldName) {
-          case 'account':
-            value = fieldValue.number;
-            break;
-          case 'amount':
-            value = `S$ ${fieldValue}`;
-            break;
-          case 'paymentType':
-            value = startCase(fieldValue);
-            break;
-          case 'phone':
-            value = `+65 ${fieldValue}`;
-            break;
-          case 'kubia':
-            label = 'Total Fee';
-            value = fieldValue;
-            break;
-          case 'total':
-            label = 'Total Amount';
-            value = fieldValue;
-            break;
-          case 'expiresAt':
-            value = formatISODate(fieldValue)
-            break;
-          default:
-            value = fieldValue;
-            break;
-        }
-        return (
-          <Descriptions.Item label={label} key={label}>
-            <span style={{ fontWeight: '600' }}>{value}</span>
-          </Descriptions.Item>
-        );
-      });
-  };
+  const requestFields = Object.keys(request)
+    .filter(fieldName => visibleRequestFieldSet.has(fieldName))
+    .reduce(
+      (acc, fieldName) => ({ ...acc, [fieldName]: request[fieldName] }),
+      {}
+    );
+
+  const { total: totalFee } = fees;
+  const totalAmount = totalFee + amount;
+  const fields = { ...requestFields, totalFee, totalAmount };
   const [submitState, setSubmitState] = useState('pending');
   const handleSubmitClick = async () => {
     // -> request otp
 
-    const OTPRequested = await getWallexOTP(details.quoteId);
+    const OTPRequested = await getWallexOTP(request.quoteId);
     //   new Promise(resolve =>
     //   setTimeout(() => resolve(true), 2000)
     // );
@@ -88,7 +96,7 @@ const PaymentDetails = ({ form, details, gotoNextStep, onSubmit }) => {
   return (
     <>
       <Descriptions bordered column={1} style={{ marginBottom: '1em' }}>
-        {renderFields(details)}
+        {renderFields(fields)}
       </Descriptions>
       {submitState === 'pending' && (
         <Form.Item>

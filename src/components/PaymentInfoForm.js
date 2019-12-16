@@ -1,5 +1,5 @@
 import { Button, Form, Radio, Input, Upload, Icon } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import InputItem from './InputItem';
 import SelectItem from './SelectItem';
@@ -78,16 +78,28 @@ const AmountField = ({ balance, form, currency }) => {
     }
     callback();
   };
-
+  const [disabled, setDisabled] = useState(true);
+  useEffect(() => {
+    if (balance) {
+      setDisabled(false);
+    }
+  }, [balance]);
   return (
-    <Form.Item label="Amount" hasFeedback>
+    <Form.Item label="Amount">
       {getFieldDecorator('amount', {
         rules: [
           { required: true, message: 'Please enter amount!' },
           { validator: greaterThanZero },
           { validator: lessOrEqualBalance }
         ]
-      })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={currency} />)}
+      })(
+        <Input
+          pattern="[0-9]*"
+          inputMode="numeric"
+          addonBefore={currency}
+          disabled={disabled}
+        />
+      )}
     </Form.Item>
   );
 };
@@ -178,6 +190,7 @@ const PaymentPurpose = ({ form, purposes = [] }) => {
       id="purposeOfTransfer"
       placeholder="Select purpose"
       options={options}
+      required
     />
   );
 };
@@ -199,6 +212,7 @@ const FundingSource = ({ form, sources = [] }) => {
       id="fundingSource"
       placeholder="Select funding source"
       options={options}
+      required
     />
   );
 };
@@ -280,7 +294,13 @@ NoteField.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const PaymentInfoForm = ({ form, setPaymentType, getDetails, setFileId }) => {
+const PaymentInfoForm = ({
+  form,
+  setPaymentType,
+  getDetails,
+  setFileId,
+  submitButtonLayoutProps
+}) => {
   const { getFieldsValue, getFieldValue } = form;
   const [wallexInfo] = useAsync(getWallexInfo, {});
   const { fundingSource, purposeOfTransfer } = wallexInfo;
@@ -289,7 +309,8 @@ const PaymentInfoForm = ({ form, setPaymentType, getDetails, setFileId }) => {
   if (paymentType) {
     setPaymentType(paymentType);
   }
-  const account = getFieldValue('account');
+  const accountId = getFieldValue('account');
+  const account = accounts.find(a => a.id === accountId);
   const balance = account ? account.amount : 0;
 
   const [loading, setLoading] = useState(false);
