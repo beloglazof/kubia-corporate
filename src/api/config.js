@@ -5,7 +5,10 @@ import { store } from '../index';
 import { removeSession } from '../redux/features/session/sessionSlice';
 import { resetState } from '../redux/reducers';
 
-const API_PATH = `https://sandbox.api.quancy.com.sg/v1`;
+const API_PATH =
+  process.env.NODE_ENV === 'production'
+    ? `https://api.quancy.com.sg/v1`
+    : `https://sandbox.api.quancy.com.sg/v1`;
 
 const instance = axios.create({
   baseURL: API_PATH,
