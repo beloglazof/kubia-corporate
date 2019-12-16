@@ -145,8 +145,7 @@ SelectBeneficiary.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const SelectLinkedUser = ({ form }) => {
-  const [people] = useAsync(getPeople, []);
+const SelectLinkedUser = ({ form, people }) => {
   const options = people.map(user => {
     const { id, name } = user;
 
@@ -165,8 +164,8 @@ const SelectLinkedUser = ({ form }) => {
   return (
     <SelectItem
       form={form}
-      label="Linked people"
-      id="linkedPeople"
+      label="Linked user"
+      id="linkedUser"
       options={options}
       required
       selectProps={selectProps}
@@ -296,31 +295,49 @@ NoteField.propTypes = {
 
 const PaymentInfoForm = ({
   form,
-  setPaymentType,
   getDetails,
+  sendInternalRequest,
+  setPaymentType,
   setFileId,
   submitButtonLayoutProps
 }) => {
   const { getFieldsValue, getFieldValue } = form;
-  const [wallexInfo] = useAsync(getWallexInfo, {});
-  const { fundingSource, purposeOfTransfer } = wallexInfo;
+
   const accounts = useSelector(state => state.accounts);
   const paymentType = getFieldValue('paymentType');
-  if (paymentType) {
-    setPaymentType(paymentType);
-  }
+  const [filteredAccounts, setFilteredAccounts] = useState(accounts);
+  useEffect(() => {
+    if (paymentType) {
+      setPaymentType(paymentType);
+      if (paymentType === 'internal') {
+        const filtered = accounts.filter(
+          acc => acc.currency_info.code === 'SGD'
+        );
+        setFilteredAccounts(filtered);
+      }
+    }
+  }, [paymentType]);
   const accountId = getFieldValue('account');
   const account = accounts.find(a => a.id === accountId);
   const balance = account ? account.amount : 0;
+
+  const [people] = useAsync(getPeople, []);
 
   const [loading, setLoading] = useState(false);
   const handleCreateClick = async () => {
     setLoading(true);
     const values = getFieldsValue();
-    const success = await getDetails(values);
-    if (!success) {
-      setLoading(false);
+    if (paymentType === 'internal') {
+      const { amount, account, linkedUser, note } = values;
+      const user = people.find(u => u.id === linkedUser);
+      const userId = user.id;
+      await sendInternalRequest(amount, account, userId, note);
+    } else if (paymentType === 'remittance') {
+      await getDetails(values);
+    } else {
+      console.error('Unknown payment type');
     }
+    setLoading(false);
   };
 
   const [beneficiaries] = useAsync(getBeneficiary, []);
@@ -328,25 +345,42 @@ const PaymentInfoForm = ({
   const selectedBeneficiary = beneficiaries.find(b => b.id === beneficiaryId);
   const beneficiaryCurrency = selectedBeneficiary?.bankAccount?.currency;
 
+  const amountCurrency =
+    paymentType === 'remittance' ? beneficiaryCurrency : 'SGD';
+
+  const [wallexInfo] = useAsync(getWallexInfo, {});
+  const { fundingSource, purposeOfTransfer } = wallexInfo;
   return (
     <>
       <PaymentTypeField form={form} />
       {paymentType && (
         <>
-          {paymentType === 'internal' && <SelectLinkedUser form={form} />}
+          {paymentType === 'internal' && (
+            <SelectLinkedUser form={form} people={people} />
+          )}
           {paymentType === 'remittance' && (
             <SelectBeneficiary form={form} beneficiaries={beneficiaries} />
           )}
           {/* <PaymentReference form={form} /> */}
-          <AccountField form={form} accounts={accounts} />
-          <FundingSource form={form} sources={fundingSource} />
+          <AccountField
+            form={form}
+            accounts={filteredAccounts}
+            paymentType={paymentType}
+          />
+          {paymentType === 'remittance' && (
+            <FundingSource form={form} sources={fundingSource} />
+          )}
           <AmountField
             form={form}
             balance={balance}
-            currency={beneficiaryCurrency}
+            currency={amountCurrency}
           />
-          <PaymentPurpose form={form} purposes={purposeOfTransfer} />
-          <UploadInvoice form={form} setFileId={setFileId} />
+          {paymentType === 'remittance' && (
+            <>
+              <PaymentPurpose form={form} purposes={purposeOfTransfer} />
+              <UploadInvoice form={form} setFileId={setFileId} />
+            </>
+          )}
           <NoteField form={form} />
           <Form.Item {...submitButtonLayoutProps}>
             <Button

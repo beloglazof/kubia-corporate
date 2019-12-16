@@ -57,24 +57,26 @@ const Beneficiaries = ({ history }) => {
         style={{ marginBottom: '1em' }}
         onBack={() => history.goBack()}
       />
-      <Button
-        onClick={handleAddClick}
-        type="primary"
-        style={{ marginBottom: '1em' }}
-      >
-        Add
-      </Button>
-      <List
-        loading={loading}
-        dataSource={loading ? [] : beneficiaries}
-        renderItem={renderBeneficiary}
-        grid={{
-          gutter: 16,
-          xs: 1,
-          md: 2,
-          lg: 3
-        }}
-      />
+      <div className='page-content-wrapper'>
+        <Button
+          onClick={handleAddClick}
+          type="primary"
+          style={{ marginBottom: '1em' }}
+        >
+          Add
+        </Button>
+        <List
+          loading={loading}
+          dataSource={loading ? [] : beneficiaries}
+          renderItem={renderBeneficiary}
+          grid={{
+            gutter: 16,
+            xs: 1,
+            md: 2,
+            lg: 3
+          }}
+        />
+      </div>
     </>
   );
 };
