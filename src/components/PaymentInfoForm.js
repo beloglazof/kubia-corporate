@@ -1,5 +1,5 @@
 import { Button, Form, Radio, Input, Upload, Icon } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import InputItem from './InputItem';
 import SelectItem from './SelectItem';
@@ -78,16 +78,28 @@ const AmountField = ({ balance, form, currency }) => {
     }
     callback();
   };
-
+  const [disabled, setDisabled] = useState(true);
+  useEffect(() => {
+    if (balance) {
+      setDisabled(false);
+    }
+  }, [balance]);
   return (
-    <Form.Item label="Amount" hasFeedback>
+    <Form.Item label="Amount">
       {getFieldDecorator('amount', {
         rules: [
           { required: true, message: 'Please enter amount!' },
           { validator: greaterThanZero },
           { validator: lessOrEqualBalance }
         ]
-      })(<Input pattern="[0-9]*" inputMode="numeric" addonBefore={currency} />)}
+      })(
+        <Input
+          pattern="[0-9]*"
+          inputMode="numeric"
+          addonBefore={currency}
+          disabled={disabled}
+        />
+      )}
     </Form.Item>
   );
 };
@@ -133,8 +145,7 @@ SelectBeneficiary.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const SelectLinkedUser = ({ form }) => {
-  const [people] = useAsync(getPeople, []);
+const SelectLinkedUser = ({ form, people }) => {
   const options = people.map(user => {
     const { id, name } = user;
 
@@ -153,8 +164,8 @@ const SelectLinkedUser = ({ form }) => {
   return (
     <SelectItem
       form={form}
-      label="Linked people"
-      id="linkedPeople"
+      label="Linked user"
+      id="linkedUser"
       options={options}
       required
       selectProps={selectProps}
@@ -178,6 +189,7 @@ const PaymentPurpose = ({ form, purposes = [] }) => {
       id="purposeOfTransfer"
       placeholder="Select purpose"
       options={options}
+      required
     />
   );
 };
@@ -199,6 +211,7 @@ const FundingSource = ({ form, sources = [] }) => {
       id="fundingSource"
       placeholder="Select funding source"
       options={options}
+      required
     />
   );
 };
@@ -280,26 +293,51 @@ NoteField.propTypes = {
   form: PropTypes.object.isRequired
 };
 
-const PaymentInfoForm = ({ form, setPaymentType, getDetails, setFileId }) => {
+const PaymentInfoForm = ({
+  form,
+  getDetails,
+  sendInternalRequest,
+  setPaymentType,
+  setFileId,
+  submitButtonLayoutProps
+}) => {
   const { getFieldsValue, getFieldValue } = form;
-  const [wallexInfo] = useAsync(getWallexInfo, {});
-  const { fundingSource, purposeOfTransfer } = wallexInfo;
+
   const accounts = useSelector(state => state.accounts);
   const paymentType = getFieldValue('paymentType');
-  if (paymentType) {
-    setPaymentType(paymentType);
-  }
-  const account = getFieldValue('account');
+  const [filteredAccounts, setFilteredAccounts] = useState(accounts);
+  useEffect(() => {
+    if (paymentType) {
+      setPaymentType(paymentType);
+      if (paymentType === 'internal') {
+        const filtered = accounts.filter(
+          acc => acc.currency_info.code === 'SGD'
+        );
+        setFilteredAccounts(filtered);
+      }
+    }
+  }, [paymentType]);
+  const accountId = getFieldValue('account');
+  const account = accounts.find(a => a.id === accountId);
   const balance = account ? account.amount : 0;
+
+  const [people] = useAsync(getPeople, []);
 
   const [loading, setLoading] = useState(false);
   const handleCreateClick = async () => {
     setLoading(true);
     const values = getFieldsValue();
-    const success = await getDetails(values);
-    if (!success) {
-      setLoading(false);
+    if (paymentType === 'internal') {
+      const { amount, account, linkedUser, note } = values;
+      const user = people.find(u => u.id === linkedUser);
+      const userId = user.id;
+      await sendInternalRequest(amount, account, userId, note);
+    } else if (paymentType === 'remittance') {
+      await getDetails(values);
+    } else {
+      console.error('Unknown payment type');
     }
+    setLoading(false);
   };
 
   const [beneficiaries] = useAsync(getBeneficiary, []);
@@ -307,25 +345,42 @@ const PaymentInfoForm = ({ form, setPaymentType, getDetails, setFileId }) => {
   const selectedBeneficiary = beneficiaries.find(b => b.id === beneficiaryId);
   const beneficiaryCurrency = selectedBeneficiary?.bankAccount?.currency;
 
+  const amountCurrency =
+    paymentType === 'remittance' ? beneficiaryCurrency : 'SGD';
+
+  const [wallexInfo] = useAsync(getWallexInfo, {});
+  const { fundingSource, purposeOfTransfer } = wallexInfo;
   return (
     <>
       <PaymentTypeField form={form} />
       {paymentType && (
         <>
-          {paymentType === 'internal' && <SelectLinkedUser form={form} />}
+          {paymentType === 'internal' && (
+            <SelectLinkedUser form={form} people={people} />
+          )}
           {paymentType === 'remittance' && (
             <SelectBeneficiary form={form} beneficiaries={beneficiaries} />
           )}
           {/* <PaymentReference form={form} /> */}
-          <AccountField form={form} accounts={accounts} />
-          <FundingSource form={form} sources={fundingSource} />
+          <AccountField
+            form={form}
+            accounts={filteredAccounts}
+            paymentType={paymentType}
+          />
+          {paymentType === 'remittance' && (
+            <FundingSource form={form} sources={fundingSource} />
+          )}
           <AmountField
             form={form}
             balance={balance}
-            currency={beneficiaryCurrency}
+            currency={amountCurrency}
           />
-          <PaymentPurpose form={form} purposes={purposeOfTransfer} />
-          <UploadInvoice form={form} setFileId={setFileId} />
+          {paymentType === 'remittance' && (
+            <>
+              <PaymentPurpose form={form} purposes={purposeOfTransfer} />
+              <UploadInvoice form={form} setFileId={setFileId} />
+            </>
+          )}
           <NoteField form={form} />
           <Form.Item {...submitButtonLayoutProps}>
             <Button

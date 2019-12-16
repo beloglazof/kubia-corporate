@@ -1,4 +1,4 @@
-import { startCase } from 'lodash';
+import { startCase, camelCase } from 'lodash';
 import { Button, Card, Descriptions, Form, Modal, Popconfirm } from 'antd';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -45,24 +45,6 @@ const renderAction = ({ name, handler, icon }) => {
       {startCase(name)}
     </Button>
   );
-};
-
-const renderFields = fields => {
-  const renderField = ([name, value]) => {
-    if (typeof value === 'object') {
-      const nestedFields = renderFields(Object.entries(value));
-      return nestedFields;
-    }
-    const label = startCase(name);
-    const span = name === 'email' ? 2 : 1;
-    return (
-      <Descriptions.Item span={span} label={label} key={name}>
-        <span style={{ fontWeight: 'bold' }}>{value}</span>
-      </Descriptions.Item>
-    );
-  };
-  const mapped = fields.map(renderField);
-  return mapped;
 };
 
 const DetailsModal = ({ details, ...props }) => {
@@ -165,6 +147,34 @@ const EditBeneficiaryFormModal = ({
 
 const EditFormModal = Form.create()(EditBeneficiaryFormModal);
 
+const renderFields = fields => {
+  const topFieldNames = new Set(fields.map(([fieldName]) => fieldName));
+  const renderField = ([name, value]) => {
+    if (typeof value === 'object') {
+      const fieldsWithNewNames = Object.keys(value).reduce((acc, fieldName) => {
+        const coverTopField = topFieldNames.has(fieldName);
+        const newFieldName = coverTopField
+          ? camelCase(`${name}-${fieldName}`)
+          : fieldName;
+        return { ...acc, [newFieldName]: value[fieldName] };
+      }, {});
+      
+      const fieldEntries = Object.entries(fieldsWithNewNames);
+      const nestedFields = renderFields(fieldEntries);
+      return nestedFields;
+    }
+    const label = startCase(name);
+    const span = name === 'email' ? 2 : 1;
+    return (
+      <Descriptions.Item span={span} label={label} key={name}>
+        <span style={{ fontWeight: 'bold' }}>{value}</span>
+      </Descriptions.Item>
+    );
+  };
+  const mapped = fields.map(renderField);
+  return mapped;
+};
+
 const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
   const { modalProps: detailsModalProps, show: showDetails } = useModal({
     defaultVisible: false
@@ -177,8 +187,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
     defaultVisible: false
   });
 
-  const fieldsSet = new Set([
-    'accountNumber',
+  const fieldSet = new Set([
     'bankAccount',
     'companyName',
     'email',
@@ -189,7 +198,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
   const details = Object.entries(beneficiary).filter(
     ([fieldName]) => fieldName !== 'id'
   );
-  const cardFields = details.filter(([name]) => fieldsSet.has(name));
+  const cardFields = details.filter(([name]) => fieldSet.has(name));
   const cardTitle = startCase(beneficiary?.nickname) || null;
 
   const actions = getCardActions(showDetails, onDelete, showEditModal);

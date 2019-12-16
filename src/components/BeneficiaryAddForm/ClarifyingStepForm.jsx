@@ -23,8 +23,7 @@ const getMainFormFields = async values => {
   if (!response) {
     return;
   }
-  const data = response[0]?.data;
-  const fields = data?.find(item => item.entityType === 'company');
+  const fields = response.find(item => item.entityType === 'company');
   return fields;
 };
 

@@ -20,11 +20,10 @@ const InputItem = ({
     rules.push(requiredRule);
   }
   if (validationPattern) {
-    const pattern = new RegExp(validationPattern)
-    console.log(validationPattern, pattern.test('123456789'), typeof validationPattern)
+    const pattern = new RegExp(validationPattern);
     const patternRule = {
-      pattern ,
-      // message: `Invalid ${label} format`
+      pattern,
+      message: `Invalid ${label} format`
     };
     rules.push(patternRule);
   }

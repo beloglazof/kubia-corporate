@@ -69,7 +69,7 @@ LinkedPeopleTable.propTypes = {
 };
 
 const AddUserForm = ({ form, handleAdd }) => {
-  const [foundUser, setFoundUser] = useState();
+  const [foundUser, setFoundUser] = useState({});
   const name = form.getFieldValue('name');
   const handleAddClick = () => {
     form.validateFields(async (errors, values) => {
@@ -90,8 +90,14 @@ const AddUserForm = ({ form, handleAdd }) => {
   };
 
   const layoutProps = {
+    labelCol: {
+      xs: { span: 6 },
+      sm: { span: 5 },
+      md: { span: 4 },
+      lg: { span: 3 }
+    },
     wrapperCol: { xs: { span: 14 } },
-    labelCol: { xs: { span: 6 } }
+    labelAlign: 'left'
   };
 
   const buttonLayoutProps = {
@@ -100,7 +106,7 @@ const AddUserForm = ({ form, handleAdd }) => {
   return (
     <>
       <h2>Link new user</h2>
-      <Form {...layoutProps} hideRequiredMark>
+      <Form style={{ paddingLeft: '1em' }} {...layoutProps} hideRequiredMark>
         <SearchUserInput form={form} setFoundUser={setFoundUser} />
         {foundUser && (
           <>
@@ -155,21 +161,18 @@ const LinkedPeople = ({ history }) => {
           style={{ marginBottom: '1em' }}
           onBack={() => history.goBack()}
         />
-        {/* <h1 style={{ marginBottom: '1em' }}>Linked People</h1> */}
-        <Row type="flex" justify="center">
-          <Col span={18}>
-            {/* find user in our core */}
-            <WrappedAddUserForm
-              // @ts-ignore
-              handleAdd={handleAdd}
-            />
-          </Col>
-        </Row>
-        <Row type="flex" justify="center" style={{ marginTop: '1em' }}>
-          <Col span={24} lg={20}>
-            <LinkedPeopleTable people={people} handleDelete={handleDelete} />
-          </Col>
-        </Row>
+        <div className="page-content-wrapper">
+          <Row>
+            <Col span={24}>
+              <WrappedAddUserForm handleAdd={handleAdd} />
+            </Col>
+          </Row>
+          <Row style={{ marginTop: '1em' }}>
+            <Col span={24}>
+              <LinkedPeopleTable people={people} handleDelete={handleDelete} />
+            </Col>
+          </Row>
+        </div>
       </Col>
     </Row>
   );

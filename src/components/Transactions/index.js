@@ -90,7 +90,7 @@ const TransactionCard = ({ transaction, handleClick }) => {
         </span>
       }
       hoverable
-      style={{ margin: 'auto auto 10px', width: '350px' }}
+      style={{ margin: 'auto auto 10px', width: '50%' }}
       headStyle={{ textAlign: 'left' }}
       bodyStyle={{
         display: 'flex',
@@ -289,7 +289,7 @@ const Transactions = ({ transList, fetchList }) => {
         style={{
           padding: '10px',
           margin: 'auto',
-          maxWidth: '550px',
+          // maxWidth: '550px',
           textAlign: 'center'
         }}
       >

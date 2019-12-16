@@ -80,13 +80,13 @@ export const getBeneficiary = async id => {
 };
 export const getBeneficiaryFields = async (
   currency,
-  bank_account_country,
-  beneficiary_country
+  bankAccountCountry,
+  beneficiaryCountry
 ) =>
-  await get('/beneficiary/fields', {
+  await post('/remittance/requirements/wallex', {
     currency,
-    bank_account_country,
-    beneficiary_country
+    bankAccountCountry,
+    beneficiaryCountry
   });
 export const createBeneficiary = async json => await post('/beneficiary', json);
 
