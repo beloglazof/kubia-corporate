@@ -2,21 +2,20 @@ import {
   Button,
   Card as UiCard,
   Col,
-  List,
-  Row,
   Collapse,
-  Divider,
+  Descriptions,
+  List,
   Modal,
-  Descriptions
+  Row
 } from 'antd';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import styles from './account.module.css';
-import LastTransactions from '../Transactions/LastTransactions';
-import PropTypes from 'prop-types';
 import { startCase } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useModal } from 'sunflower-antd';
+import LastTransactions from '../Transactions/LastTransactions';
+import styles from './account.module.css';
 
 const renderField = ([name, value]) => {
   const label = startCase(name);
