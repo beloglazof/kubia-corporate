@@ -1,4 +1,4 @@
-import { Button, Form, Radio, Input, Upload, Icon } from 'antd';
+import { Button, Form, Radio, Input, Upload, Icon, Divider } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import InputItem from './InputItem';
@@ -12,6 +12,7 @@ import {
 } from '../api';
 import { submitButtonLayoutProps } from '../routes/Pay';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 const PaymentTypeField = ({ form }) => {
   const { getFieldDecorator } = form;
@@ -124,9 +125,28 @@ const SelectBeneficiary = ({ form, beneficiaries }) => {
 
       return option;
     });
+  let history = useHistory();
+  const dropdownRender = menu => (
+    <div>
+      <div
+        className="hoverable"
+        style={{
+          padding: '4px 8px 6px',
+          cursor: 'pointer',
+          borderBottom: '1px solid rgba(224, 224, 224, 0.25)'
+        }}
+        onMouseDown={e => e.preventDefault()}
+        onClick={() => history.push('/beneficiaries/add')}
+      >
+        <Icon type="plus" /> Add beneficiary
+      </div>
+      {menu}
+    </div>
+  );
 
   const selectProps = {
-    placeholder: 'Select beneficiary'
+    placeholder: 'Select beneficiary',
+    dropdownRender
   };
 
   return (
