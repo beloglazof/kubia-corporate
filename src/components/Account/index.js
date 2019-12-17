@@ -43,7 +43,7 @@ const Account = ({ account }) => {
   });
   return (
     <List.Item key={id}>
-      <UiCard title="Account info" bodyStyle={{ paddingBottom: '10px' }}>
+      <UiCard title="Account" bodyStyle={{ paddingBottom: '10px' }}>
         <div className={styles.name}>{name}</div>
         <Row className={styles.row}>
           <Col span={8} className={styles.infoParam}>
@@ -69,7 +69,7 @@ const Account = ({ account }) => {
                 <Link to="/new-payment">Make Payment</Link>
               </Button>
               <Button type="primary" onClick={() => show()}>
-                Requisites
+                Account Details
               </Button>
               <Modal title="Account requisites" footer={null} {...modalProps}>
                 <Descriptions bordered column={2} layout="vertical">
