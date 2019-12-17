@@ -71,7 +71,7 @@ const Account = ({ account }) => {
               <Button type="primary" onClick={() => show()}>
                 Account Details
               </Button>
-              <Modal title="Account requisites" footer={null} {...modalProps}>
+              <Modal title="Account details" footer={null} {...modalProps}>
                 <Descriptions bordered column={2} layout="vertical">
                   {renderFields(bank_deposit)}
                 </Descriptions>

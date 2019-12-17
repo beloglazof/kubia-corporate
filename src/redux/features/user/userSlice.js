@@ -5,7 +5,7 @@ const storageUser = localStorage.getItem('user');
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: storageUser ? JSON.parse(storageUser) : {},
+  initialState: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
   reducers: {
     setUser(state, action) {
       const user = action.payload;

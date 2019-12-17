@@ -11,5 +11,6 @@ module.exports = {
   singaporeDateTimeFormat: {
     short: `M/d/yy h:mm a`,
     medium: `dd-MMM-yyyy a hh:mm:ss`
-  }
+  },
+  intercomToken: 'myv42x3y'
 };
