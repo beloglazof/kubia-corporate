@@ -6,8 +6,8 @@ import CompanyInfoCard from '../../components/CompanyInfoCard';
 
 const Accounts = () => {
   const accounts = useSelector(state => state.accounts);
-  const userType = useSelector(state => state.user?.type).toLowerCase();
-  const isCorporateUser = userType === 'corporate';
+  const userType = useSelector(state => state.user?.type);
+  const isCorporateUser = userType && userType.toLowerCase() === 'corporate';
   return (
     <>
       <Row gutter={16}>

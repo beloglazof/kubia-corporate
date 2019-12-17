@@ -6,7 +6,7 @@ import {
   Popconfirm,
   Radio,
   Select,
-  Table
+  Table,
 } from 'antd';
 import { startCase } from 'lodash/string';
 import React, { useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ import styles from './settings.module.css';
 import useAsync from '../../hooks/useAsync';
 
 const CurrentSession = ({ session }) => {
-  console.log(session);
   if (!session) return null;
   const visibleFields = new Set(['created', 'expire', 'ip']);
   const dateFields = new Set(['created', 'expire']);
@@ -56,7 +55,7 @@ const CurrentSession = ({ session }) => {
 };
 
 CurrentSession.propTypes = {
-  session: PropTypes.object.isRequired
+  session: PropTypes.object.isRequired,
 };
 
 const CloseAllSessionsButton = ({ handler }) => {
@@ -73,7 +72,7 @@ const CloseAllSessionsButton = ({ handler }) => {
 };
 
 CloseAllSessionsButton.propTypes = {
-  handler: PropTypes.func.isRequired
+  handler: PropTypes.func.isRequired,
 };
 
 const CloseSessionButton = ({ sessionId, handleClose }) => {
@@ -96,14 +95,13 @@ const CloseSessionButton = ({ sessionId, handleClose }) => {
 
 CloseSessionButton.propTypes = {
   sessionId: PropTypes.number.isRequired,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
 };
 
 const Settings = () => {
   const [sessions, setSessions] = useAsync(getSessions, []);
   const [currentSession, setCurrentSession] = useState(null);
   useEffect(() => {
-    console.log(sessions);
     const current = sessions.find(session => session.current);
     const otherSessions = sessions.filter(session => !session.current);
     if (!currentSession && current) {
@@ -132,7 +130,7 @@ const Settings = () => {
   const formLayoutProps = {
     labelAlign: 'left',
     labelCol: { xs: 12, sm: 6 },
-    wrapperCol: { xs: 12, sm: 6 }
+    wrapperCol: { xs: 12, sm: 6 },
   };
   const { firstPagePath } = useSelector(state => state.settings);
   const dispatch = useDispatch();
@@ -144,33 +142,33 @@ const Settings = () => {
     {
       title: 'IP',
       dataIndex: 'ip',
-      key: 'ip'
+      key: 'ip',
     },
     {
       title: 'User Agent',
       dataIndex: 'userAgent',
       key: 'userAgent',
-      ellipsis: true
+      ellipsis: true,
     },
     {
       title: 'Creation Date',
       dataIndex: 'created',
       key: 'created',
-      render: v => formatISODate(v)
+      render: v => formatISODate(v),
     },
     {
       title: 'Expiration Date',
       dataIndex: 'expire',
       key: 'expire',
-      render: v => formatISODate(v)
+      render: v => formatISODate(v),
     },
     {
       title: 'Action',
       key: 'action',
       render: (text, record) => (
         <CloseSessionButton sessionId={record.id} handleClose={closeSession} />
-      )
-    }
+      ),
+    },
   ];
   const showCloseAllButton = sessions && sessions.length > 0;
   const showSessionsTable = sessions && sessions.length > 0;
@@ -223,7 +221,7 @@ const Settings = () => {
           style={{
             display: 'flex',
             flexFlow: 'row-reverse',
-            marginBottom: '1em'
+            marginBottom: '1em',
           }}
         >
           {showCloseAllButton && (

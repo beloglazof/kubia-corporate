@@ -8,7 +8,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   changeLayoutType,
   changeNavStyle,
-  setThemeType
+  setThemeType,
 } from '../../redux/features/settings/themeSettingsSlice';
 
 import {
@@ -21,7 +21,7 @@ import {
   NAV_STYLE_DEFAULT_HORIZONTAL,
   NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
   THEME_TYPE_DARK,
-  THEME_TYPE_LITE
+  THEME_TYPE_LITE,
 } from '../../constants/ThemeSetting';
 import SignIn from '../SignIn';
 // import SignUp from '../SignUp';
@@ -39,7 +39,7 @@ const RestrictedRoute = ({ component: Component, ...rest }) => {
           <Redirect
             to={{
               pathname: '/sign-in',
-              state: { from: props.location }
+              state: { from: props.location },
             }}
           />
         )
@@ -81,15 +81,6 @@ class App extends Component {
     }
   };
 
-  // componentDidMount() {
-  //   const { history, token, location } = this.props;
-  //   if (location.pathname === '/') {
-  //     if (token === null) {
-  //       history.push('/sign-in');
-  //     }
-  //   }
-  // }
-
   render() {
     const { match, themeType, layoutType, navStyle, locale } = this.props;
     if (themeType === THEME_TYPE_DARK) {
@@ -129,6 +120,6 @@ const mapStateToProps = ({ themeSettings, session }) => {
 const actions = {
   setThemeType,
   changeNavStyle,
-  changeLayoutType
+  changeLayoutType,
 };
 export default connect(mapStateToProps, actions)(App);

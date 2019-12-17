@@ -94,7 +94,7 @@ const AddUserForm = ({ form, handleAdd }) => {
       xs: { span: 6 },
       sm: { span: 5 },
       md: { span: 4 },
-      lg: { span: 3 }
+      lg: { span: 4 }
     },
     wrapperCol: { xs: { span: 14 } },
     labelAlign: 'left'

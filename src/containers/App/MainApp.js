@@ -11,7 +11,7 @@ import {
   NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
   NAV_STYLE_MINI_SIDEBAR,
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
-  NAV_STYLE_NO_HEADER_MINI_SIDEBAR
+  NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
 } from '../../constants/ThemeSetting';
 import { fetchMainScreen } from '../../redux/features/screens/screensSlice';
 import { fetchUser } from '../../redux/features/user/userSlice';
@@ -25,6 +25,9 @@ import HorizontalDefault from '../Topbar/HorizontalDefault/index';
 import Topbar from '../Topbar/index';
 import InsideHeader from '../Topbar/InsideHeader/index';
 import NoHeaderNotification from '../Topbar/NoHeaderNotification/index';
+
+import { intercomToken } from '../../util/config';
+import { usersMe } from '../../api';
 
 const { Content, Footer } = Layout;
 
@@ -76,10 +79,28 @@ export class MainApp extends Component {
     return <Sidebar location={this.props.location} />;
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { fetchMainScreen, fetchUser } = this.props;
-    fetchUser();
-    fetchMainScreen();
+    await fetchMainScreen();
+    // await fetchUser();
+    const user = await usersMe()
+    if (user && window.Intercom) {
+      console.log(user);
+      const { email, id, name } = user;
+      window.Intercom('boot', {
+        app_id: intercomToken,
+        created_at: Date.now(),
+        user_id: id,
+        email,
+        name,
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    if (window.Intercom) {
+      window.Intercom('shutdown');
+    }
   }
 
   render() {
@@ -104,13 +125,13 @@ export class MainApp extends Component {
   }
 }
 
-const mapStateToProps = ({ themeSettings }) => {
+const mapStateToProps = ({ themeSettings, user }) => {
   const { width, navStyle } = themeSettings;
-  return { width, navStyle };
+  return { width, navStyle, user };
 };
 
 const actions = {
   fetchMainScreen,
-  fetchUser
+  fetchUser,
 };
 export default connect(mapStateToProps, actions)(MainApp);
