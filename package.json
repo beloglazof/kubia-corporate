@@ -64,7 +64,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "deploy:corporate": "ssh -i /home/bvd/.ssh/id_ed25519 slava@dev.quancy.com.sg 'bash /home/slava/deploy-corporate.sh'",
+    "deploy-dev:corporate": "ssh -i /home/bvd/.ssh/id_ed25519 slava@dev.quancy.com.sg 'bash /home/slava/deploy-corporate.sh'",
     "copy-build:corporate": "cp -r build/* /var/www/dev.account3.quancy.com.sg/public_html",
     "copy-build:person": "cp -r build/* /var/www/dev.account2.quancy.com.sg/public_html",
     "test": "react-app-rewired --env=jsdom"

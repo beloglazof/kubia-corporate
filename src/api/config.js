@@ -11,7 +11,7 @@ const API_PATH =
     : `https://sandbox.api.quancy.com.sg/v1`;
 
 const instance = axios.create({
-  baseURL: API_PATH,
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
