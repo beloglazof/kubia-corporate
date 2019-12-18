@@ -262,8 +262,13 @@ const Transactions = ({ transList, fetchList }) => {
     return transactionsEntries.map(renderMonthTabPane);
   };
 
-  const defaultActiveKey = formatISODate(transList[0].creationDate, 'MMMM')
-  const [activeKey, setActiveKey] = useState(defaultActiveKey);
+  const [activeKey, setActiveKey] = useState();
+  useEffect(() => {
+    if (transList.length > 0) {
+      const defaultActiveKey = formatISODate(transList[0].creationDate, 'MMMM');
+      setActiveKey(defaultActiveKey);
+    }
+  }, [transList]);
 
   const defaultType = TRANSACTION_TYPES[0];
   const [transactionTypeFilter, setTransactionTypeFilter] = useState(
