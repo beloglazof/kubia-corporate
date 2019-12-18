@@ -78,6 +78,20 @@ export const getBeneficiary = async id => {
     return [];
   }
 };
+
+export const getBeneficiaryFieldsOld = async (
+  currency,
+  bank_account_country,
+  beneficiary_country
+) => {
+  const response = await get('/beneficiary/fields', {
+    currency,
+    bank_account_country,
+    beneficiary_country,
+  });
+  return response[0].data;
+};
+
 export const getBeneficiaryFields = async (
   currency,
   bankAccountCountry,
