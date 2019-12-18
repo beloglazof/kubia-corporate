@@ -1,17 +1,18 @@
 import useAsync from '../hooks/useAsync';
-import { getCurrencies } from '../api';
+import { getCurrencies, getBeneficiaryCurrencies } from '../api';
 import SelectItem from './SelectItem';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CurrencySelect = ({ form }) => {
-  const [currencies] = useAsync(getCurrencies);
+const CurrencySelect = ({ form, extended = false }) => {
+  const request = extended ? getBeneficiaryCurrencies : getCurrencies;
+  const [currencies] = useAsync(request, []);
   const options = currencies
     ? currencies.map(c => ({ value: c.code, title: c.name }))
     : [];
   const loading = !currencies || currencies.length === 0;
   const selectProps = {
-    loading
+    loading,
   };
   return (
     <SelectItem
@@ -26,7 +27,7 @@ const CurrencySelect = ({ form }) => {
 };
 
 CurrencySelect.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 export default CurrencySelect;
