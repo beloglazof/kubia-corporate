@@ -9,20 +9,22 @@ const filterCountry = (inputValue, option) => {
 };
 
 const CountrySelect = ({
+  form,
+  initialValue,
   label = 'Country',
   id = 'country',
-  form,
-  initialValue
+  disabled = false
 }) => {
   const [countries] = useAsync(getCountries);
   const options = countries
-    ? countries.map(c => ({ value: c.iso2, title: c.name }))
+    ? countries.map(c => ({ value: c.iso2.toUpperCase(), title: c.name }))
     : [];
   const loading = !countries || countries.length === 0;
   const selectProps = {
     showSearch: true,
     filterOption: filterCountry,
-    loading
+    loading,
+    disabled
   };
   return (
     <SelectItem
