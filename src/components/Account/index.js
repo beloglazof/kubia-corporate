@@ -6,7 +6,7 @@ import {
   Descriptions,
   List,
   Modal,
-  Row
+  Row,
 } from 'antd';
 import { startCase } from 'lodash';
 import PropTypes from 'prop-types';
@@ -39,7 +39,7 @@ const Account = ({ account }) => {
 
   const { number, amount, currency_info, id, bank_deposit } = account;
   const { modalProps, show } = useModal({
-    defaultVisible: false
+    defaultVisible: false,
   });
   return (
     <List.Item key={id}>
@@ -50,7 +50,11 @@ const Account = ({ account }) => {
             Number: <div className={'param-value'}>{number}</div>
           </Col>
           <Col span={8} className={styles.infoParam}>
-            Balance: <div className={'param-value'}>S${amount}</div>
+            Balance:{' '}
+            <div className={'param-value'}>
+              {currency_info.symbol}
+              {amount}
+            </div>
           </Col>
           <Col span={8} className={styles.infoParam}>
             Currency: <div className={'param-value'}>{currency_info.code}</div>
@@ -62,7 +66,7 @@ const Account = ({ account }) => {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                flexDirection: 'row'
+                flexDirection: 'row',
               }}
             >
               <Button type="primary">
@@ -107,8 +111,8 @@ Account.propTypes = {
     updated: PropTypes.string,
     bank_deposit: PropTypes.object,
     cards: PropTypes.array,
-    transactions: PropTypes.object
-  }).isRequired
+    transactions: PropTypes.object,
+  }).isRequired,
 };
 
 export default Account;
