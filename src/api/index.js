@@ -30,9 +30,9 @@ export const withdrawal = async (
       bank_account_id: '',
       branch_code: '',
       bank_address: '',
-      bank_name: ''
+      bank_name: '',
     },
-    idempotency: ''
+    idempotency: '',
   }
 ) => await post('withdrawal', params);
 
@@ -55,7 +55,7 @@ export const cardsNew = async (
     type_id: 0,
     assoc_number: '',
     failed_id: 0,
-    pin: ''
+    pin: '',
   }
 ) => await post('/cards/new', params);
 
@@ -86,7 +86,7 @@ export const getBeneficiaryFields = async (
   await post('/remittance/requirements/wallex', {
     currency,
     bankAccountCountry,
-    beneficiaryCountry
+    beneficiaryCountry,
   });
 export const createBeneficiary = async json => await post('/beneficiary', json);
 
@@ -99,7 +99,8 @@ export const deleteBeneficiary = async id =>
 export const getCountries = async () => await get('/countries');
 
 export const getCurrencies = async () => await get('/currencies');
-
+export const getBeneficiaryCurrencies = async () =>
+  await get('remittance/currencies/wallex');
 export const fetchPaymentDetails = async (
   params = {
     company_id: 0,
@@ -107,7 +108,7 @@ export const fetchPaymentDetails = async (
     account_id: 0,
     buyCurrency: 'SGD',
     sellCurrency: 'SGD',
-    amount: 0
+    amount: 0,
   }
 ) => await post('remittance/request/wallex', params);
 export const getWallexInfo = async () =>
@@ -120,7 +121,7 @@ export const submitRemittance = async (
     fundingSource: '',
     paymentReference: '',
     purposeOfTransfer: '',
-    purposeOfTransferDescription: ''
+    purposeOfTransferDescription: '',
   }
 ) => await post('/remittance/wallex', params);
 export const getWallexOTP = async quote_id =>

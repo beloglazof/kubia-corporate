@@ -85,7 +85,6 @@ export class MainApp extends Component {
     // await fetchUser();
     const user = await usersMe()
     if (user && window.Intercom) {
-      console.log(user);
       const { email, id, name } = user;
       window.Intercom('boot', {
         app_id: intercomToken,

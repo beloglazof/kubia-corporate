@@ -111,7 +111,7 @@ class HorizontalDefault extends Component {
                 to="/"
                 className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
-                <img alt="" src={require('../../../assets/images/main-logo-black.png')} />
+                <img alt="" src={require('../../../assets/images/main-logo-black.webp')} />
               </Link>
               <div className="gx-header-search gx-d-none gx-d-lg-flex">
                 <SearchBox

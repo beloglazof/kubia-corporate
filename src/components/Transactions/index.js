@@ -12,7 +12,7 @@ import {
   Select,
   Spin,
   Tabs,
-  Tooltip
+  Tooltip,
 } from 'antd';
 import TransactionDetails from './TransactionDetails/TransactionDetails';
 import { fetchList } from '../../redux/actions';
@@ -25,12 +25,12 @@ const { Option } = Select;
 export const COLORS = {
   DEPOSIT: 'limegreen',
   WITHDRAWAL: 'tomato',
-  TRANSFER: '#28aaeb'
+  TRANSFER: '#28aaeb',
 };
 export const TRANS_ICONS = {
   DEPOSIT: 'rise',
   WITHDRAWAL: 'fall',
-  TRANSFER: 'fall'
+  TRANSFER: 'fall',
 };
 const { TabPane } = Tabs;
 export const MONTHS = [
@@ -45,19 +45,19 @@ export const MONTHS = [
   'September',
   'October',
   'November',
-  'December'
+  'December',
 ];
 
 export const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
 export const LINKED_ACC_TYPES = {
   DEPOSIT: 'Sender',
-  WITHDRAWAL: 'Recipient'
+  WITHDRAWAL: 'Recipient',
 };
 
 const TRANSACTION_TYPES = [
   { name: 'ALL', label: 'All' },
   { name: 'DEPOSIT', label: 'Deposit' },
-  { name: 'WITHDRAWAL', label: 'Withdrawal' }
+  { name: 'WITHDRAWAL', label: 'Withdrawal' },
 ];
 
 //  Currency with tooltip
@@ -95,7 +95,7 @@ const TransactionCard = ({ transaction, handleClick }) => {
       bodyStyle={{
         display: 'flex',
         alignItems: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
       }}
       onClick={() => handleClick(transaction)}
     >
@@ -122,7 +122,7 @@ const Transactions = ({ transList, fetchList }) => {
   const [filters, updateFilters] = useState({
     //  Filters stored here
     type: 'ALL',
-    linkedAccounts: []
+    linkedAccounts: [],
   });
   const [filteredTransactions, setFilteredTransactions] = useState(transList);
   useEffect(() => {
@@ -199,7 +199,7 @@ const Transactions = ({ transList, fetchList }) => {
   const getLinkedAccounts = () => {
     const allLinkedAccs = transList.map(t => ({
       id: t.linked_account.id,
-      name: t.linked_account.name
+      name: t.linked_account.name,
     }));
 
     const uniqueAccs = uniqBy(allLinkedAccs, 'id');
@@ -236,7 +236,7 @@ const Transactions = ({ transList, fetchList }) => {
       monthTransactionsByDay
     );
     return (
-      <TabPane tab={month} key={monthInd}>
+      <TabPane tab={month} key={month}>
         <Anchor
           offsetTop={15}
           style={{ position: 'absolute', margin: '15px 0 0 0' }}
@@ -262,8 +262,13 @@ const Transactions = ({ transList, fetchList }) => {
     return transactionsEntries.map(renderMonthTabPane);
   };
 
-  const defaultActiveKey = new Date().getMonth().toString();
-  const [activeKey, setActiveKey] = useState(defaultActiveKey);
+  const [activeKey, setActiveKey] = useState();
+  useEffect(() => {
+    if (transList.length > 0) {
+      const defaultActiveKey = formatISODate(transList[0].creationDate, 'MMMM');
+      setActiveKey(defaultActiveKey);
+    }
+  }, [transList]);
 
   const defaultType = TRANSACTION_TYPES[0];
   const [transactionTypeFilter, setTransactionTypeFilter] = useState(
@@ -290,7 +295,7 @@ const Transactions = ({ transList, fetchList }) => {
           padding: '10px',
           margin: 'auto',
           // maxWidth: '550px',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
         <Spin spinning={!transList} size="large" tip="loading transactions...">
@@ -339,17 +344,17 @@ const Transactions = ({ transList, fetchList }) => {
 
 Transactions.propTypes = {
   transList: PropTypes.array.isRequired,
-  fetchList: PropTypes.func.isRequired
+  fetchList: PropTypes.func.isRequired,
 };
 
 // Mapping store state to component props
 const mapStateToProps = state => ({
-  transList: state.transactions.transList
+  transList: state.transactions.transList,
 });
 
 //  Mapping store actions to component props
 const mapDispatchToProps = dispatch => ({
-  fetchList: () => dispatch(fetchList())
+  fetchList: () => dispatch(fetchList()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
