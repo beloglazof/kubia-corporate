@@ -1,10 +1,10 @@
-import InputItem from '../InputItem';
 import { startCase } from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Button, Form } from 'antd';
 
+import InputItem from '../InputItem';
+import CountrySelect from '../CountrySelect';
 const renderFields = (fields, form) => {
   if (!fields || typeof fields !== 'object') return null;
   const filterFields = ([name]) => name !== 'entityType';
@@ -13,18 +13,32 @@ const renderFields = (fields, form) => {
     if (typeof value === 'object') {
       return renderFields(value, form);
     }
-    const selectedCountry = form.getFieldValue('country').toLowerCase();
     const isCityField = fieldName === 'city';
     const disabledFields = new Set(['entityType', 'country']);
+    const selectedCountry = form.getFieldValue('country').toLowerCase();
     if (isCityField && selectedCountry === 'sg') {
       disabledFields.add(fieldName);
     }
     const initialValue =
       isCityField && selectedCountry === 'sg' ? 'Singapore' : null;
+
     const disabled = disabledFields.has(fieldName);
+
     const startCasedName = startCase(fieldName);
     const label = fieldName === 'bicSwift' ? 'SWIFT' : startCasedName;
     const placeholder = label;
+
+    const isCountryField = fieldName === 'country';
+    if (isCountryField) {
+      return (
+        <CountrySelect
+          form={form}
+          label={label}
+          id={fieldName}
+          disabled={disabled}
+        />
+      );
+    }
 
     return (
       <InputItem
@@ -73,7 +87,7 @@ const BeneficiaryInfoStepForm = ({ form, fields, submitButtonLayoutProps }) => (
 BeneficiaryInfoStepForm.propTypes = {
   form: PropTypes.object.isRequired,
   fields: PropTypes.object.isRequired,
-  submit: PropTypes.func.isRequired
+  submit: PropTypes.func.isRequired,
 };
 
 export default BeneficiaryInfoStepForm;

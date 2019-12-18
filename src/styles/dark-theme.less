@@ -1567,6 +1567,15 @@ body.dark-theme {
     &:hover {
       border: #ffffff;
     }
+
+    &-disabled {
+      color: fade(@dark-theme-text-color, 10%);
+      &:hover {
+        border: none;
+        box-shadow: none;
+      }
+    }
+
     &-selection {
       background-color: fade(@grey-2, 10%);
       border-color: fade(@grey-2, 10%);

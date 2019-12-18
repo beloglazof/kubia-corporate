@@ -3,7 +3,9 @@ import { getCurrencies, getBeneficiaryCurrencies } from '../api';
 import SelectItem from './SelectItem';
 import React from 'react';
 import PropTypes from 'prop-types';
-
+const filterOption = (inputValue, option) => {
+  return option.props.children.toLowerCase().includes(inputValue.toLowerCase());
+};
 const CurrencySelect = ({ form, extended = false }) => {
   const request = extended ? getBeneficiaryCurrencies : getCurrencies;
   const [currencies] = useAsync(request, []);
@@ -12,6 +14,8 @@ const CurrencySelect = ({ form, extended = false }) => {
     : [];
   const loading = !currencies || currencies.length === 0;
   const selectProps = {
+    showSearch: true,
+    filterOption,
     loading,
   };
   return (

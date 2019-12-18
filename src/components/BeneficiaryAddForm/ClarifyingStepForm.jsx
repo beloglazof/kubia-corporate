@@ -1,5 +1,5 @@
 import { Button, Form, message } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { getBeneficiaryFields } from '../../api';
 import CountrySelect from '../CountrySelect';
@@ -33,13 +33,16 @@ const ClarifyingStepForm = ({
   setClarifiedInfo,
   gotoStep,
   current,
-  submitButtonLayoutProps
+  submitButtonLayoutProps,
 }) => {
+  const [loading, setLoading] = useState(false);
   const handleNext = async () => {
     form.validateFields(async (errors, values) => {
       if (errors) return;
       setClarifiedInfo(values);
+      setLoading(true);
       const mainFormFields = await getMainFormFields(values);
+      setLoading(false);
       if (mainFormFields) {
         setMainFormFields(mainFormFields);
         gotoStep(current + 1);
@@ -55,7 +58,7 @@ const ClarifyingStepForm = ({
       <BankAccountCountrySelect form={form} />
       <CurrencySelect form={form} extended />
       <Form.Item {...submitButtonLayoutProps}>
-        <Button type="primary" onClick={handleNext}>
+        <Button type="primary" onClick={handleNext} loading={loading}>
           Next
         </Button>
       </Form.Item>
@@ -67,7 +70,7 @@ ClarifyingStepForm.propTypes = {
   form: PropTypes.object.isRequired,
   setMainFormFields: PropTypes.func.isRequired,
   gotoStep: PropTypes.func.isRequired,
-  current: PropTypes.number.isRequired
+  current: PropTypes.number.isRequired,
 };
 
 export default ClarifyingStepForm;
