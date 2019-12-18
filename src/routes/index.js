@@ -11,6 +11,7 @@ import Beneficiaries from './Beneficiaries';
 import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
 import LinkedPeople from './LinkedPeople';
 import NewPayment from './Pay';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
@@ -18,12 +19,12 @@ export const navItems = [
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
-  { name: 'settings', path: '/settings', iconName: 'setting' }
+  { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
 export const renderNavigationItems = () => {
   const activeStyles = {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   };
   const renderItem = route => {
     const showIcon = route.iconName && route.iconName.length > 0;
@@ -38,6 +39,34 @@ export const renderNavigationItems = () => {
   };
   return navItems.map(renderItem);
 };
+
+const BoundaryRoute = props => {
+  let history = useHistory();
+  return (
+    <ErrorBoundary history={history}>
+      <Route {...props} />
+    </ErrorBoundary>
+  );
+};
+const RouteNotFound = () => {
+  let history = useHistory();
+  const { firstPagePath } = useSelector(state => state.settings);
+
+  return (
+    <Route path="*">
+      <Result
+        status="404"
+        title="404"
+        subTitle="Sorry, the page you visited does not exist."
+        extra={
+          <Button type="primary" onClick={() => history.push(firstPagePath)}>
+            Back Home
+          </Button>
+        }
+      />
+    </Route>
+  );
+};
 const App = () => {
   const { firstPagePath } = useSelector(state => state.settings);
   let history = useHistory();
@@ -45,28 +74,21 @@ const App = () => {
     <div className="gx-main-content-wrapper">
       <Switch>
         <Redirect exact from="/" to={firstPagePath} />
-        <Route path={`/accounts`} component={Accounts} />
-        <Route path={`/new-payment`} component={NewPayment} />
-        <Route path={`/settings`} component={Settings} />
-        <Route path={`/transactions`} component={Transactions} />
-        <Route exact path={`/beneficiaries`} component={Beneficiaries} />
-        <Route path={`/beneficiaries/add`} component={BeneficiaryAddForm} />
-        <Route exact path={`/linked-people`} component={LinkedPeople} />
-        <Route path="*">
-          <Result
-            status="404"
-            title="404"
-            subTitle="Sorry, the page you visited does not exist."
-            extra={
-              <Button
-                type="primary"
-                onClick={() => history.push(firstPagePath)}
-              >
-                Back Home
-              </Button>
-            }
-          />
-        </Route>
+        <BoundaryRoute path={`/accounts`} component={Accounts} />
+        <BoundaryRoute path={`/new-payment`} component={NewPayment} />
+        <BoundaryRoute path={`/settings`} component={Settings} />
+        <BoundaryRoute path={`/transactions`} component={Transactions} />
+        <BoundaryRoute
+          exact
+          path={`/beneficiaries`}
+          component={Beneficiaries}
+        />
+        <BoundaryRoute
+          path={`/beneficiaries/add`}
+          component={BeneficiaryAddForm}
+        />
+        <BoundaryRoute exact path={`/linked-people`} component={LinkedPeople} />
+        <RouteNotFound />
       </Switch>
     </div>
   );
