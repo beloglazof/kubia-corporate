@@ -632,11 +632,11 @@ body.dark-theme {
   }
 
   & .@{class-prefix}-app-login-content .ant-input {
-    background-color: @grey-6;
+    // background-color: @grey-6;
 
-    &:focus {
-      border-color: @dark-theme-primary-color;
-    }
+    // &:focus {
+    //   border-color: @dark-theme-primary-color;
+    // }
   }
 
   & .@{class-prefix}-app-logo-content {
@@ -1403,10 +1403,23 @@ body.dark-theme {
     background-color: transparent;
   }
 
+  .has-error .ant-input,
+  .has-error .ant-input:hover {
+    background-color: fade(@grey-2, 10%);
+  }
+
   & .ant-input {
-    background-color: fade(@grey-2, 10%) !important;
+    background-color: fade(@grey-2, 10%);
     border-color: fade(@grey-2, 10%);
     color: @dark-theme-text-color;
+
+    &[disabled] {
+      background-color: fade(@grey-2, 20%);
+      &:hover {
+        border: none;
+        box-shadow: none;
+      }
+    }
 
     &:focus,
     &:hover {
@@ -2619,6 +2632,10 @@ body.dark-theme {
     & .h6 {
       color: darken(@dark-theme-text-color, 60%);
     }
+  }
+
+  .@{class-prefix}-app-login-wrap {
+    background-color: inherit;
   }
 
   & .@{class-prefix}-module-side {
