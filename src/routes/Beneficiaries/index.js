@@ -3,7 +3,7 @@ import React from 'react';
 import {
   deleteBeneficiary,
   getBeneficiary,
-  updateBeneficiary
+  updateBeneficiary,
 } from '../../api';
 import BeneficiaryCard from '../../components/BeneficiaryCard';
 import useAsync from '../../hooks/useAsync';
@@ -57,7 +57,7 @@ const Beneficiaries = ({ history }) => {
         style={{ marginBottom: '1em' }}
         onBack={() => history.goBack()}
       />
-      <div className='page-content-wrapper'>
+      <div className="page-content-wrapper">
         <Button
           onClick={handleAddClick}
           type="primary"
@@ -73,7 +73,8 @@ const Beneficiaries = ({ history }) => {
             gutter: 16,
             xs: 1,
             md: 2,
-            lg: 3
+            lg: 2,
+            xl: 3,
           }}
         />
       </div>

@@ -148,3 +148,5 @@ export const getCompany = async id => await get('/company', { id });
 export const getPeople = async id => await get('/people', { id });
 export const addPeople = async people => await post('/people', people);
 export const deletePeople = async id => await httpDelete('/people', { id });
+
+export const getAccounts = async () => await get('/accounts')

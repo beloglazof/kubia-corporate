@@ -42,40 +42,46 @@ const LastTransactions = ({ data }) => {
     history.push('/transactions');
   };
   return (
-    <Table
-      loading={isLoading}
-      dataSource={lastTransactions}
-      rowKey="id"
-      size="small"
-      pagination={false}
-      footer={() => (
-        <Button type="primary" onClick={handleMoreClick} block>
+    <>
+      <Table
+        loading={isLoading}
+        dataSource={lastTransactions}
+        rowKey="id"
+        size="small"
+        pagination={false}
+        bordered
+      >
+        <Column
+          title="Amount"
+          dataIndex="amount"
+          key="amount"
+          render={renderAmount}
+        />
+        <Column
+          title="Creation date"
+          dataIndex="creationDate"
+          key="creationDate"
+          render={renderDate}
+          ellipsis
+        />
+
+        <Column
+          title="From/To"
+          dataIndex="linked_account"
+          key="linkedAccount"
+          render={renderFromField}
+        />
+        <Column title="Type" dataIndex="type" key="type" />
+      </Table>
+      <div style={{ display: 'flex' }}>
+        <Button
+          style={{ marginTop: '1em', marginLeft: 'auto', width: '20%' }}
+          onClick={handleMoreClick}
+        >
           More
         </Button>
-      )}
-      bordered
-    >
-      <Column
-        title="Amount"
-        dataIndex="amount"
-        key="amount"
-        render={renderAmount}
-      />
-      <Column
-        title="Creation date"
-        dataIndex="creationDate"
-        key="creationDate"
-        render={renderDate}
-      />
-
-      <Column
-        title="From/To"
-        dataIndex="linked_account"
-        key="linkedAccount"
-        render={renderFromField}
-      />
-      <Column title="Type" dataIndex="type" key="type" />
-    </Table>
+      </div>
+    </>
   );
 };
 

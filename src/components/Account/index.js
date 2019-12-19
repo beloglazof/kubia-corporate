@@ -1,6 +1,6 @@
 import {
   Button,
-  Card as UiCard,
+  Card,
   Col,
   Collapse,
   Descriptions,
@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import { startCase } from 'lodash';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useModal } from 'sunflower-antd';
@@ -32,59 +32,122 @@ const renderFields = (fieldsObj = {}) => {
   return mapped;
 };
 
+const AccountCardHeader = ({ number, amount, currencyInfo }) => (
+  <Row
+    style={{ marginBottom: '.4em' }}
+    gutter={[16, 16]}
+  >
+    <Col xs={24}>
+      <div>
+        <span
+          className={'param-value'}
+          style={{
+            fontSize: 'calc(16px + 0.5vw)',
+            lineHeight: 'calc(16px + 1.05vw)',
+          }}
+        >
+          {currencyInfo.code} Account &nbsp;
+          {number}
+        </span>
+      </div>
+    </Col>
+    <Col xs={24}>
+      <div
+        style={{
+          textAlign: 'left',
+        }}
+      >
+        <span
+          style={{
+            letterSpacing: '-.02em',
+            fontWeight: 'bold',
+            fontSize: 'calc(14px + 0.5vw)',
+            lineHeight: 'calc(16px + 1.05vw)',
+          }}
+        >
+          Current Amount &nbsp;
+          {currencyInfo.symbol}
+          {Number(amount).toFixed(currencyInfo.units)}
+        </span>
+      </div>
+    </Col>
+    <Col xs={24}>
+      <Button type="primary" key="payment" block>
+        <Link to="/new-payment">Make Payment</Link>
+      </Button>
+    </Col>
+
+    {/* <Col xs={12}>
+            <div>
+              Currency:
+              <div className={'param-value'}>{currency_info.code}</div>
+            </div>
+          </Col> */}
+  </Row>
+);
+
 const Account = ({ account }) => {
   const user = useSelector(({ user }) => user);
   const { first_name, last_name } = user;
   const name = first_name && last_name && `${first_name} ${last_name}`;
 
-  const { number, amount, currency_info, id, bank_deposit, transactions } = account;
-  
+  const {
+    number,
+    amount,
+    currency_info,
+    id,
+    bank_deposit,
+    transactions,
+  } = account;
+
   const { modalProps, show } = useModal({
     defaultVisible: false,
   });
+
+  const tabList = [
+    { key: 'lastTransactions', tab: 'Last transactions' },
+    { key: 'accountDetails', tab: 'Account Details' },
+  ];
+  const defaulActiveTabKey = tabList[0].key;
+  const [activeTabKey, setActiveTabKey] = useState(defaulActiveTabKey);
+
+  const renderTab = tabKey => {
+    switch (tabKey) {
+      case tabList[0].key:
+        return <LastTransactions data={transactions} />;
+      case tabList[1].key:
+        return (
+          <Descriptions column={2} layout="horizontal">
+            {renderFields(bank_deposit)}
+          </Descriptions>
+        );
+      default:
+        return 'Unknow tab key';
+    }
+  };
+
   return (
     <List.Item key={id}>
-      <UiCard title="Account" bodyStyle={{ paddingBottom: '10px' }}>
-        <div className={styles.name}>{name}</div>
-        <Row className={styles.row}>
-          <Col span={8} className={styles.infoParam}>
-            Number: <div className={'param-value'}>{number}</div>
-          </Col>
-          <Col span={8} className={styles.infoParam}>
-            Balance:
-            <div className={'param-value'}>
-              {currency_info.symbol}
-              {amount}
-            </div>
-          </Col>
-          <Col span={8} className={styles.infoParam}>
-            Currency: <div className={'param-value'}>{currency_info.code}</div>
-          </Col>
-        </Row>
-        <Row className={styles.row}>
-          <Col span={8}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-              }}
-            >
-              <Button type="primary">
-                <Link to="/new-payment">Make Payment</Link>
-              </Button>
-              <Button type="primary" onClick={() => show()}>
-                Account Details
-              </Button>
-              <Modal title="Account details" footer={null} {...modalProps}>
-                <Descriptions bordered column={2} layout="vertical">
-                  {renderFields(bank_deposit)}
-                </Descriptions>
-              </Modal>
-            </div>
-          </Col>
-        </Row>
-        <Row className={styles.row}>
+      <Card
+        style={{
+          minWidth: '260px',
+        }}
+        title={
+          <AccountCardHeader
+            number={number}
+            amount={amount}
+            currencyInfo={currency_info}
+          />
+        }
+        bodyStyle={{ padding: '16px 18px' }}
+        tabList={tabList}
+        activeTabKey={activeTabKey}
+        onTabChange={key => setActiveTabKey(key)}
+      >
+        {renderTab(activeTabKey)}
+        {/* <div className={styles.name}>{name}</div> */}
+
+        {/* <Row gutter={[16, 16]}>
           <Col span={24}>
             <Collapse expandIconPosition="right">
               <Collapse.Panel
@@ -95,8 +158,8 @@ const Account = ({ account }) => {
               </Collapse.Panel>
             </Collapse>
           </Col>
-        </Row>
-      </UiCard>
+        </Row> */}
+      </Card>
     </List.Item>
   );
 };
