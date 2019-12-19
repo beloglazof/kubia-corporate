@@ -192,6 +192,13 @@ class HorizontalDark extends Component {
                 {/*</li>*/}
                 <li className="gx-user-nav">
                   {/* <UserInfo /> */}
+                  <span style={{
+                    fontSize: '0.8em'
+                  }}>
+                    {this.props.user.first_name}
+                    &nbsp;
+                    {this.props.user.last_name}
+                  </span>
                   <Button icon="logout" type="link" onClick={() => this.props.signOut()} style={{color: '#e0e0e0'}}>
                     Sign out
                   </Button>
@@ -231,9 +238,9 @@ class HorizontalDark extends Component {
   }
 }
 
-const mapStateToProps = ({ themeSettings }) => {
+const mapStateToProps = ({ themeSettings, user }) => {
   const { locale, navCollapsed } = themeSettings;
-  return { locale, navCollapsed };
+  return { locale, navCollapsed, user };
 };
 export default connect(mapStateToProps, {
   toggleCollapsedNav,

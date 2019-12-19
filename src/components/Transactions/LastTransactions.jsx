@@ -9,16 +9,16 @@ import { useHistory } from 'react-router-dom';
 
 const lastTransactionsNumber = 5;
 
-const LastTransactions = () => {
-  const [transactionsResponse] = useAsync(getTransactions);
+const LastTransactions = ({ data }) => {
+  // const [transactionsResponse] = useAsync(getTransactions);
   const [lastTransactions, setLastTransactions] = useState([]);
   useEffect(() => {
-    if (transactionsResponse) {
-      const transactions = transactionsResponse.results;
+    if (data) {
+      const transactions = data.results;
       const last = take(transactions, lastTransactionsNumber);
       setLastTransactions(last);
     }
-  }, [transactionsResponse]);
+  }, [data]);
 
   const renderAmount = (amount, record) => {
     const currency = record.currency.symbol;
@@ -42,44 +42,46 @@ const LastTransactions = () => {
     history.push('/transactions');
   };
   return (
-    <Table
-      loading={isLoading}
-      dataSource={lastTransactions}
-      rowKey="id"
-      size="small"
-      pagination={false}
-      footer={() =>
+    <>
+      <Table
+        loading={isLoading}
+        dataSource={lastTransactions}
+        rowKey="id"
+        size="small"
+        pagination={false}
+        bordered
+      >
+        <Column
+          title="Amount"
+          dataIndex="amount"
+          key="amount"
+          render={renderAmount}
+        />
+        <Column
+          title="Creation date"
+          dataIndex="creationDate"
+          key="creationDate"
+          render={renderDate}
+          ellipsis
+        />
+
+        <Column
+          title="From/To"
+          dataIndex="linked_account"
+          key="linkedAccount"
+          render={renderFromField}
+        />
+        <Column title="Type" dataIndex="type" key="type" />
+      </Table>
+      <div style={{ display: 'flex' }}>
         <Button
-          type="primary"
+          style={{ marginTop: '1em', marginLeft: 'auto', width: '20%' }}
           onClick={handleMoreClick}
-          block
         >
           More
         </Button>
-      }
-      bordered
-    >
-      <Column
-        title="Amount"
-        dataIndex="amount"
-        key="amount"
-        render={renderAmount}
-      />
-      <Column
-        title="Creation date"
-        dataIndex="creationDate"
-        key="creationDate"
-        render={renderDate}
-      />
-
-      <Column
-        title="From/To"
-        dataIndex="linked_account"
-        key="linkedAccount"
-        render={renderFromField}
-      />
-      <Column title="Type" dataIndex="type" key="type" />
-    </Table>
+      </div>
+    </>
   );
 };
 

@@ -70,6 +70,7 @@ const PaymentDetails = ({ form, details, gotoNextStep, onSubmit }) => {
   const { total: totalFee } = fees;
   const totalAmount = totalFee + amount;
   const fields = { ...requestFields, totalFee, totalAmount };
+
   const [submitState, setSubmitState] = useState('pending');
   const handleSubmitClick = async () => {
     // -> request otp

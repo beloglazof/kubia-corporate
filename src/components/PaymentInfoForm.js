@@ -8,7 +8,7 @@ import {
   getBeneficiary,
   getPeople,
   getWallexInfo,
-  uploadInvoice
+  uploadInvoice,
 } from '../api';
 import { submitButtonLayoutProps } from '../routes/Pay';
 import PropTypes from 'prop-types';
@@ -20,7 +20,7 @@ const PaymentTypeField = ({ form }) => {
   return (
     <Form.Item label="Payment Type">
       {getFieldDecorator('paymentType', {
-        rules: [{ required: true, message: 'Please choose payment type!' }]
+        rules: [{ required: true, message: 'Please choose payment type!' }],
       })(
         <Radio.Group>
           <Radio.Button value="internal">Internal</Radio.Button>
@@ -32,7 +32,7 @@ const PaymentTypeField = ({ form }) => {
 };
 
 PaymentTypeField.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const accountToOption = account => {
@@ -40,13 +40,13 @@ const accountToOption = account => {
   const title = `${number} | Balance: S$ ${amount}`;
   return {
     title,
-    value: account.id
+    value: account.id,
   };
 };
 const AccountField = ({ accounts, form }) => {
   const options = accounts.map(accountToOption);
   const selectProps = {
-    placeholder: 'Select account'
+    placeholder: 'Select account',
   };
   return (
     <SelectItem
@@ -62,7 +62,7 @@ const AccountField = ({ accounts, form }) => {
 
 AccountField.propType = {
   accounts: PropTypes.array.isRequired,
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const AmountField = ({ balance, form, currency }) => {
@@ -91,8 +91,8 @@ const AmountField = ({ balance, form, currency }) => {
         rules: [
           { required: true, message: 'Please enter amount!' },
           { validator: greaterThanZero },
-          { validator: lessOrEqualBalance }
-        ]
+          { validator: lessOrEqualBalance },
+        ],
       })(
         <Input
           pattern="[0-9]*"
@@ -107,7 +107,7 @@ const AmountField = ({ balance, form, currency }) => {
 
 AmountField.propType = {
   balance: PropTypes.number.isRequired,
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const SelectBeneficiary = ({ form, beneficiaries }) => {
@@ -120,7 +120,7 @@ const SelectBeneficiary = ({ form, beneficiaries }) => {
         ''} ${bankAccount.accountNumber || ''}`;
       const option = {
         value: id,
-        title
+        title,
       };
 
       return option;
@@ -133,7 +133,7 @@ const SelectBeneficiary = ({ form, beneficiaries }) => {
         style={{
           padding: '4px 8px 6px',
           cursor: 'pointer',
-          borderBottom: '1px solid rgba(224, 224, 224, 0.25)'
+          borderBottom: '1px solid rgba(224, 224, 224, 0.25)',
         }}
         onMouseDown={e => e.preventDefault()}
         onClick={() => history.push('/beneficiaries/add')}
@@ -146,7 +146,7 @@ const SelectBeneficiary = ({ form, beneficiaries }) => {
 
   const selectProps = {
     placeholder: 'Select beneficiary',
-    dropdownRender
+    dropdownRender,
   };
 
   return (
@@ -162,7 +162,7 @@ const SelectBeneficiary = ({ form, beneficiaries }) => {
 };
 
 SelectBeneficiary.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const SelectLinkedUser = ({ form, people }) => {
@@ -171,14 +171,14 @@ const SelectLinkedUser = ({ form, people }) => {
 
     const option = {
       value: id,
-      title: name
+      title: name,
     };
 
     return option;
   });
 
   const selectProps = {
-    placeholder: 'Select user'
+    placeholder: 'Select user',
   };
 
   return (
@@ -194,35 +194,48 @@ const SelectLinkedUser = ({ form, people }) => {
 };
 
 SelectLinkedUser.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const PaymentPurpose = ({ form, purposes = [] }) => {
   const options = purposes.map(purpose => ({
     value: purpose.name,
-    title: purpose.description
+    title: purpose.description,
   }));
+  const purpose = form.getFieldValue('purposeOfTransfer');
+  const showDescriptionField = purpose && purpose.toLowerCase() === 'oth';
   return (
-    <SelectItem
-      form={form}
-      label="Payment Purpose"
-      id="purposeOfTransfer"
-      placeholder="Select purpose"
-      options={options}
-      required
-    />
+    <>
+      <SelectItem
+        form={form}
+        label="Payment Purpose"
+        id="purposeOfTransfer"
+        placeholder="Select purpose"
+        options={options}
+        required
+      />
+      {showDescriptionField && (
+        <InputItem
+          form={form}
+          label="Purpose Description"
+          id="purposeOfTransferDescription"
+          placeholder="Input description"
+          required
+        />
+      )}
+    </>
   );
 };
 
 PaymentPurpose.propTypes = {
   form: PropTypes.object.isRequired,
-  purposes: PropTypes.array.isRequired
+  purposes: PropTypes.array.isRequired,
 };
 
 const FundingSource = ({ form, sources = [] }) => {
   const options = sources.map(purpose => ({
     value: purpose.name,
-    title: purpose.description
+    title: purpose.description,
   }));
   return (
     <SelectItem
@@ -238,7 +251,7 @@ const FundingSource = ({ form, sources = [] }) => {
 
 FundingSource.propTypes = {
   form: PropTypes.object.isRequired,
-  sources: PropTypes.array.isRequired
+  sources: PropTypes.array.isRequired,
 };
 
 const PaymentReference = ({ form }) => (
@@ -251,7 +264,7 @@ const PaymentReference = ({ form }) => (
 );
 
 PaymentReference.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const UploadInvoice = ({ form, setFileId }) => {
@@ -278,7 +291,7 @@ const UploadInvoice = ({ form, setFileId }) => {
       {form.getFieldDecorator('invoice', {
         valuePropName: 'fileList',
         getValueFromEvent: normFile,
-        rules: [{ required: true, message: 'Please upload invoice' }]
+        rules: [{ required: true, message: 'Please upload invoice' }],
       })(
         <Upload.Dragger name="files" customRequest={upload}>
           <p className="ant-upload-drag-icon">
@@ -297,7 +310,7 @@ const UploadInvoice = ({ form, setFileId }) => {
 };
 
 UploadInvoice.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const NoteField = ({ form }) => {
@@ -310,7 +323,7 @@ const NoteField = ({ form }) => {
 };
 
 NoteField.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 const PaymentInfoForm = ({
@@ -319,7 +332,7 @@ const PaymentInfoForm = ({
   sendInternalRequest,
   setPaymentType,
   setFileId,
-  submitButtonLayoutProps
+  submitButtonLayoutProps,
 }) => {
   const { getFieldsValue, getFieldValue } = form;
 
@@ -344,19 +357,21 @@ const PaymentInfoForm = ({
   const [people] = useAsync(getPeople, []);
 
   const [loading, setLoading] = useState(false);
-  const handleCreateClick = async () => {
+  const handleCreateClick = () => {
     setLoading(true);
-    const values = getFieldsValue();
-    if (paymentType === 'internal') {
-      const { amount, account, linkedUser, note } = values;
-      const user = people.find(u => u.id === linkedUser);
-      const userId = user.id;
-      await sendInternalRequest(amount, account, userId, note);
-    } else if (paymentType === 'remittance') {
-      await getDetails(values);
-    } else {
-      console.error('Unknown payment type');
-    }
+    form.validateFields(async (errors, values) => {
+      if (errors) return;
+      if (paymentType === 'internal') {
+        const { amount, account, linkedUser, note } = values;
+        const user = people.find(u => u.id === linkedUser);
+        const userId = user.id;
+        await sendInternalRequest(amount, account, userId, note);
+      } else if (paymentType === 'remittance') {
+        await getDetails(values);
+      } else {
+        console.error('Unknown payment type');
+      }
+    });
     setLoading(false);
   };
 
@@ -420,7 +435,7 @@ const PaymentInfoForm = ({
 PaymentInfoForm.propTypes = {
   form: PropTypes.object.isRequired,
   setPaymentType: PropTypes.func.isRequired,
-  getDetails: PropTypes.func.isRequired
+  getDetails: PropTypes.func.isRequired,
 };
 
 export default PaymentInfoForm;
