@@ -202,15 +202,28 @@ const PaymentPurpose = ({ form, purposes = [] }) => {
     value: purpose.name,
     title: purpose.description,
   }));
+  const purpose = form.getFieldValue('purposeOfTransfer');
+  const showDescriptionField = purpose && purpose.toLowerCase() === 'oth';
   return (
-    <SelectItem
-      form={form}
-      label="Payment Purpose"
-      id="purposeOfTransfer"
-      placeholder="Select purpose"
-      options={options}
-      required
-    />
+    <>
+      <SelectItem
+        form={form}
+        label="Payment Purpose"
+        id="purposeOfTransfer"
+        placeholder="Select purpose"
+        options={options}
+        required
+      />
+      {showDescriptionField && (
+        <InputItem
+          form={form}
+          label="Purpose Description"
+          id="purposeOfTransferDescription"
+          placeholder="Input description"
+          required
+        />
+      )}
+    </>
   );
 };
 
