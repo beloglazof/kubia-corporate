@@ -9,16 +9,16 @@ import { useHistory } from 'react-router-dom';
 
 const lastTransactionsNumber = 5;
 
-const LastTransactions = () => {
-  const [transactionsResponse] = useAsync(getTransactions);
+const LastTransactions = ({ data }) => {
+  // const [transactionsResponse] = useAsync(getTransactions);
   const [lastTransactions, setLastTransactions] = useState([]);
   useEffect(() => {
-    if (transactionsResponse) {
-      const transactions = transactionsResponse.results;
+    if (data) {
+      const transactions = data.results;
       const last = take(transactions, lastTransactionsNumber);
       setLastTransactions(last);
     }
-  }, [transactionsResponse]);
+  }, [data]);
 
   const renderAmount = (amount, record) => {
     const currency = record.currency.symbol;
@@ -48,15 +48,11 @@ const LastTransactions = () => {
       rowKey="id"
       size="small"
       pagination={false}
-      footer={() =>
-        <Button
-          type="primary"
-          onClick={handleMoreClick}
-          block
-        >
+      footer={() => (
+        <Button type="primary" onClick={handleMoreClick} block>
           More
         </Button>
-      }
+      )}
       bordered
     >
       <Column

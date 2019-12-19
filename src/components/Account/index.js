@@ -37,7 +37,8 @@ const Account = ({ account }) => {
   const { first_name, last_name } = user;
   const name = first_name && last_name && `${first_name} ${last_name}`;
 
-  const { number, amount, currency_info, id, bank_deposit } = account;
+  const { number, amount, currency_info, id, bank_deposit, transactions } = account;
+  
   const { modalProps, show } = useModal({
     defaultVisible: false,
   });
@@ -50,7 +51,7 @@ const Account = ({ account }) => {
             Number: <div className={'param-value'}>{number}</div>
           </Col>
           <Col span={8} className={styles.infoParam}>
-            Balance:{' '}
+            Balance:
             <div className={'param-value'}>
               {currency_info.symbol}
               {amount}
@@ -90,7 +91,7 @@ const Account = ({ account }) => {
                 header="Last transactions"
                 className={styles.panel}
               >
-                <LastTransactions />
+                <LastTransactions data={transactions} />
               </Collapse.Panel>
             </Collapse>
           </Col>
