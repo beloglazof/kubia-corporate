@@ -32,11 +32,8 @@ const renderFields = (fieldsObj = {}) => {
   return mapped;
 };
 
-const AccountCardHeader = ({ number, amount, currencyInfo }) => (
-  <Row
-    style={{ marginBottom: '.4em' }}
-    gutter={[16, 16]}
-  >
+const AccountCardHeader = ({ number, amount, currencyInfo, id }) => (
+  <Row style={{ marginBottom: '.4em' }} gutter={[16, 16]}>
     <Col xs={24}>
       <div>
         <span
@@ -73,7 +70,9 @@ const AccountCardHeader = ({ number, amount, currencyInfo }) => (
     </Col>
     <Col xs={24}>
       <Button type="primary" key="payment" block>
-        <Link to="/new-payment">Make Payment</Link>
+        <Link to={{ pathname: '/new-payment', state: { accountId: id } }}>
+          Make Payment
+        </Link>
       </Button>
     </Col>
 
@@ -137,6 +136,7 @@ const Account = ({ account }) => {
             number={number}
             amount={amount}
             currencyInfo={currency_info}
+            id={id}
           />
         }
         bodyStyle={{ padding: '16px 18px' }}
