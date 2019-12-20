@@ -12,7 +12,7 @@ import {
 } from '../api';
 import { submitButtonLayoutProps } from '../routes/Pay';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const PaymentTypeField = ({ form }) => {
   const { getFieldDecorator } = form;
@@ -20,6 +20,7 @@ const PaymentTypeField = ({ form }) => {
   return (
     <Form.Item label="Payment Type">
       {getFieldDecorator('paymentType', {
+        initialValue: 'internal',
         rules: [{ required: true, message: 'Please choose payment type!' }],
       })(
         <Radio.Group>
@@ -35,16 +36,17 @@ PaymentTypeField.propTypes = {
   form: PropTypes.object.isRequired,
 };
 
-const accountToOption = account => {
-  const { number, amount } = account;
-  const title = `${number} | Balance: S$ ${amount}`;
-  return {
-    title,
-    value: account.id,
-  };
-};
 const AccountField = ({ accounts, form }) => {
-  const options = accounts.map(accountToOption);
+  let location = useLocation();
+  const fromAccountId = location.state?.accountId;
+  const options = accounts.map(account => {
+    const { number, amount } = account;
+    const title = `${number} | Balance: S$ ${amount}`;
+    return {
+      title,
+      value: account.id,
+    };
+  });
   const selectProps = {
     placeholder: 'Select account',
   };
@@ -56,6 +58,7 @@ const AccountField = ({ accounts, form }) => {
       options={options}
       required
       selectProps={selectProps}
+      initialValue={fromAccountId}
     />
   );
 };
@@ -358,8 +361,8 @@ const PaymentInfoForm = ({
 
   const [loading, setLoading] = useState(false);
   const handleCreateClick = () => {
-    setLoading(true);
     form.validateFields(async (errors, values) => {
+      setLoading(true);
       if (errors) return;
       if (paymentType === 'internal') {
         const { amount, account, linkedUser, note } = values;
@@ -371,8 +374,8 @@ const PaymentInfoForm = ({
       } else {
         console.error('Unknown payment type');
       }
+      setLoading(false);
     });
-    setLoading(false);
   };
 
   const [beneficiaries] = useAsync(getBeneficiary, []);
@@ -390,6 +393,11 @@ const PaymentInfoForm = ({
       <PaymentTypeField form={form} />
       {paymentType && (
         <>
+          <AccountField
+            form={form}
+            accounts={filteredAccounts}
+            paymentType={paymentType}
+          />
           {paymentType === 'internal' && (
             <SelectLinkedUser form={form} people={people} />
           )}
@@ -397,11 +405,7 @@ const PaymentInfoForm = ({
             <SelectBeneficiary form={form} beneficiaries={beneficiaries} />
           )}
           {/* <PaymentReference form={form} /> */}
-          <AccountField
-            form={form}
-            accounts={filteredAccounts}
-            paymentType={paymentType}
-          />
+
           {paymentType === 'remittance' && (
             <FundingSource form={form} sources={fundingSource} />
           )}
@@ -417,7 +421,7 @@ const PaymentInfoForm = ({
             </>
           )}
           <NoteField form={form} />
-          <Form.Item {...submitButtonLayoutProps}>
+          <Form.Item style={{ padding: '0 16px' }} {...submitButtonLayoutProps}>
             <Button
               type="primary"
               onClick={handleCreateClick}

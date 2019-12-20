@@ -51,10 +51,10 @@ const PaymentDetails = ({ form, details, gotoNextStep, onSubmit }) => {
   const visibleRequestFieldSet = new Set([
     'sellCurrency',
     'buyCurrency',
-    'expiresAt'
+    'expiresAt',
   ]);
   const { request, fees } = details;
-  const { sellCurrency, buyCurrency, totalAmount: amount } = request;
+  const { sellCurrency, buyCurrency, sellAmount } = request;
   if (sellCurrency !== buyCurrency) {
     visibleRequestFieldSet.add('buyAmount');
     visibleRequestFieldSet.add('sellAmount');
@@ -68,7 +68,7 @@ const PaymentDetails = ({ form, details, gotoNextStep, onSubmit }) => {
     );
 
   const { total: totalFee } = fees;
-  const totalAmount = totalFee + amount;
+  const totalAmount = totalFee + sellAmount;
   const fields = { ...requestFields, totalFee, totalAmount };
 
   const [submitState, setSubmitState] = useState('pending');

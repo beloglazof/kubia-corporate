@@ -7,7 +7,7 @@ import {
   Result,
   Row,
   Steps,
-  PageHeader
+  PageHeader,
 } from 'antd';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -19,7 +19,7 @@ import {
   withdrawal,
   getCompanies,
   getBeneficiary,
-  submitRemittance
+  submitRemittance,
 } from '../../api';
 import getRandomString from '../../util/getRandomString';
 import PaymentInfoForm from '../../components/PaymentInfoForm';
@@ -33,14 +33,14 @@ const formLayoutProps = {
     xs: { span: 8 },
     sm: { span: 8 },
     md: { span: 6 },
-    lg: { span: 4 }
+    lg: { span: 4 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 12 },
-    md: { span: 12 }
+    md: { span: 12 },
   },
-  labelAlign: 'left'
+  labelAlign: 'left',
 };
 
 const submitButtonLayoutProps = {
@@ -48,8 +48,8 @@ const submitButtonLayoutProps = {
     xs: { offset: formLayoutProps.labelCol.xs.span },
     sm: { offset: formLayoutProps.labelCol.sm.span },
     md: { offset: formLayoutProps.labelCol.md.span },
-    lg: { offset: formLayoutProps.labelCol.lg.span }
-  }
+    lg: { offset: formLayoutProps.labelCol.lg.span },
+  },
 };
 
 const NewPayment = ({ form, history }) => {
@@ -67,7 +67,7 @@ const NewPayment = ({ form, history }) => {
       account_id,
       user_id,
       description,
-      idempotency
+      idempotency,
     };
 
     try {
@@ -84,14 +84,14 @@ const NewPayment = ({ form, history }) => {
   const handleSubmit = async ({ otp }) => {
     // sendPaymentRequest(values, paymentType, history);
     const {
-      request: { quoteId: quote_id }
+      request: { quoteId: quote_id },
     } = paymentDetails;
     const { purposeOfTransfer, fundingSource } = infoFieldValues;
     const submitted = await submitRemittance({
       purposeOfTransfer,
       quote_id,
       fundingSource,
-      otp
+      otp,
     });
     if (submitted) {
       gotoNextStep();
@@ -101,7 +101,7 @@ const NewPayment = ({ form, history }) => {
   const { current, gotoStep, stepsProps, formProps } = useStepsForm({
     submit: handleSubmit,
     form,
-    total: 3
+    total: 3,
   });
 
   const [paymentDetails, setPaymentDetails] = useState();
@@ -115,7 +115,7 @@ const NewPayment = ({ form, history }) => {
     const {
       amount,
       beneficiary: beneficiary_id,
-      account: account_id
+      account: account_id,
     } = fieldValues;
     const companies = await getCompanies();
     const company_id = companies[0].id;
@@ -132,7 +132,7 @@ const NewPayment = ({ form, history }) => {
       company_id,
       buyCurrency,
       sellCurrency,
-      fixedSide: 'buy'
+      fixedSide: 'buy',
     };
     // console.log(beneficiary);
     // console.log(params);
@@ -163,6 +163,7 @@ const NewPayment = ({ form, history }) => {
             {...formLayoutProps}
             {...formProps}
             style={{ marginTop: '1em' }}
+            hideRequiredMark
           >
             {current === 0 && (
               <PaymentInfoForm
