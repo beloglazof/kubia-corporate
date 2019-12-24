@@ -76,7 +76,7 @@ const BeneficiaryInfoStepForm = ({ form, fields, submitButtonLayoutProps }) => (
       required
     />
     {renderFields(fields, form)}
-    <Form.Item {...submitButtonLayoutProps}>
+    <Form.Item >
       <Button type="primary" htmlType="submit">
         Submit
       </Button>

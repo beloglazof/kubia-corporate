@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 const AccountSelect = ({ accounts, form }) => {
   let location = useLocation();
-  const fromAccountId = location.state?.accountId;
+  const fromAccountId = location.state?.fromAccountId;
   const options = accounts.map(account => {
     const { number, amount, currency_info } = account;
     const { symbol } = currency_info;
@@ -15,6 +15,18 @@ const AccountSelect = ({ accounts, form }) => {
       value: account.id,
     };
   });
+  const setInitialValue = () => {
+    if (fromAccountId) {
+      return fromAccountId;
+    }
+
+    if (options.length === 1) {
+      return options[0].value;
+    }
+
+    return;
+  };
+  const initialValue = setInitialValue();
   const selectProps = {
     placeholder: 'Select account',
   };
@@ -26,7 +38,7 @@ const AccountSelect = ({ accounts, form }) => {
       options={options}
       required
       selectProps={selectProps}
-      initialValue={fromAccountId}
+      initialValue={initialValue}
     />
   );
 };

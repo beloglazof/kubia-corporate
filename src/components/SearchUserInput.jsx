@@ -21,7 +21,7 @@ const PhoneCodeSelector = ({ form }) => {
   return getFieldDecorator('phoneCode', {
     initialValue: SINGAPORE_CALLING_CODE
   })(
-    <Select style={{ width: '70px' }}>
+    <Select showSearch style={{ width: '70px' }}>
       {countryCodes.map(code => {
         return (
           <Option value={code} key={code}>
@@ -83,7 +83,7 @@ const SearchUserInput = ({
   };
 
   return (
-    <Form.Item label={label} extra={user ? user.name : null} {...formItemProps}>
+    <Form.Item extra={user ? user.name : null} {...formItemProps}>
       {getFieldDecorator('phone', {
         rules: [
           { required: true, message: 'Please input phone number!' },

@@ -75,10 +75,9 @@ const AccountCardHeader = ({ number, amount, currencyInfo, id }) => {
         <Button
           type="primary"
           key="payment"
-          disabled={makePaymentButtonDisabled}
           block
         >
-          <Link to={{ pathname: '/new-payment', state: { accountId: id } }}>
+          <Link to={{ pathname: '/payments/new', state: { fromAccountId: id } }}>
             Make Payment
           </Link>
         </Button>

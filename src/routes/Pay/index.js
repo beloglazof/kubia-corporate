@@ -158,6 +158,8 @@ const PayPage = ({ form, history }) => {
   };
 
   let { url } = useRouteMatch();
+  let location = useLocation();
+  const fromAccountId = location.state?.fromAccountId;
   return (
     <Row>
       <Col span={24}>
@@ -192,7 +194,9 @@ const PayPage = ({ form, history }) => {
                 type="primary"
                 size="large"
                 style={typeButtonStyle}
-                onClick={() => history.push(`${url}/internal`)}
+                onClick={() =>
+                  history.push(`${url}/internal`, { fromAccountId })
+                }
               >
                 Internal
               </Button>
@@ -202,7 +206,9 @@ const PayPage = ({ form, history }) => {
                 type="primary"
                 size="large"
                 style={typeButtonStyle}
-                onClick={() => history.push(`${url}/remittance`)}
+                onClick={() =>
+                  history.push(`${url}/remittance`, { fromAccountId })
+                }
               >
                 Remittance
               </Button>

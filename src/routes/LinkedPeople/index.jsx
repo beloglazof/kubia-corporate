@@ -7,7 +7,7 @@ import {
   Row,
   Table,
   message,
-  PageHeader
+  PageHeader,
 } from 'antd';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -15,6 +15,7 @@ import { addPeople, deletePeople, getPeople } from '../../api';
 import InputItem from '../../components/InputItem';
 import SearchUserInput from '../../components/SearchUserInput';
 import useAsync from '../../hooks/useAsync';
+import TopTitle from '../../components/TopTitle';
 
 const DeleteButton = ({ peopleId, handleDelete }) => {
   const handleClick = () => {
@@ -36,7 +37,7 @@ const DeleteButton = ({ peopleId, handleDelete }) => {
 
 DeleteButton.propTypes = {
   peopleId: PropTypes.number.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired,
 };
 
 const LinkedPeopleTable = ({ people, handleDelete }) => {
@@ -48,8 +49,8 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
       key: 'phone',
       render: (text, record) => (
         <DeleteButton peopleId={record.id} handleDelete={handleDelete} />
-      )
-    }
+      ),
+    },
   ];
   return (
     <Table
@@ -65,48 +66,51 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
 
 LinkedPeopleTable.propTypes = {
   people: PropTypes.array.isRequired,
-  handleDelete: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired,
 };
 
 const AddUserForm = ({ form, handleAdd }) => {
   const [foundUser, setFoundUser] = useState({});
   const name = form.getFieldValue('name');
   const handleAddClick = () => {
-    form.validateFields(async (errors, values) => {
-      if (!errors) {
-        const addingSuccess = await handleAdd({
-          ...foundUser,
-          name: values.name,
-          userId: foundUser.id
-        });
-        if (addingSuccess) {
-          form.resetFields();
-          setFoundUser(null);
-        } else {
-          message.error('User already added');
-        }
+    form.validateFields((errors, values) => {
+      if (errors) {
+        return;
       }
+      handleAdd({
+        ...foundUser,
+        name: values.name,
+        userId: foundUser?.id,
+      });
+
+      form.resetFields();
+      setFoundUser(null);
     });
   };
 
   const layoutProps = {
-    labelCol: {
-      xs: { span: 6 },
-      sm: { span: 5 },
-      md: { span: 4 },
-      lg: { span: 4 }
-    },
+    // labelCol: {
+    //   xs: { span: 6 },
+    //   sm: { span: 5 },
+    //   md: { span: 4 },
+    //   lg: { span: 4 }
+    // },
     wrapperCol: { xs: { span: 14 } },
-    labelAlign: 'left'
+    labelAlign: 'left',
+    layout: 'vertical',
   };
 
-  const buttonLayoutProps = {
-    wrapperCol: { xs: { offset: layoutProps.labelCol.xs.span } }
-  };
+  // const buttonLayoutProps = {
+  //   wrapperCol: { xs: { offset: layoutProps.labelCol.xs.span } }
+  // };
   return (
     <>
       <h2>Link new user</h2>
-      <Form style={{ paddingLeft: '1em' }} {...layoutProps} hideRequiredMark>
+      <Form
+        style={{ paddingLeft: '1em', marginTop: '1em' }}
+        {...layoutProps}
+        hideRequiredMark
+      >
         <SearchUserInput form={form} setFoundUser={setFoundUser} />
         {foundUser && (
           <>
@@ -117,7 +121,7 @@ const AddUserForm = ({ form, handleAdd }) => {
               placeholder="John (SMM)"
               required
             />
-            <Form.Item {...buttonLayoutProps}>
+            <Form.Item>
               <Button type="primary" disabled={!name} onClick={handleAddClick}>
                 Add
               </Button>
@@ -131,17 +135,19 @@ const AddUserForm = ({ form, handleAdd }) => {
 
 AddUserForm.propTypes = {
   form: PropTypes.object.isRequired,
-  handleAdd: PropTypes.func.isRequired
+  handleAdd: PropTypes.func.isRequired,
 };
 const WrappedAddUserForm = Form.create()(AddUserForm);
 
 const LinkedPeople = ({ history }) => {
   const [people, setPeople] = useAsync(getPeople, []);
   const handleAdd = async userInfo => {
-    const userAdded = people.find(user => user.phone === userInfo.phone);
+    const userAdded = await people.find(user => user.phone === userInfo.phone);
     if (userAdded) {
+      message.error('User already added');
       return false;
     }
+
     await addPeople(userInfo);
     const updatedPeople = await getPeople();
     setPeople(updatedPeople);
@@ -156,11 +162,7 @@ const LinkedPeople = ({ history }) => {
   return (
     <Row>
       <Col span={24}>
-        <PageHeader
-          title="Linked People"
-          style={{ marginBottom: '1em' }}
-          onBack={() => history.goBack()}
-        />
+        <TopTitle title="Linked People" backButton={false} />
         <div className="page-content-wrapper">
           <Row>
             <Col span={24}>
