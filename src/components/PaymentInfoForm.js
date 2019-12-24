@@ -10,265 +10,22 @@ import {
   getWallexInfo,
   uploadInvoice,
 } from '../api';
-import { submitButtonLayoutProps } from '../routes/Pay';
 import PropTypes from 'prop-types';
 import { useHistory, useLocation } from 'react-router-dom';
 
-const PaymentTypeField = ({ form }) => {
-  const { getFieldDecorator } = form;
 
-  return (
-    <Form.Item label="Payment Type">
-      {getFieldDecorator('paymentType', {
-        initialValue: 'internal',
-        rules: [{ required: true, message: 'Please choose payment type!' }],
-      })(
-        <Radio.Group>
-          <Radio.Button value="internal">Internal</Radio.Button>
-          <Radio.Button value="remittance">Remittance</Radio.Button>
-        </Radio.Group>
-      )}
-    </Form.Item>
-  );
-};
 
-PaymentTypeField.propTypes = {
-  form: PropTypes.object.isRequired,
-};
 
-const AccountField = ({ accounts, form }) => {
-  let location = useLocation();
-  const fromAccountId = location.state?.accountId;
-  const options = accounts.map(account => {
-    const { number, amount } = account;
-    const title = `${number} | Balance: S$ ${amount}`;
-    return {
-      title,
-      value: account.id,
-    };
-  });
-  const selectProps = {
-    placeholder: 'Select account',
-  };
-  return (
-    <SelectItem
-      form={form}
-      label="Account"
-      id="account"
-      options={options}
-      required
-      selectProps={selectProps}
-      initialValue={fromAccountId}
-    />
-  );
-};
 
-AccountField.propType = {
-  accounts: PropTypes.array.isRequired,
-  form: PropTypes.object.isRequired,
-};
 
-const AmountField = ({ balance, form, currency }) => {
-  const { getFieldDecorator } = form;
-  const greaterThanZero = (rule, value, callback) => {
-    if (value > 0) {
-      return callback();
-    }
-    callback('Amount must be greater than zero');
-  };
-  const lessOrEqualBalance = (rule, value, callback) => {
-    if (value > balance) {
-      return callback("Amount can't be more than balance");
-    }
-    callback();
-  };
-  const [disabled, setDisabled] = useState(true);
-  useEffect(() => {
-    if (balance) {
-      setDisabled(false);
-    }
-  }, [balance]);
-  return (
-    <Form.Item label="Amount">
-      {getFieldDecorator('amount', {
-        rules: [
-          { required: true, message: 'Please enter amount!' },
-          { validator: greaterThanZero },
-          { validator: lessOrEqualBalance },
-        ],
-      })(
-        <Input
-          pattern="[0-9]*"
-          inputMode="numeric"
-          addonBefore={currency}
-          disabled={disabled}
-        />
-      )}
-    </Form.Item>
-  );
-};
 
-AmountField.propType = {
-  balance: PropTypes.number.isRequired,
-  form: PropTypes.object.isRequired,
-};
 
-const SelectBeneficiary = ({ form, beneficiaries }) => {
-  const options = beneficiaries
-    .filter(counterparty => counterparty.bankAccount)
-    .map(beneficiary => {
-      const { nickname, bankAccount, id, companyName } = beneficiary;
 
-      const title = `${nickname || ''} ${companyName ||
-        ''} ${bankAccount.accountNumber || ''}`;
-      const option = {
-        value: id,
-        title,
-      };
 
-      return option;
-    });
-  let history = useHistory();
-  const dropdownRender = menu => (
-    <div>
-      <div
-        className="hoverable"
-        style={{
-          padding: '4px 8px 6px',
-          cursor: 'pointer',
-          borderBottom: '1px solid rgba(224, 224, 224, 0.25)',
-        }}
-        onMouseDown={e => e.preventDefault()}
-        onClick={() => history.push('/beneficiaries/add')}
-      >
-        <Icon type="plus" /> Add beneficiary
-      </div>
-      {menu}
-    </div>
-  );
 
-  const selectProps = {
-    placeholder: 'Select beneficiary',
-    dropdownRender,
-  };
 
-  return (
-    <SelectItem
-      form={form}
-      label="Beneficiary"
-      id="beneficiary"
-      options={options}
-      required
-      selectProps={selectProps}
-    />
-  );
-};
 
-SelectBeneficiary.propTypes = {
-  form: PropTypes.object.isRequired,
-};
 
-const SelectLinkedUser = ({ form, people }) => {
-  const options = people.map(user => {
-    const { id, name } = user;
-
-    const option = {
-      value: id,
-      title: name,
-    };
-
-    return option;
-  });
-
-  const selectProps = {
-    placeholder: 'Select user',
-  };
-
-  return (
-    <SelectItem
-      form={form}
-      label="Linked user"
-      id="linkedUser"
-      options={options}
-      required
-      selectProps={selectProps}
-    />
-  );
-};
-
-SelectLinkedUser.propTypes = {
-  form: PropTypes.object.isRequired,
-};
-
-const PaymentPurpose = ({ form, purposes = [] }) => {
-  const options = purposes.map(purpose => ({
-    value: purpose.name,
-    title: purpose.description,
-  }));
-  const purpose = form.getFieldValue('purposeOfTransfer');
-  const showDescriptionField = purpose && purpose.toLowerCase() === 'oth';
-  return (
-    <>
-      <SelectItem
-        form={form}
-        label="Payment Purpose"
-        id="purposeOfTransfer"
-        placeholder="Select purpose"
-        options={options}
-        required
-      />
-      {showDescriptionField && (
-        <InputItem
-          form={form}
-          label="Purpose Description"
-          id="purposeOfTransferDescription"
-          placeholder="Input description"
-          required
-        />
-      )}
-    </>
-  );
-};
-
-PaymentPurpose.propTypes = {
-  form: PropTypes.object.isRequired,
-  purposes: PropTypes.array.isRequired,
-};
-
-const FundingSource = ({ form, sources = [] }) => {
-  const options = sources.map(purpose => ({
-    value: purpose.name,
-    title: purpose.description,
-  }));
-  return (
-    <SelectItem
-      form={form}
-      label="Funding source"
-      id="fundingSource"
-      placeholder="Select funding source"
-      options={options}
-      required
-    />
-  );
-};
-
-FundingSource.propTypes = {
-  form: PropTypes.object.isRequired,
-  sources: PropTypes.array.isRequired,
-};
-
-const PaymentReference = ({ form }) => (
-  <InputItem
-    form={form}
-    id="paymentRefrence"
-    label="Payment Reference"
-    placeholder="For family"
-  />
-);
-
-PaymentReference.propTypes = {
-  form: PropTypes.object.isRequired,
-};
 
 const UploadInvoice = ({ form, setFileId }) => {
   const normFile = e => {
@@ -316,18 +73,6 @@ UploadInvoice.propTypes = {
   form: PropTypes.object.isRequired,
 };
 
-const NoteField = ({ form }) => {
-  const { getFieldDecorator } = form;
-  return (
-    <Form.Item label="Note">
-      {getFieldDecorator('note')(<Input allowClear />)}
-    </Form.Item>
-  );
-};
-
-NoteField.propTypes = {
-  form: PropTypes.object.isRequired,
-};
 
 const PaymentInfoForm = ({
   form,
@@ -390,37 +135,37 @@ const PaymentInfoForm = ({
   const { fundingSource, purposeOfTransfer } = wallexInfo;
   return (
     <>
-      <PaymentTypeField form={form} />
+      {/* <PaymentType form={form} /> */}
       {paymentType && (
         <>
-          <AccountField
+          {/* <AccountSelect
             form={form}
             accounts={filteredAccounts}
             paymentType={paymentType}
-          />
+          /> */}
           {paymentType === 'internal' && (
-            <SelectLinkedUser form={form} people={people} />
+            {/* <LinkedUserSelect form={form} people={people} /> */}
           )}
           {paymentType === 'remittance' && (
-            <SelectBeneficiary form={form} beneficiaries={beneficiaries} />
+            {/* <BeneficiarySelect form={form} beneficiaries={beneficiaries} /> */}
           )}
           {/* <PaymentReference form={form} /> */}
 
           {paymentType === 'remittance' && (
-            <FundingSource form={form} sources={fundingSource} />
+            {/* <FundingSource form={form} sources={fundingSource} /> */}
           )}
-          <AmountField
+          {/* <AmountField
             form={form}
             balance={balance}
             currency={amountCurrency}
-          />
+          /> */}
           {paymentType === 'remittance' && (
             <>
-              <PaymentPurpose form={form} purposes={purposeOfTransfer} />
+              {/* <PaymentPurpose form={form} purposes={purposeOfTransfer} /> */}
               <UploadInvoice form={form} setFileId={setFileId} />
             </>
           )}
-          <NoteField form={form} />
+          {/* <NoteField form={form} /> */}
           <Form.Item style={{ padding: '0 16px' }} {...submitButtonLayoutProps}>
             <Button
               type="primary"

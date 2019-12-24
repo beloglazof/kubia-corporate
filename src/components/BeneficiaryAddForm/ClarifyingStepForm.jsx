@@ -57,7 +57,7 @@ const ClarifyingStepForm = ({
       <CountrySelect form={form} />
       <BankAccountCountrySelect form={form} />
       <CurrencySelect form={form} extended />
-      <Form.Item {...submitButtonLayoutProps}>
+      <Form.Item>
         <Button type="primary" onClick={handleNext} loading={loading}>
           Next
         </Button>

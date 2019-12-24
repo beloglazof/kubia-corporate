@@ -1,4 +1,4 @@
-import { Button, List, PageHeader } from 'antd';
+import { Button, List } from 'antd';
 import React from 'react';
 import {
   deleteBeneficiary,
@@ -7,6 +7,7 @@ import {
 } from '../../api';
 import BeneficiaryCard from '../../components/BeneficiaryCard';
 import useAsync from '../../hooks/useAsync';
+import TopTitle from '../../components/TopTitle';
 
 const Beneficiaries = ({ history }) => {
   const handleAddClick = () => {
@@ -52,29 +53,30 @@ const Beneficiaries = ({ history }) => {
 
   return (
     <>
-      <PageHeader
-        title="Beneficiaries"
-        style={{ marginBottom: '1em' }}
-        onBack={() => history.goBack()}
-      />
+      <TopTitle title="Beneficiaries" backButton={false} />
       <div className="page-content-wrapper">
-        <Button
-          onClick={handleAddClick}
-          type="primary"
-          style={{ marginBottom: '1em' }}
-        >
-          Add
-        </Button>
+        <div style={{ textAlign: 'right' }}>
+          <Button
+            onClick={handleAddClick}
+            type="primary"
+            style={{ marginBottom: '1em' }}
+            icon="user-add"
+          >
+            Add
+          </Button>
+        </div>
+
         <List
           loading={loading}
           dataSource={loading ? [] : beneficiaries}
           renderItem={renderBeneficiary}
           grid={{
-            gutter: 16,
+            gutter: [32, 16],
             xs: 1,
             md: 2,
             lg: 2,
-            xl: 3,
+            xl: 2,
+            xxl: 3,
           }}
         />
       </div>

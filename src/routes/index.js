@@ -10,12 +10,15 @@ import Settings from './Settings';
 import Beneficiaries from './Beneficiaries';
 import BeneficiaryAddForm from '../components/BeneficiaryAddForm';
 import LinkedPeople from './LinkedPeople';
-import NewPayment from './Pay';
+import PayPage from './Pay';
 import ErrorBoundary from '../components/ErrorBoundary';
+import InternalPayment from './Pay/InternalPayment';
+import RemittancePayment from './Pay/RemittancePayment';
+import SubmitRemittance from './Pay/SubmitRemittance';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
-  { name: 'pay', path: '/new-payment', iconName: 'transaction' },
+  { name: 'Pay', path: '/payments/new', iconName: 'transaction' },
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
@@ -40,11 +43,11 @@ export const renderNavigationItems = () => {
   return navItems.map(renderItem);
 };
 
-const BoundaryRoute = props => {
+export const BoundaryRoute = props => {
   let history = useHistory();
   return (
     <ErrorBoundary history={history}>
-      <Route {...props} />
+      <Route {...props}>{props.children}</Route>
     </ErrorBoundary>
   );
 };
@@ -75,7 +78,21 @@ const App = () => {
       <Switch>
         <Redirect exact from="/" to={firstPagePath} />
         <BoundaryRoute path={`/accounts`} component={Accounts} />
-        <BoundaryRoute path={`/new-payment`} component={NewPayment} />
+        <BoundaryRoute exact path={`/payments/new`} component={PayPage} />
+        <BoundaryRoute
+          exact
+          path={`/payments/new/internal`}
+          component={InternalPayment}
+        />
+        <BoundaryRoute
+          exact
+          path={`/payments/new/remittance`}
+          component={RemittancePayment}
+        />
+        <BoundaryRoute
+          path={`/payments/remittance/requests/:quoteId`}
+          component={SubmitRemittance}
+        />
         <BoundaryRoute path={`/settings`} component={Settings} />
         <BoundaryRoute path={`/transactions`} component={Transactions} />
         <BoundaryRoute

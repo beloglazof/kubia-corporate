@@ -4,6 +4,7 @@ import { useStepsForm } from 'sunflower-antd';
 import { createBeneficiary } from '../../api';
 import BeneficiaryInfoStepForm from './BeneficiaryInfoStepForm';
 import ClarifyingStepForm from './ClarifyingStepForm';
+import TopTitle from '../TopTitle';
 
 const { Step } = Steps;
 
@@ -19,7 +20,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
             if (typeof fieldPattern === 'object') {
               const newAcc = {
                 ...acc,
-                [fieldName]: mapFieldValues(fieldPattern)
+                [fieldName]: mapFieldValues(fieldPattern),
               };
               return newAcc;
             } else {
@@ -38,11 +39,11 @@ const BeneficiaryAddForm = ({ history, form }) => {
         bankAccount: {
           ...structuredFields.bankAccount,
           country: bankAccountCountry,
-          currency
+          currency,
         },
         entityType: 'company',
         nickname,
-        email
+        email,
       };
       // console.log(params);
       const id = await createBeneficiary(params);
@@ -55,7 +56,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
   const { current, gotoStep, stepsProps, formProps, submit } = useStepsForm({
     submit: handleSubmit,
     form,
-    total: 3
+    total: 3,
   });
 
   const [mainFormFields, setMainFormFields] = useState();
@@ -65,36 +66,33 @@ const BeneficiaryAddForm = ({ history, form }) => {
   };
 
   const formLayoutProps = {
-    labelCol: {
-      xs: { span: 6 },
-      sm: { span: 6 }
-    },
+    // labelCol: {
+    //   xs: { span: 6 },
+    //   sm: { span: 6 },
+    // },
     wrapperCol: {
       xs: { span: 12 },
-      sm: { span: 12 }
+      sm: { span: 12 },
     },
-    labelAlign: 'left'
+    labelAlign: 'left',
+    layout: 'vertical'
   };
 
-  const submitButtonLayoutProps = {
-    wrapperCol: {
-      xs: { offset: formLayoutProps.labelCol.xs.span },
-      sm: { offset: formLayoutProps.labelCol.sm.span }
-    }
-  };
+  // const submitButtonLayoutProps = {
+  //   wrapperCol: {
+  //     xs: { offset: formLayoutProps.labelCol.xs.span },
+  //     sm: { offset: formLayoutProps.labelCol.sm.span },
+  //   },
+  // };
   return (
     <>
-      <PageHeader
-        title="Add new beneficiary"
-        style={{ marginBottom: '2em' }}
-        onBack={() => history.goBack()}
-      />
+      <TopTitle title="Add new beneficiary" />
 
-      <Steps {...stepsProps}>
+      {/* <Steps {...stepsProps}>
         <Step />
         <Step />
         <Step />
-      </Steps>
+      </Steps> */}
 
       <Form
         {...formLayoutProps}
@@ -109,7 +107,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
             setClarifiedInfo={setClarifiedInfo}
             gotoStep={gotoStep}
             current={current}
-            submitButtonLayoutProps={submitButtonLayoutProps}
+            // submitButtonLayoutProps={submitButtonLayoutProps}
           />
         )}
         {current === 1 && (
@@ -117,7 +115,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
             form={form}
             fields={mainFormFields}
             submit={submit}
-            submitButtonLayoutProps={submitButtonLayoutProps}
+            // submitButtonLayoutProps={submitButtonLayoutProps}
           />
         )}
       </Form>

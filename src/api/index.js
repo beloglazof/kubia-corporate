@@ -14,9 +14,8 @@ export const tokenRefresh = async (params = { refreshToken: '' }) =>
 
 export const logout = async () => await get('logout');
 
-export const paymentsPay = async (
-  params = { amount: '', account_id: '', user_id: '', idempotency: '' }
-) => await post('payments/pay', params);
+export const paymentsPay = async (amount, account_id, user_id, idempotency) =>
+  await post('payments/pay', { amount, account_id, user_id, idempotency });
 
 export const withdrawal = async (
   params = {
@@ -149,4 +148,4 @@ export const getPeople = async id => await get('/people', { id });
 export const addPeople = async people => await post('/people', people);
 export const deletePeople = async id => await httpDelete('/people', { id });
 
-export const getAccounts = async () => await get('/accounts')
+export const getAccounts = async () => await get('/accounts');

@@ -32,58 +32,66 @@ const renderFields = (fieldsObj = {}) => {
   return mapped;
 };
 
-const AccountCardHeader = ({ number, amount, currencyInfo, id }) => (
-  <Row style={{ marginBottom: '.4em' }} gutter={[16, 16]}>
-    <Col xs={24}>
-      <div>
-        <span
-          className={'param-value'}
-          style={{
-            fontSize: 'calc(16px + 0.5vw)',
-            lineHeight: 'calc(16px + 1.05vw)',
-          }}
-        >
-          {currencyInfo.code} Account &nbsp;
-          {number}
-        </span>
-      </div>
-    </Col>
-    <Col xs={24}>
-      <div
-        style={{
-          textAlign: 'left',
-        }}
-      >
-        <span
-          style={{
-            letterSpacing: '-.02em',
-            fontWeight: 'bold',
-            fontSize: 'calc(14px + 0.5vw)',
-            lineHeight: 'calc(16px + 1.05vw)',
-          }}
-        >
-          Current Amount &nbsp;
-          {currencyInfo.symbol}
-          {Number(amount).toFixed(currencyInfo.units)}
-        </span>
-      </div>
-    </Col>
-    <Col xs={24}>
-      <Button type="primary" key="payment" block>
-        <Link to={{ pathname: '/new-payment', state: { accountId: id } }}>
-          Make Payment
-        </Link>
-      </Button>
-    </Col>
+const AccountCardHeader = ({ number, amount, currencyInfo, id }) => {
+  const makePaymentButtonDisabled = currencyInfo.code.toLowerCase() !== 'sgd';
 
-    {/* <Col xs={12}>
+  return (
+    <Row style={{ marginBottom: '.4em' }} gutter={[16, 16]}>
+      <Col xs={24}>
+        <div>
+          <span
+            className={'param-value'}
+            style={{
+              fontSize: 'calc(16px + 0.5vw)',
+              lineHeight: 'calc(16px + 1.05vw)',
+            }}
+          >
+            {currencyInfo.code} Account &nbsp;
+            {number}
+          </span>
+        </div>
+      </Col>
+      <Col xs={24}>
+        <div
+          style={{
+            textAlign: 'left',
+          }}
+        >
+          <span
+            style={{
+              letterSpacing: '-.02em',
+              fontWeight: 'bold',
+              fontSize: 'calc(14px + 0.5vw)',
+              lineHeight: 'calc(16px + 1.05vw)',
+            }}
+          >
+            Current Amount &nbsp;
+            {currencyInfo.symbol}
+            {Number(amount).toFixed(currencyInfo.units)}
+          </span>
+        </div>
+      </Col>
+      <Col xs={24}>
+        <Button
+          type="primary"
+          key="payment"
+          block
+        >
+          <Link to={{ pathname: '/payments/new', state: { fromAccountId: id } }}>
+            Make Payment
+          </Link>
+        </Button>
+      </Col>
+
+      {/* <Col xs={12}>
             <div>
               Currency:
               <div className={'param-value'}>{currency_info.code}</div>
             </div>
           </Col> */}
-  </Row>
-);
+    </Row>
+  );
+};
 
 const Account = ({ account }) => {
   const user = useSelector(({ user }) => user);
