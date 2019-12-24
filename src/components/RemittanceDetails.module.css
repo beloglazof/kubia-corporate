@@ -1,0 +1,24 @@
+.arrowBox {
+  position: relative;
+  height: 50px;
+  border-color: #e0e0e0;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  margin: 0 2em;
+}
+
+.arrowBox::before {
+  content: '';
+  border-color: #e0e0e0;
+  border-top: 1px solid;
+  border-right: 1px solid;
+  left: 45px;
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  transform: rotate(45deg);
+}

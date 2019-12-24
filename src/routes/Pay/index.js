@@ -4,30 +4,32 @@ import {
   Col,
   Form,
   message,
-  Result,
+  Radio,
   Row,
   Steps,
-  PageHeader,
+  Typography,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import {
   fetchPaymentDetails,
-  paymentsPay,
-  usersCheck,
-  withdrawal,
-  getCompanies,
   getBeneficiary,
+  getCompanies,
+  getPeople,
+  paymentsPay,
   submitRemittance,
 } from '../../api';
+import {
+  AccountSelect,
+  AmountInput,
+  LinkedUserSelect,
+  NoteFieldInput,
+} from '../../components/PaymentFields';
+import useAsync from '../../hooks/useAsync';
 import getRandomString from '../../util/getRandomString';
-import PaymentInfoForm from '../../components/PaymentInfoForm';
-import PaymentDetails from '../../components/PaymentDetails';
+import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 
-export const FormItem = Form.Item;
 const { Step } = Steps;
-
 const formLayoutProps = {
   labelCol: {
     xs: { span: 8 },
@@ -52,7 +54,7 @@ const submitButtonLayoutProps = {
   },
 };
 
-const NewPayment = ({ form, history }) => {
+const PayPage = ({ form, history }) => {
   const [paymentType, setPaymentType] = useState();
   const gotoNextStep = () => gotoStep(current + 1);
   const sendInternalRequest = async (
@@ -145,47 +147,92 @@ const NewPayment = ({ form, history }) => {
       return false;
     }
   };
+  const buttonWrapperStyle = {
+    display: 'flex',
+    justifyContent: 'space-around',
+  };
 
+  const typeButtonStyle = {
+    width: '80%',
+    height: '100px',
+  };
+
+  let { url } = useRouteMatch();
   return (
     <Row>
       <Col span={24}>
-        <PageHeader
-          title="New Payment Request"
-          onBack={() => history.goBack()}
-        />
-        {/* <Steps {...stepsProps}>
-          <Step />
-          <Step />
-          <Step />
-        </Steps> */}
         <div className="page-content-wrapper">
-          <Form
+          {/* <PageHeader
+            title="Choose Payment Type"
+            onBack={() => history.goBack()}
+          /> */}
+          <Row style={{ marginBottom: '2em' }}>
+            <Col span={24}>
+              <Typography.Title level={2} style={{ marginBottom: '0.2em' }}>
+                Choose payment type
+              </Typography.Title>
+              <Button
+                icon="left"
+                onClick={() => history.goBack()}
+                style={{ padding: 0 }}
+                type="link"
+              >
+                Go back
+              </Button>
+            </Col>
+          </Row>
+
+          {/* <Radio.Group size="large">
+            <Radio.Button value="internal">Internal</Radio.Button>
+            <Radio.Button value="remittance">Remittance</Radio.Button>
+          </Radio.Group> */}
+          <Row type="flex">
+            <Col span={6} style={buttonWrapperStyle}>
+              <Button
+                type="primary"
+                size="large"
+                style={typeButtonStyle}
+                onClick={() => history.push(`${url}/internal`)}
+              >
+                Internal
+              </Button>
+            </Col>
+            <Col span={6} offset={4} style={buttonWrapperStyle}>
+              <Button
+                type="primary"
+                size="large"
+                style={typeButtonStyle}
+                onClick={() => history.push(`${url}/remittance`)}
+              >
+                Remittance
+              </Button>
+            </Col>
+          </Row>
+          {/* <Form
             {...formLayoutProps}
             {...formProps}
             style={{ marginTop: '1em' }}
             hideRequiredMark
           >
-            {current === 0 && (
-              <PaymentInfoForm
-                form={form}
-                getDetails={getDetails}
-                sendInternalRequest={sendInternalRequest}
-                setPaymentType={setPaymentType}
-                setFileId={setFileId}
-                setInfoFieldValues={setInfoFieldValues}
-                submitButtonLayoutProps={submitButtonLayoutProps}
-              />
-            )}
-            {current === 1 && (
+            <PaymentInfoForm
+              form={form}
+              getDetails={getDetails}
+              sendInternalRequest={sendInternalRequest}
+              setPaymentType={setPaymentType}
+              setFileId={setFileId}
+              setInfoFieldValues={setInfoFieldValues}
+              submitButtonLayoutProps={submitButtonLayoutProps}
+            />
+          </Form> */}
+          {/* {current === 1 && (
               <PaymentDetails
                 form={form}
                 details={paymentDetails}
                 gotoNextStep={gotoNextStep}
                 onSubmit={handleSubmit}
               />
-            )}
-          </Form>
-          {current === 2 && (
+            )} */}
+          {/* {current === 2 && (
             <Result
               status="success"
               title="Request succefully submitted!"
@@ -194,17 +241,14 @@ const NewPayment = ({ form, history }) => {
                   <Button type="primary" onClick={() => gotoStep(0)}>
                     Make new payment
                   </Button>
-                  {/* <Button onClick={() => }>
-                  Go home
-                </Button> */}
                 </>
               }
             />
-          )}
+          )} */}
         </div>
       </Col>
     </Row>
   );
 };
 
-export default Form.create()(NewPayment);
+export default Form.create()(PayPage);
