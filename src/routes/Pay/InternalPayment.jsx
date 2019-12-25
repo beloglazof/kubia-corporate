@@ -126,21 +126,23 @@ const InternalPayment = () => {
             </Button>
           </Col>
         </Row>
-        {state === 'input' && <WrappedForm onSubmit={sendInternalPayment} />}
-        {state === 'success' && (
-          <Result
-            status="success"
-            title="Success!"
-            extra={
-              <Button
-                type="primary"
-                onClick={() => history.push('/payments/new')}
-              >
-                Make new payment
-              </Button>
-            }
-          />
-        )}
+        <div style={{ marginLeft: '1em' }}>
+          {state === 'input' && <WrappedForm onSubmit={sendInternalPayment} />}
+          {state === 'success' && (
+            <Result
+              status="success"
+              title="Success!"
+              extra={
+                <Button
+                  type="primary"
+                  onClick={() => history.push('/payments/new')}
+                >
+                  Make new payment
+                </Button>
+              }
+            />
+          )}
+        </div>
       </Col>
     </Row>
   );

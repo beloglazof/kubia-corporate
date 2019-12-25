@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: center;
   width: 80px;
-  margin: 0 2em;
+  margin: 0 2.5em;
 }
 
 .arrowBox::before {
@@ -16,7 +16,7 @@
   border-color: #e0e0e0;
   border-top: 1px solid;
   border-right: 1px solid;
-  left: 45px;
+  left: 55%;
   position: absolute;
   height: 50px;
   width: 50px;

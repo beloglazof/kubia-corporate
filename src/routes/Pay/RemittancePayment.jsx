@@ -152,6 +152,7 @@ const RemittancePayment = () => {
   const accounts = useSelector(state => state.accounts);
   const [beneficiaries] = useAsync(getBeneficiary, []);
   let history = useHistory();
+  const [companies] = useAsync(getCompanies, []);
 
   const getDetails = async fieldValues => {
     setInputedData(fieldValues);
@@ -162,7 +163,6 @@ const RemittancePayment = () => {
     } = fieldValues;
 
     //TODO extract companies into redux
-    const companies = await getCompanies();
     const company_id = companies[0].id;
 
     const account = accounts.find(acc => acc.id === account_id);
@@ -205,14 +205,15 @@ const RemittancePayment = () => {
   return (
     <>
       <TopTitle title="Remittance payment request" />
-
-      <WrappedRequestForm
-        accounts={accounts}
-        onSubmit={getDetails}
-        setFileId={setFileId}
-        accounts={accounts}
-        beneficiaries={beneficiaries}
-      />
+      <div style={{ marginLeft: '1em' }}>
+        <WrappedRequestForm
+          accounts={accounts}
+          onSubmit={getDetails}
+          setFileId={setFileId}
+          accounts={accounts}
+          beneficiaries={beneficiaries}
+        />
+      </div>
     </>
   );
 };
