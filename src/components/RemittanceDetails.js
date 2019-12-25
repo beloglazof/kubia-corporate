@@ -1,6 +1,6 @@
 import { Button, Descriptions, Form, Input } from 'antd';
 import { startCase } from 'lodash/string';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getWallexOTP, submitRemittance } from '../api';
 import InputItem from './InputItem';
 import { formatISODate } from '../util';
@@ -49,6 +49,29 @@ const renderFields = fields => {
   });
 };
 
+const AmountBox = ({ title, amount, currencyCode }) => {
+  const amountBoxStyle = {
+    border: '1px solid #e0e0e0',
+    borderRadius: '32px',
+    width: '180px',
+    height: '100px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    margin: '1em',
+    padding: '1em',
+  };
+  return (
+    <div style={amountBoxStyle}>
+      <span style={{ fontSize: '1em' }}>{title}</span>
+      <span style={{ fontSize: '3vmin', whiteSpace: 'nowrap' }}>
+        {amount} {currencyCode}
+      </span>
+    </div>
+  );
+};
+
 const RemittanceDetails = ({
   details,
   onSubmit,
@@ -77,12 +100,16 @@ const RemittanceDetails = ({
     'expiresAt',
   ]);
   const { request, fees } = details;
-  const { sellCurrency, buyCurrency, sellAmount } = request;
-  if (sellCurrency !== buyCurrency) {
-    visibleRequestFieldSet.add('buyAmount');
-    visibleRequestFieldSet.add('sellAmount');
-    visibleRequestFieldSet.add('rate');
-  }
+  const { sellCurrency, buyCurrency, sellAmount, buyAmount, rate } = request;
+  const [showConvertation, setShowConvertation] = useState(false);
+  useEffect(() => {
+    if (sellCurrency !== buyCurrency) {
+      setShowConvertation(true);
+      visibleRequestFieldSet.add('buyAmount');
+      visibleRequestFieldSet.add('sellAmount');
+      visibleRequestFieldSet.add('rate');
+    }
+  }, [sellCurrency, buyCurrency]);
   const filteredFields = Object.keys(request)
     .filter(fieldName => visibleRequestFieldSet.has(fieldName))
     .reduce(
@@ -91,22 +118,11 @@ const RemittanceDetails = ({
     );
 
   const { total: totalFee } = fees;
-  const totalAmount = totalFee + sellAmount;
+  const totalAmount = Number(totalFee + sellAmount).toFixed(2);
   const fields = { ...filteredFields, totalFee, totalAmount };
-  const amountBoxStyle = {
-    border: '1px solid #e0e0e0',
-    borderRadius: '32px',
-    width: '150px',
-    height: '100px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    margin: '1em',
-  };
 
   const OTPInputStyle = {
-    marginBottom: '1em',
+    margin: '0 1em 1em 0',
     width: '200px',
   };
   return (
@@ -121,46 +137,73 @@ const RemittanceDetails = ({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
+          flexWrap: 'wrap',
         }}
       >
-        <div style={amountBoxStyle}>
-          <span style={{ fontSize: '1em' }}>Sell amount</span>
-          <span style={{ fontSize: '2em' }}>
-            {sellAmount} {sellCurrency}
-          </span>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          {showConvertation && (
+            <>
+              <AmountBox
+                title="Buy amount"
+                amount={buyAmount}
+                currencyCode={buyCurrency}
+              />
+              <div className={styles.arrowBox}>
+                <span>Rate {rate}</span>
+              </div>
+            </>
+          )}
+          <AmountBox
+            title="Sell amount"
+            amount={sellAmount}
+            currencyCode={sellCurrency}
+          />
         </div>
-        <div className={styles.arrowBox}>
-          <span>Fee {totalFee}</span>
-        </div>
-        <div style={amountBoxStyle}>
-          <span style={{ fontSize: '1em' }}>Total amount</span>
-          <span style={{ fontSize: '2em' }}>
-            {totalAmount} {sellCurrency}
-          </span>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <div className={styles.arrowBox}>
+            <span>Fee {totalFee}</span>
+          </div>
+          <AmountBox
+            title="Total amount"
+            amount={totalAmount}
+            currencyCode={sellCurrency}
+          />
         </div>
       </div>
-
-      {submitState === 'pending' && (
-        <Button type="primary" onClick={requestOTP}>
-          Submit payment
-        </Button>
-      )}
-      {submitState === 'OTP' && (
-        <>
-          <Input
-            id="otp"
-            label="Code"
-            placeholder="Code from SMS"
-            onChange={e => setOTP(e.target.value)}
-            maxLength={6}
-            style={OTPInputStyle}
-          />
-          <br />
-          <Button type="primary" disabled={disabled} onClick={handleSend}>
-            Send
+      <div style={{ marginLeft: '1em' }}>
+        {submitState === 'pending' && (
+          <Button type="primary" onClick={requestOTP}>
+            Submit payment
           </Button>
-        </>
-      )}
+        )}
+        {submitState === 'OTP' && (
+          <>
+            <Input
+              id="otp"
+              label="Code"
+              placeholder="Code from SMS"
+              onChange={e => setOTP(e.target.value)}
+              maxLength={6}
+              style={OTPInputStyle}
+            />
+            <Button type="primary" disabled={disabled} onClick={handleSend}>
+              Send
+            </Button>
+          </>
+        )}
+      </div>
     </>
   );
 };

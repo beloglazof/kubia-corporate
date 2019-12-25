@@ -189,7 +189,7 @@ const PayPage = ({ form, history }) => {
             <Radio.Button value="remittance">Remittance</Radio.Button>
           </Radio.Group> */}
           <Row type="flex">
-            <Col span={6} style={buttonWrapperStyle}>
+            <Col span={6} offset={4} style={buttonWrapperStyle}>
               <Button
                 type="primary"
                 size="large"
