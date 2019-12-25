@@ -135,7 +135,7 @@ const RemittancePaymentForm = ({
       <UploadInvoice form={form} setFileId={setFileId} />
 
       <NoteFieldInput form={form} />
-      <Form.Item style={{ padding: '0 16px' }}>
+      <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
           Create payment request
         </Button>
@@ -195,7 +195,7 @@ const RemittancePayment = () => {
           purposeOfTransfer,
           fundingSource,
           paymentDetails: fetchedDetails,
-          submitState: 'pending'
+          submitState: 'pending',
         })
       );
       history.push(`/payments/remittance/requests/${quoteId}`);

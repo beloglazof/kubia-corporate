@@ -80,7 +80,7 @@ const InternalPaymentForm = ({ form, onSubmit }) => {
       <LinkedUserSelect form={form} people={people} />
       <AmountInput form={form} balance={balance} currency={amountCurrency} />
       <NoteFieldInput form={form} />
-      <Form.Item style={{ padding: '0 16px' }}>
+      <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
           Send
         </Button>
