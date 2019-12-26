@@ -64,7 +64,8 @@ export const getCardsNew = async request_id =>
 export const cardsRequestState = async () =>
   await get('/cards/request_states', {});
 
-export const getTransactions = async () => await get('/transactions');
+export const getTransactions = async account_id =>
+  await get('/transactions', { account_id });
 
 export const getBeneficiary = async id => {
   const fetched = await get('/beneficiary', { id });
