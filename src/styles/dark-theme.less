@@ -1410,11 +1410,65 @@ body.dark-theme {
     background-color: fade(@grey-2, 10%);
   }
 
+  & .phone-input-dropdown-button {
+    background-color: #4b545c;
+    border-color: fade(@grey-2, 10%);
+    color: @dark-theme-text-color;
+
+    &:hover,
+    &:focus {
+      & .selected-flag {
+        background-color: fade(@grey-2, 0%);
+      }
+    }
+
+    &.open {
+      background: darken(@dark-theme-component-background, 5%);
+      & .selected-flag {
+        background: fade(@grey-2, 0%);
+      }
+    }
+
+    & .arrow {
+      border-top-color: @dark-theme-text-color;
+      & .up {
+        border-bottom-color: @dark-theme-text-color;
+      }
+    }
+
+    & .ant-select-dropdown {
+      top: auto;
+      left: auto;
+      border-color: @dark-theme-border-color;
+      & .search {
+        background-color: darken(@dark-theme-component-background, 5%);
+        & .search-box {
+          background: fade(@grey-2, 10%);
+          border-color: @dark-theme-border-color;
+          &::placeholder {
+            color: fade(@dark-theme-text-color, 50%);
+          }
+        }
+      }
+
+      & .country {
+        &:hover,
+        &:focus,
+        &.highlight {
+          background-color: @dark-theme-component-background;
+        }
+      }
+    }
+  }
+
   & .ant-input {
     background-color: fade(@grey-2, 10%);
     border-color: fade(@grey-2, 10%);
     color: @dark-theme-text-color;
 
+    &.open {
+      border-color: fade(@grey-2, 10%);
+    }
     &[disabled] {
       background-color: fade(@grey-2, 20%);
       &:hover {
@@ -1425,7 +1479,7 @@ body.dark-theme {
 
     &:focus,
     &:hover {
-      border-color: @grey-6;
+      border-color: darken(@grey-6, 20%);
       .box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1));
     }
 
@@ -1442,7 +1496,7 @@ body.dark-theme {
     }
 
     &-affix-wrapper:hover .ant-input:not(.ant-input-disabled) {
-      border-color: @grey-6;
+      border-color: darken(@grey-6, 20%);
     }
 
     &-group-addon {
@@ -1583,7 +1637,7 @@ body.dark-theme {
       border-color: fade(@grey-2, 10%);
 
       &:hover {
-        border-color: @grey-6;
+        border-color: darken(@grey-6, 20%);
       }
 
       &__clear {

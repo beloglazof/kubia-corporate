@@ -10,3 +10,8 @@
 .hoverable:hover {
   background-color: #343d46;
 }
+
+.phone-input-dropdown-button .ant-select-dropdown {
+  top: auto;
+  left: auto;
+}
