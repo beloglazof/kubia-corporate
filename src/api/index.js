@@ -139,6 +139,18 @@ export const submitRemittance = async (
 ) => await post('/remittance/wallex', params);
 export const getWallexOTP = async quote_id =>
   await post('remittance/otp/wallex', { quote_id });
+export const getConvertionRate = async (
+  buyCurrency,
+  sellCurrency,
+  fixedSide,
+  amount = 1
+) =>
+  await post('/remittance/convertion/wallex', {
+    buyCurrency,
+    sellCurrency,
+    fixedSide,
+    amount,
+  });
 
 export const getCompanyFields = async () => await get('/company/fields');
 export const getCompanies = async () => await get('/company');

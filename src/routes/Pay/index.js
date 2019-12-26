@@ -115,7 +115,7 @@ const PayPage = ({ form, history }) => {
   const getDetails = async fieldValues => {
     setInfoFieldValues(fieldValues);
     const {
-      amount,
+      buyAmount: amount,
       beneficiary: beneficiary_id,
       account: account_id,
     } = fieldValues;

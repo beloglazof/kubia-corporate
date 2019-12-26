@@ -101,10 +101,10 @@ const RemittanceDetails = ({
   ]);
   const { request, fees } = details;
   const { sellCurrency, buyCurrency, sellAmount, buyAmount, rate } = request;
-  const [showConvertation, setShowConvertation] = useState(false);
+  const [showConvertion, setShowConvertion] = useState(false);
   useEffect(() => {
     if (sellCurrency !== buyCurrency) {
-      setShowConvertation(true);
+      setShowConvertion(true);
       visibleRequestFieldSet.add('buyAmount');
       visibleRequestFieldSet.add('sellAmount');
       visibleRequestFieldSet.add('rate');
@@ -147,7 +147,7 @@ const RemittanceDetails = ({
             alignItems: 'center',
           }}
         >
-          {showConvertation && (
+          {showConvertion && (
             <>
               <AmountBox
                 title="Buy amount"

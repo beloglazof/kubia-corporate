@@ -10,8 +10,11 @@ const InputItem = ({
   required = false,
   validationPattern = null,
   initialValue = null,
+  disabled = false,
+  validators = [],
   formItemProps = {},
-  disabled = false
+  inputProps = {},
+  style = {},
 }) => {
   if (!form) return null;
   const rules = [];
@@ -23,20 +26,26 @@ const InputItem = ({
     const pattern = new RegExp(validationPattern);
     const patternRule = {
       pattern,
-      message: `Invalid ${label} format`
+      message: `Invalid ${label} format`,
     };
     rules.push(patternRule);
+  }
+  if (validators.length > 0) {
+    const validatorRules = validators.map(validator => ({ validator }));
+    rules.push(...validatorRules);
   }
   const fieldConfig = {
     rules,
     initialValue,
-    validateTrigger: 'onSubmit'
+    validateTrigger: 'onSubmit',
   };
 
   const fieldDecorator = form && form.getFieldDecorator(id, fieldConfig);
   return (
-    <Form.Item label={label} {...formItemProps}>
-      {fieldDecorator(<Input placeholder={placeholder} disabled={disabled} />)}
+    <Form.Item label={label} {...formItemProps} style={style}>
+      {fieldDecorator(
+        <Input placeholder={placeholder} disabled={disabled} {...inputProps} />
+      )}
     </Form.Item>
   );
 };
@@ -44,13 +53,13 @@ const InputItem = ({
 InputItem.propTypes = {
   form: PropTypes.object.isRequired,
   id: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.string || PropTypes.element,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   validationPattern: PropTypes.string,
   initialValue: PropTypes.string,
   formItemProps: PropTypes.object,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 export default InputItem;

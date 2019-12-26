@@ -1391,6 +1391,8 @@ body.dark-theme {
   }
 
   & .ant-form {
+    color: @dark-theme-text-color;
+
     &-item,
     &-item-label label,
     &-explain,
@@ -1416,7 +1418,7 @@ body.dark-theme {
     &[disabled] {
       background-color: fade(@grey-2, 20%);
       &:hover {
-        border: none;
+        border-color: transparent;
         box-shadow: none;
       }
     }

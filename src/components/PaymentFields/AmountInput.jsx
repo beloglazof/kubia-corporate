@@ -27,7 +27,7 @@ const AmountInput = ({ balance, form, currency }) => {
   }, [balance, currency]);
   return (
     <Form.Item label="Amount">
-      {getFieldDecorator('amount', {
+      {getFieldDecorator('buyAmount', {
         rules: [
           { required: true, message: 'Please enter amount!' },
           { validator: greaterThanZero },
