@@ -35,7 +35,7 @@ const LastTransactions = ({ data }) => {
     const formattedDate = formatISODate(date, singaporeDateTimeFormat.medium);
     return formattedDate;
   };
-  const isLoading = !lastTransactions.length;
+  const isLoading = !data;
   const { Column } = Table;
   const history = useHistory();
   const handleMoreClick = () => {
