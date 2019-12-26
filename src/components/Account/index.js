@@ -16,6 +16,8 @@ import { Link } from 'react-router-dom';
 import { useModal } from 'sunflower-antd';
 import LastTransactions from '../Transactions/LastTransactions';
 import styles from './account.module.css';
+import useAsync from '../../hooks/useAsync';
+import { getTransactions } from '../../api';
 
 const renderField = ([name, value]) => {
   const label = startCase(name);
@@ -72,12 +74,10 @@ const AccountCardHeader = ({ number, amount, currencyInfo, id }) => {
         </div>
       </Col>
       <Col xs={24}>
-        <Button
-          type="primary"
-          key="payment"
-          block
-        >
-          <Link to={{ pathname: '/payments/new', state: { fromAccountId: id } }}>
+        <Button type="primary" key="payment" block>
+          <Link
+            to={{ pathname: '/payments/new', state: { fromAccountId: id } }}
+          >
             Make Payment
           </Link>
         </Button>
@@ -94,9 +94,9 @@ const AccountCardHeader = ({ number, amount, currencyInfo, id }) => {
 };
 
 const Account = ({ account }) => {
-  const user = useSelector(({ user }) => user);
-  const { first_name, last_name } = user;
-  const name = first_name && last_name && `${first_name} ${last_name}`;
+  // const user = useSelector(({ user }) => user);
+  // const { first_name, last_name } = user;
+  // const name = first_name && last_name && `${first_name} ${last_name}`;
 
   const {
     number,
@@ -104,7 +104,7 @@ const Account = ({ account }) => {
     currency_info,
     id,
     bank_deposit,
-    transactions,
+    // transactions,
   } = account;
 
   const { modalProps, show } = useModal({
@@ -118,6 +118,7 @@ const Account = ({ account }) => {
   const defaulActiveTabKey = tabList[0].key;
   const [activeTabKey, setActiveTabKey] = useState(defaulActiveTabKey);
 
+  const [transactions] = useAsync(getTransactions, null, [], id);
   const renderTab = tabKey => {
     switch (tabKey) {
       case tabList[0].key:
