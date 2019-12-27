@@ -7,7 +7,7 @@ const screensSlice = createSlice({
   name: 'screens',
   initialState: {
     main: storageMainString ? JSON.parse(storageMainString) : null,
-    error: null
+    error: null,
   },
   reducers: {
     getMainScreenSuccess(state, action) {
@@ -17,13 +17,13 @@ const screensSlice = createSlice({
     getMainScreenFailed(state, action) {
       state.main = null;
       state.error = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const {
   getMainScreenSuccess,
-  getMainScreenFailed
+  getMainScreenFailed,
 } = screensSlice.actions;
 
 export default screensSlice.reducer;
@@ -35,10 +35,6 @@ export const fetchMainScreen = () => async dispatch => {
     dispatch(getMainScreenSuccess(data));
     const mainString = JSON.stringify(data);
     localStorage.setItem('main', mainString);
-    const accounts = data.accounts.results;
-    const accountsString = JSON.stringify(accounts);
-    localStorage.setItem('accounts', accountsString);
-    dispatch(setAccounts(accounts));
   } catch (error) {
     dispatch(getMainScreenFailed(error.toString()));
   }

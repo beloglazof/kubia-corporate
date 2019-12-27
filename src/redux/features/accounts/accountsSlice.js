@@ -3,13 +3,12 @@ import { getAccounts } from '../../../api';
 
 const accountsSlice = createSlice({
   name: 'accounts',
-  initialState: localStorage.getItem('accounts')
-    ? JSON.parse(localStorage.getItem('accounts'))
-    : [],
+  initialState: [],
   reducers: {
     setAccounts(state, action) {
       const accounts = action.payload;
-      accounts.forEach((account, index) => (state[index] = account));
+      state.length = 0;
+      state.push(...accounts);
     },
   },
 });
@@ -23,8 +22,6 @@ export const fetchAccounts = () => async dispatch => {
     const data = await getAccounts();
     if (!data) return;
     const accounts = data.results;
-    const accountsString = JSON.stringify(accounts);
-    localStorage.setItem('accounts', accountsString);
     dispatch(setAccounts(accounts));
   } catch (error) {
     console.error(error);
