@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BeneficiarySelect,
   AccountSelect,
@@ -15,11 +15,23 @@ import {
   uploadInvoice,
   fetchPaymentDetails,
   getCompanies,
+  getConvertionRate,
 } from '../../api';
-import { Form, Upload, Icon, Button, Row, Col, Typography } from 'antd';
+import {
+  Form,
+  Upload,
+  Icon,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Tooltip,
+  message,
+} from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import TopTitle from '../../components/TopTitle';
+import InputItem from '../../components/InputItem';
 
 const UploadInvoice = ({ form, setFileId }) => {
   const normFile = e => {
@@ -75,11 +87,12 @@ const formLayoutProps = {
   //   lg: { span: 4 },
   // },
   wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-    md: { span: 16 },
-    lg: { span: 14 },
-    xl: { span: 12 },
+    span: { span: 24 },
+    // xs: { span: 24 },
+    // sm: { span: 16 },
+    // md: { span: 16 },
+    // lg: { span: 14 },
+    // xl: { span: 12 },
   },
   labelAlign: 'left',
   layout: 'vertical',
@@ -87,17 +100,58 @@ const formLayoutProps = {
 
 const RemittancePaymentForm = ({
   form,
-  onSubmit,
+  getDetails,
   accounts,
   beneficiaries,
   setFileId,
 }) => {
   const paymentType = 'remittance';
-  const { getFieldValue, validateFields } = form;
+  const { getFieldValue, validateFields, setFieldsValue } = form;
 
   const accountId = getFieldValue('accountId');
   const account = accounts.find(a => a.id === accountId);
+  const sellCurrency = account?.currency_info?.code;
   const balance = account ? account.amount : 0;
+
+  useEffect(() => {
+    setConvertionRate(null);
+  }, [accountId]);
+
+  const beneficiaryId = getFieldValue('beneficiaryId');
+  const selectedBeneficiary = beneficiaries.find(b => b.id === beneficiaryId);
+  const beneficiaryCurrency = selectedBeneficiary?.bankAccount?.currency;
+  const buyCurrency = beneficiaryCurrency;
+  const amountCurrency = beneficiaryCurrency;
+
+  const [convertionRate, setConvertionRate] = useState();
+  const [showConvertion, setShowConvertion] = useState(false);
+
+  useEffect(() => {
+    if (!sellCurrency || !buyCurrency) {
+      return;
+    }
+    if (sellCurrency !== buyCurrency) {
+      const fetchRate = async () => {
+        const fetchedData = await getConvertionRate(
+          buyCurrency,
+          sellCurrency,
+          'buy'
+        );
+        if (fetchedData) {
+          const { sellAmount: rate } = fetchedData;
+          setConvertionRate(rate);
+        }
+      };
+
+      setShowConvertion(true);
+      fetchRate();
+    } else {
+      setShowConvertion(false);
+    }
+  }, [sellCurrency, buyCurrency]);
+
+  const [wallexInfo] = useAsync(getWallexInfo, {});
+  const { fundingSource, purposeOfTransfer } = wallexInfo;
 
   const [loading, setLoading] = useState(false);
   const handleSubmit = e => {
@@ -108,18 +162,60 @@ const RemittancePaymentForm = ({
         setLoading(false);
         return;
       }
-      await onSubmit(values);
+      await getDetails(values, sellCurrency, buyCurrency, fixedSide);
       setLoading(false);
     });
   };
 
-  const beneficiaryId = getFieldValue('beneficiaryId');
-  const selectedBeneficiary = beneficiaries.find(b => b.id === beneficiaryId);
-  const beneficiaryCurrency = selectedBeneficiary?.bankAccount?.currency;
-  const amountCurrency = beneficiaryCurrency;
+  const [fixedSide, setFixedSide] = useState('');
+  const handleSellAmountChange = event => {
+    const { value } = event.target;
+    setFixedSide('sell');
+    if (!value) {
+      setFieldsValue({
+        buyAmount: '',
+      });
+      setFixedSide('');
+      return;
+    }
+    const amount = Number(value);
+    const buyAmount = Number(amount / convertionRate).toFixed(2);
+    setFieldsValue({
+      buyAmount,
+    });
+  };
 
-  const [wallexInfo] = useAsync(getWallexInfo, {});
-  const { fundingSource, purposeOfTransfer } = wallexInfo;
+  const handleBuyAmountChange = event => {
+    const { value } = event.target;
+    setFixedSide('buy');
+    if (!value) {
+      setFieldsValue({
+        sellAmount: '',
+      });
+      setFixedSide('');
+      return;
+    }
+    const amount = Number(value);
+    const sellAmount = Number(amount * convertionRate).toFixed(2);
+    setFieldsValue({
+      sellAmount,
+    });
+  };
+
+  const greaterThanZero = (rule, value, callback) => {
+    if (value > 0) {
+      return callback();
+    }
+    callback('Amount must be greater than zero');
+  };
+  const lessOrEqualBalance = (rule, value, callback) => {
+    if (value > balance) {
+      return callback("Amount can't be more than balance");
+    }
+    callback();
+  };
+  const validators = [greaterThanZero, lessOrEqualBalance];
+  const inputAmountDisabled = !balance || !convertionRate;
 
   return (
     <Form {...formLayoutProps} onSubmit={handleSubmit} hideRequiredMark>
@@ -130,7 +226,69 @@ const RemittancePaymentForm = ({
       />
       <BeneficiarySelect form={form} beneficiaries={beneficiaries} />
       <FundingSourceSelect form={form} sources={fundingSource} />
-      <AmountInput form={form} balance={balance} currency={amountCurrency} />
+
+      {showConvertion && (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <InputItem
+            form={form}
+            label={
+              <span>
+                Buy amount&nbsp;
+                <Tooltip title="Amount that will be sent to beneficiary">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+            id="buyAmount"
+            placeholder=""
+            disabled={inputAmountDisabled}
+            formItemProps={{
+              wrapperCol: { xs: 24 },
+            }}
+            inputProps={{
+              addonBefore: buyCurrency,
+              onChange: handleBuyAmountChange,
+            }}
+            style={{
+              paddingRight: '1em',
+              width: '100%',
+            }}
+            required
+          />
+          <div style={{ fontSize: '2em' }}>≈</div>
+          <InputItem
+            form={form}
+            label={
+              <span>
+                Sell amount&nbsp;
+                <Tooltip title="Amount that will be charge off from your account">
+                  <Icon type="question-circle-o" />
+                </Tooltip>
+              </span>
+            }
+            id="sellAmount"
+            placeholder=""
+            disabled={inputAmountDisabled}
+            formItemProps={{
+              wrapperCol: { xs: 24 },
+              help: convertionRate ? `Rate: ${convertionRate}` : '',
+            }}
+            inputProps={{
+              addonBefore: sellCurrency,
+              onChange: handleSellAmountChange,
+            }}
+            style={{
+              paddingLeft: '1em',
+              width: '100%',
+            }}
+            validators={validators}
+            required
+          />
+        </div>
+      )}
+      {!showConvertion && (
+        <AmountInput form={form} balance={balance} currency={amountCurrency} />
+      )}
       <PaymentPurposeSelect form={form} purposes={purposeOfTransfer} />
       <UploadInvoice form={form} setFileId={setFileId} />
 
@@ -147,29 +305,30 @@ const RemittancePaymentForm = ({
 const WrappedRequestForm = Form.create()(RemittancePaymentForm);
 
 const RemittancePayment = () => {
-  const [fileId, setFileId] = useState();
-  const [inputedData, setInputedData] = useState();
-  const accounts = useSelector(state => state.accounts);
-  const [beneficiaries] = useAsync(getBeneficiary, []);
   let history = useHistory();
+  const [fileId, setFileId] = useState();
+  const [beneficiaries] = useAsync(getBeneficiary, []);
   const [companies] = useAsync(getCompanies, []);
+  const accounts = useSelector(state => state.accounts);
 
-  const getDetails = async fieldValues => {
-    setInputedData(fieldValues);
+  const getDetails = async (
+    fieldValues,
+    sellCurrency,
+    buyCurrency,
+    fixedSide
+  ) => {
+    if (!fixedSide) {
+      message.error('No fixed side');
+      return;
+    }
     const {
-      amount,
+      [`${fixedSide}Amount`]: amount,
       beneficiaryId: beneficiary_id,
       accountId: account_id,
     } = fieldValues;
 
     //TODO extract companies into redux
     const company_id = companies[0].id;
-
-    const account = accounts.find(acc => acc.id === account_id);
-    const sellCurrency = account.currency_info.code;
-
-    const beneficiary = beneficiaries.find(b => b.id === beneficiary_id);
-    const buyCurrency = beneficiary.bankAccount.currency;
 
     const params = {
       file_id: [fileId],
@@ -179,7 +338,7 @@ const RemittancePayment = () => {
       company_id,
       buyCurrency,
       sellCurrency,
-      fixedSide: 'buy',
+      fixedSide,
     };
     const fetchedDetails = await fetchPaymentDetails(params);
 
@@ -205,15 +364,19 @@ const RemittancePayment = () => {
   return (
     <>
       <TopTitle title="Remittance payment request" />
-      <div style={{ marginLeft: '1em' }}>
-        <WrappedRequestForm
-          accounts={accounts}
-          onSubmit={getDetails}
-          setFileId={setFileId}
-          accounts={accounts}
-          beneficiaries={beneficiaries}
-        />
-      </div>
+      <Row>
+        <Col xs={24} sm={20} md={16} xl={14} xxl={12}>
+          <div style={{ marginLeft: '1em' }}>
+            <WrappedRequestForm
+              accounts={accounts}
+              getDetails={getDetails}
+              setFileId={setFileId}
+              accounts={accounts}
+              beneficiaries={beneficiaries}
+            />
+          </div>
+        </Col>
+      </Row>
     </>
   );
 };

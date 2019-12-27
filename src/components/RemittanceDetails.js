@@ -1,4 +1,4 @@
-import { Button, Descriptions, Form, Input } from 'antd';
+import { Button, Descriptions, Form, Input, Typography } from 'antd';
 import { startCase } from 'lodash/string';
 import React, { useState, useEffect } from 'react';
 import { getWallexOTP, submitRemittance } from '../api';
@@ -6,6 +6,7 @@ import InputItem from './InputItem';
 import { formatISODate } from '../util';
 
 import styles from './RemittanceDetails.module.css';
+import { isPast, parseISO } from 'date-fns';
 
 const renderFields = fields => {
   if (!fields) return null;
@@ -92,7 +93,6 @@ const RemittanceDetails = ({
   };
 
   const [OTP, setOTP] = useState();
-  const disabled = !OTP || OTP.length < 6;
 
   const visibleRequestFieldSet = new Set([
     'sellCurrency',
@@ -100,11 +100,18 @@ const RemittanceDetails = ({
     'expiresAt',
   ]);
   const { request, fees } = details;
-  const { sellCurrency, buyCurrency, sellAmount, buyAmount, rate } = request;
-  const [showConvertation, setShowConvertation] = useState(false);
+  const {
+    sellCurrency,
+    buyCurrency,
+    sellAmount,
+    buyAmount,
+    rate,
+    expiresAt,
+  } = request;
+  const [showConvertion, setShowConvertion] = useState(false);
   useEffect(() => {
     if (sellCurrency !== buyCurrency) {
-      setShowConvertation(true);
+      setShowConvertion(true);
       visibleRequestFieldSet.add('buyAmount');
       visibleRequestFieldSet.add('sellAmount');
       visibleRequestFieldSet.add('rate');
@@ -125,12 +132,19 @@ const RemittanceDetails = ({
     margin: '0 1em 1em 0',
     width: '200px',
   };
+
+  const expired = isPast(parseISO(expiresAt));
+  const OTPSendButtonDisabled = !OTP || OTP.length < 6;
+  const submitButtonDisabled = expired;
+
   return (
     <>
       {/* <Descriptions bordered column={1} style={{ marginBottom: '1em' }}>
         {renderFields(fields)}
       </Descriptions> */}
-
+      <Typography.Text>
+        Request expires at: {formatISODate(expiresAt)}
+      </Typography.Text>
       <div
         style={{
           marginBottom: '1em',
@@ -147,7 +161,7 @@ const RemittanceDetails = ({
             alignItems: 'center',
           }}
         >
-          {showConvertation && (
+          {showConvertion && (
             <>
               <AmountBox
                 title="Buy amount"
@@ -184,7 +198,11 @@ const RemittanceDetails = ({
       </div>
       <div style={{ marginLeft: '1em' }}>
         {submitState === 'pending' && (
-          <Button type="primary" onClick={requestOTP}>
+          <Button
+            type="primary"
+            onClick={requestOTP}
+            disabled={submitButtonDisabled}
+          >
             Submit payment
           </Button>
         )}
@@ -198,7 +216,11 @@ const RemittanceDetails = ({
               maxLength={6}
               style={OTPInputStyle}
             />
-            <Button type="primary" disabled={disabled} onClick={handleSend}>
+            <Button
+              type="primary"
+              disabled={OTPSendButtonDisabled}
+              onClick={handleSend}
+            >
               Send
             </Button>
           </>

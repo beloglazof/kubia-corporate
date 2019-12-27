@@ -1,14 +1,48 @@
 // @ts-check
 import React, { useState, useLayoutEffect } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Button, message } from 'antd';
 import { uniq } from 'lodash';
-import PropTypes from 'prop-types';
+import PropTypes, { node } from 'prop-types';
+import PhoneInput from 'react-phone-input-2';
+import { parsePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
 import { usersCheck, getCountries } from '../api';
 import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../constants';
 import useAsync from '../hooks/useAsync';
 
 const { Search } = Input;
 const { Option } = Select;
+
+const PhoneInputWithSearchButton = ({
+  checkPhone,
+  value = '',
+  onChange = () => {},
+}) => {
+  return (
+    <div style={{ display: 'flex' }}>
+      <div>
+        <PhoneInput
+          buttonClass="phone-input-dropdown-button"
+          inputClass="ant-input"
+          dropdownClass="ant-select-dropdown"
+          placeholder="Search people by phone"
+          value={value}
+          onChange={onChange}
+          // autoFormat={false}
+          enableSearch
+        />
+      </div>
+
+      <Button
+        type="primary"
+        icon="search"
+        onClick={checkPhone}
+        style={{ marginLeft: '1em' }}
+      >
+        Search
+      </Button>
+    </div>
+  );
+};
 
 const hasErrors = fieldsErrors => {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field]);
@@ -19,7 +53,7 @@ const PhoneCodeSelector = ({ form }) => {
   const countryCodes = uniq(countries.map(({ dial }) => dial.toString()));
   const { getFieldDecorator } = form;
   return getFieldDecorator('phoneCode', {
-    initialValue: SINGAPORE_CALLING_CODE
+    initialValue: SINGAPORE_CALLING_CODE,
   })(
     <Select showSearch style={{ width: '70px' }}>
       {countryCodes.map(code => {
@@ -36,7 +70,7 @@ const SearchUserInput = ({
   form,
   setFoundUser,
   label = 'Phone number',
-  formItemProps = {}
+  formItemProps = {},
 }) => {
   const [user, setUser] = useState();
   const { getFieldDecorator } = form;
@@ -63,14 +97,24 @@ const SearchUserInput = ({
   };
 
   const checkPhone = async () => {
-    const code = form.getFieldValue('phoneCode');
+    // const code = form.getFieldValue('phoneCode');
     const phone = form.getFieldValue('phone');
-    const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
-
-    if (!code || !phone || fieldHasErrors) {
-      return null;
+    const validPhone = isValidPhoneNumber(phone);
+    if (!validPhone) {
+      message.warning('Invalid phone number');
+      if (process.env.NODE_ENV === 'production') {
+        return;
+      }
     }
-    const phoneWithCode = `${code}${phone}`;
+
+    const parsedPhone = parsePhoneNumber(phone);
+    console.log(parsedPhone);
+    // const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
+
+    // if (!code || !phone || fieldHasErrors) {
+    //   return null;
+    // }
+    const phoneWithCode = parsedPhone.number.replace('+', '');
 
     const userInfo = await usersCheck(phoneWithCode);
 
@@ -79,37 +123,42 @@ const SearchUserInput = ({
     if (setFoundUser) {
       await setFoundUser(userInfo);
     }
-    return userInfo;
+    // return userInfo;
   };
 
   return (
-    <Form.Item extra={user ? user.name : null} {...formItemProps}>
-      {getFieldDecorator('phone', {
-        rules: [
-          { required: true, message: 'Please input phone number!' },
-          {
+    <>
+      <Form.Item extra={user ? user.name : null} {...formItemProps}>
+        {getFieldDecorator('phone', {
+          rules: [
+            { required: true, message: 'Please input phone number!' },
+            {
+              /* {
             len: PHONE_NUMBER_LENGTH
-          }
-        ],
-        normalize: normalizePhone,
-        validateFirst: true,
-        validateTrigger: ['onSearch']
-      })(
-        <Search
+          } */
+            },
+          ],
+          normalize: normalizePhone,
+          validateFirst: true,
+          validateTrigger: ['onSearch'],
+        })(<PhoneInputWithSearchButton checkPhone={checkPhone} />)
+
+        /* <Search
           inputMode="tel"
           addonBefore={<PhoneCodeSelector form={form} />}
           pattern="[0-9]*"
           placeholder="Search people by phone"
           onSearch={checkPhone}
           enterButton
-        />
-      )}
-    </Form.Item>
+        /> */
+        }
+      </Form.Item>
+    </>
   );
 };
 
 SearchUserInput.propTypes = {
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
 };
 
 export default SearchUserInput;

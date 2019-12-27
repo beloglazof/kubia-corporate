@@ -64,7 +64,8 @@ export const getCardsNew = async request_id =>
 export const cardsRequestState = async () =>
   await get('/cards/request_states', {});
 
-export const getTransactions = async () => await get('/transactions');
+export const getTransactions = async account_id =>
+  await get('/transactions', { account_id });
 
 export const getBeneficiary = async id => {
   const fetched = await get('/beneficiary', { id });
@@ -139,6 +140,18 @@ export const submitRemittance = async (
 ) => await post('/remittance/wallex', params);
 export const getWallexOTP = async quote_id =>
   await post('remittance/otp/wallex', { quote_id });
+export const getConvertionRate = async (
+  buyCurrency,
+  sellCurrency,
+  fixedSide,
+  amount = 1
+) =>
+  await post('/remittance/convertion/wallex', {
+    buyCurrency,
+    sellCurrency,
+    fixedSide,
+    amount,
+  });
 
 export const getCompanyFields = async () => await get('/company/fields');
 export const getCompanies = async () => await get('/company');
