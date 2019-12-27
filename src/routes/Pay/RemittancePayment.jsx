@@ -87,7 +87,7 @@ const formLayoutProps = {
   //   lg: { span: 4 },
   // },
   wrapperCol: {
-    span: { span: 24 },
+    span: 24,
     // xs: { span: 24 },
     // sm: { span: 16 },
     // md: { span: 16 },
@@ -151,7 +151,7 @@ const RemittancePaymentForm = ({
   }, [sellCurrency, buyCurrency]);
 
   const [wallexInfo] = useAsync(getWallexInfo, {});
-  const { fundingSource, purposeOfTransfer } = wallexInfo;
+  const { fundingSource = [], purposeOfTransfer = [] } = wallexInfo;
 
   const [loading, setLoading] = useState(false);
   const handleSubmit = e => {

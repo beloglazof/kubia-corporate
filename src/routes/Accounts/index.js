@@ -9,6 +9,7 @@ import { fetchAccounts } from '../../redux/features/accounts/accountsSlice';
 
 const Accounts = () => {
   const accounts = useSelector(state => state.accounts);
+  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAccounts());

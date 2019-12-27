@@ -1,11 +1,15 @@
 // @ts-check
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { Form, Input, Select, Button, message } from 'antd';
 import { uniq } from 'lodash';
 import PropTypes, { node } from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
-import { parsePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
-import { usersCheck, getCountries } from '../api';
+import {
+  parsePhoneNumber,
+  isValidPhoneNumber,
+  isPossiblePhoneNumber,
+} from 'react-phone-number-input';
+import { usersCheck, getCountries, getCompanies } from '../api';
 import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../constants';
 import useAsync from '../hooks/useAsync';
 
@@ -16,17 +20,39 @@ const PhoneInputWithSearchButton = ({
   checkPhone,
   value = '',
   onChange = () => {},
+  buttonDisabled,
 }) => {
+  const [companies] = useAsync(getCompanies);
+  const [companyCountryCode, setCompanyCountryCode] = useState();
+  useEffect(() => {
+    if (!companies) return;
+    const companyInfo = companies[0];
+    const fields = companyInfo.fields;
+    const countryFieldId = 8;
+    const countryCodeField = fields.find(field => field.id === countryFieldId);
+    const code = countryCodeField.value.toLowerCase();
+    setCompanyCountryCode(code);
+  }, [companies]);
+
+  const handleEnterKeyDown = event => {
+    if (event.key !== 'Enter') {
+      return;
+    }
+    checkPhone();
+  };
+
   return (
     <div style={{ display: 'flex' }}>
       <div>
         <PhoneInput
+          country={companyCountryCode}
           buttonClass="phone-input-dropdown-button"
           inputClass="ant-input"
           dropdownClass="ant-select-dropdown"
           placeholder="Search people by phone"
           value={value}
           onChange={onChange}
+          onKeyDown={handleEnterKeyDown}
           // autoFormat={false}
           enableSearch
         />
@@ -98,16 +124,20 @@ const SearchUserInput = ({
 
   const checkPhone = async () => {
     // const code = form.getFieldValue('phoneCode');
+    const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
     const phone = form.getFieldValue('phone');
-    const validPhone = isValidPhoneNumber(phone);
-    if (!validPhone) {
-      message.warning('Invalid phone number');
+    // const validPhone = isValidPhoneNumber(phone);
+    const possiblePhone = isPossiblePhoneNumber(phone);
+    if (!possiblePhone) {
+      message.error('Impossible phone number');
+      return;
     }
 
     const parsedPhone = parsePhoneNumber(phone);
-    console.log(parsedPhone);
-    // const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
-
+    if (!parsedPhone) {
+      message.warning('Invalid phone number');
+      return;
+    }
     // if (!code || !phone || fieldHasErrors) {
     //   return null;
     // }

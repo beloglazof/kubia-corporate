@@ -181,7 +181,10 @@ Account.propTypes = {
     amount: PropTypes.number,
     balance: PropTypes.object,
     created: PropTypes.string,
-    updated: PropTypes.string,
+    updated: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.bool
+    ]),
     bank_deposit: PropTypes.object,
     cards: PropTypes.array,
     transactions: PropTypes.object,
