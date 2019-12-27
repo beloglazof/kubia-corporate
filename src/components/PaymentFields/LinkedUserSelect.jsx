@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 const LinkedUserSelect = ({ form, people }) => {
   const options = people.map(user => {
-    const { id, name } = user;
+    const { userId, name } = user;
 
     const option = {
-      value: id,
+      value: userId,
       title: name,
     };
 
