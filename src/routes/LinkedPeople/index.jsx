@@ -54,7 +54,7 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
   ];
   return (
     <Table
-      dataSource={people}
+      dataSource={[]}
       columns={columns}
       rowKey="id"
       loading={!people}
