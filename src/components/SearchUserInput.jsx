@@ -102,9 +102,6 @@ const SearchUserInput = ({
     const validPhone = isValidPhoneNumber(phone);
     if (!validPhone) {
       message.warning('Invalid phone number');
-      if (process.env.REACT_APP_DENY_INVALID_PHONES) {
-        return;
-      }
     }
 
     const parsedPhone = parsePhoneNumber(phone);
