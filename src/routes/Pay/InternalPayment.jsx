@@ -94,7 +94,7 @@ const WrappedForm = Form.create()(InternalPaymentForm);
 const InternalPayment = () => {
   const [state, setState] = useState('input');
   const sendInternalPayment = async values => {
-    const { amount, accountId, linkedUserId } = values;
+    const { buyAmount: amount, accountId, linkedUserId } = values;
     const idempotency = getRandomString();
     const result = await paymentsPay(
       amount,
