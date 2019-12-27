@@ -41,7 +41,7 @@ SelectItem.propTypes = {
   label: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   options: PropTypes.array.isRequired,
-  initialValue: PropTypes.string,
+  initialValue: PropTypes.any,
 }
 
 export default SelectItem;

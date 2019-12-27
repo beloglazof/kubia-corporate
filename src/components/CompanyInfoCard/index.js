@@ -8,7 +8,7 @@ const renderFields = (fields, values) => {
   if (!fields || !values) return null;
   return values.map(value => {
     const field = fields.find(field => field.id === value.id);
-    if (!field) return null;
+    if (!field || field.hidden) return null;
     return (
       <Descriptions.Item label={field.name} key={field.id}>
         {value.value}
@@ -24,7 +24,7 @@ const CompanyInfoCard = props => {
   const currentCompany = companies && companies[0];
   const fieldValues = currentCompany?.fields;
   const titleStyles = {
-    fontSize: '1.7em'
+    fontSize: '1.7em',
   };
   const loading = !currentCompany || !companyFields;
   return (
