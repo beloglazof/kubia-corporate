@@ -26,6 +26,7 @@ import {
   Col,
   Typography,
   Tooltip,
+  message,
 } from 'antd';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -161,17 +162,20 @@ const RemittancePaymentForm = ({
         setLoading(false);
         return;
       }
-      await getDetails(values, buyCurrency, sellCurrency);
+      await getDetails(values, sellCurrency, buyCurrency, fixedSide);
       setLoading(false);
     });
   };
 
+  const [fixedSide, setFixedSide] = useState('');
   const handleSellAmountChange = event => {
     const { value } = event.target;
+    setFixedSide('sell');
     if (!value) {
       setFieldsValue({
         buyAmount: '',
       });
+      setFixedSide('');
       return;
     }
     const amount = Number(value);
@@ -180,12 +184,15 @@ const RemittancePaymentForm = ({
       buyAmount,
     });
   };
+
   const handleBuyAmountChange = event => {
     const { value } = event.target;
+    setFixedSide('buy');
     if (!value) {
       setFieldsValue({
         sellAmount: '',
       });
+      setFixedSide('');
       return;
     }
     const amount = Number(value);
@@ -304,9 +311,18 @@ const RemittancePayment = () => {
   const [companies] = useAsync(getCompanies, []);
   const accounts = useSelector(state => state.accounts);
 
-  const getDetails = async (fieldValues, sellCurrency, buyCurrency) => {
+  const getDetails = async (
+    fieldValues,
+    sellCurrency,
+    buyCurrency,
+    fixedSide
+  ) => {
+    if (!fixedSide) {
+      message.error('No fixed side');
+      return;
+    }
     const {
-      buyAmount: amount,
+      [`${fixedSide}Amount`]: amount,
       beneficiaryId: beneficiary_id,
       accountId: account_id,
     } = fieldValues;
@@ -322,7 +338,7 @@ const RemittancePayment = () => {
       company_id,
       buyCurrency,
       sellCurrency,
-      fixedSide: 'buy',
+      fixedSide,
     };
     const fetchedDetails = await fetchPaymentDetails(params);
 
