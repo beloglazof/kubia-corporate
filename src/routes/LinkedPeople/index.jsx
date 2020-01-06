@@ -9,8 +9,9 @@ import {
   message,
   PageHeader,
 } from 'antd';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { formatPhoneNumberIntl } from 'react-phone-number-input';
 import { addPeople, deletePeople, getPeople } from '../../api';
 import InputItem from '../../components/InputItem';
 import SearchUserInput from '../../components/SearchUserInput';
@@ -43,7 +44,17 @@ DeleteButton.propTypes = {
 const LinkedPeopleTable = ({ people, handleDelete }) => {
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name', ellipsis: true },
-    { title: 'Phone', dataIndex: 'phone', key: 'phoneNumber' },
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phoneNumber',
+      render: (phoneNumber, record) => {
+        const formatted = formatPhoneNumberIntl(
+          `+${record.code}${phoneNumber}`
+        );
+        return formatted;
+      },
+    },
     {
       title: 'Actions',
       key: 'phone',
@@ -70,8 +81,13 @@ LinkedPeopleTable.propTypes = {
 };
 
 const AddUserForm = ({ form, handleAdd }) => {
-  const [foundUser, setFoundUser] = useState({});
-  const name = form.getFieldValue('name');
+  const [foundUser, setFoundUser] = useState({ name: '', id: '' });
+  const [name, setName] = useState('');
+  useEffect(() => {
+    if (foundUser && foundUser.name) {
+      setName(foundUser.name);
+    }
+  }, [foundUser]);
   const handleAddClick = () => {
     form.validateFields((errors, values) => {
       if (errors) {
@@ -89,23 +105,14 @@ const AddUserForm = ({ form, handleAdd }) => {
   };
 
   const layoutProps = {
-    // labelCol: {
-    //   xs: { span: 6 },
-    //   sm: { span: 5 },
-    //   md: { span: 4 },
-    //   lg: { span: 4 }
-    // },
     wrapperCol: { xs: { span: 14 } },
     labelAlign: 'left',
     layout: 'vertical',
   };
 
-  // const buttonLayoutProps = {
-  //   wrapperCol: { xs: { offset: layoutProps.labelCol.xs.span } }
-  // };
   return (
     <>
-      <h2>Link new user</h2>
+      <h2>Link user</h2>
       <Form
         style={{ paddingLeft: '1em', marginTop: '1em' }}
         {...layoutProps}
@@ -118,11 +125,13 @@ const AddUserForm = ({ form, handleAdd }) => {
               form={form}
               id="name"
               label="Name"
-              placeholder="John (SMM)"
+              initialValue={name}
+              inputProps={{ style: { width: '300px' } }}
+              style={{ marginBottom: '1em' }}
               required
             />
             <Form.Item>
-              <Button type="primary" disabled={!name} onClick={handleAddClick}>
+              <Button icon="user-add" type="primary" disabled={!name} onClick={handleAddClick}>
                 Add
               </Button>
             </Form.Item>

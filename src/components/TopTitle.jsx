@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col, Typography, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 
-const TopTitle = ({ title, children, backButton = true }) => {
+const TopTitle = ({ title, children = null, backButton = true }) => {
   let history = useHistory();
 
   return (

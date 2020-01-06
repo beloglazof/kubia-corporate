@@ -14,7 +14,7 @@ const InputItem = ({
   validators = [],
   formItemProps = {},
   inputProps = {},
-  style = {},
+  style = {}
 }) => {
   if (!form) return null;
   const rules = [];
