@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { message } from 'antd';
 import Cookies from 'js-cookie';
-import { store } from '../index';
+// import { store } from '../index';
 import { removeSession } from '../redux/features/session/sessionSlice';
 import { resetState } from '../redux/reducers';
 
@@ -23,11 +23,11 @@ const handleError = err => {
   const status = err?.response?.status;
   switch (status) {
     case 401:
-      store.dispatch(removeSession());
+      // store.dispatch(removeSession());
       break;
     case 403:
-      store.dispatch(removeSession());
-      store.dispatch(resetState());
+      // store.dispatch(removeSession());
+      // store.dispatch(resetState());
       break;
     default:
       break;

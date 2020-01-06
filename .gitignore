@@ -8,3 +8,4 @@ build/
 deploy.sh
 .env.*.local
 .env.local
+launch.json
