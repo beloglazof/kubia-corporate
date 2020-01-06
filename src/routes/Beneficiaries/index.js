@@ -53,19 +53,12 @@ const Beneficiaries = ({ history }) => {
 
   return (
     <>
-      <TopTitle title="Beneficiaries" backButton={false} />
+      <TopTitle title="Beneficiaries" backButton={false}>
+        <Button onClick={handleAddClick} type="primary" icon="user-add">
+          Add
+        </Button>
+      </TopTitle>
       <div className="page-content-wrapper">
-        <div style={{ textAlign: 'right' }}>
-          <Button
-            onClick={handleAddClick}
-            type="primary"
-            style={{ marginBottom: '1em' }}
-            icon="user-add"
-          >
-            Add
-          </Button>
-        </div>
-
         <List
           loading={loading}
           dataSource={loading ? [] : beneficiaries}
