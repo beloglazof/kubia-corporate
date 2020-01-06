@@ -42,7 +42,7 @@ DeleteButton.propTypes = {
 
 const LinkedPeopleTable = ({ people, handleDelete }) => {
   const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Name', dataIndex: 'name', key: 'name', ellipsis: true },
     { title: 'Phone', dataIndex: 'phone', key: 'phoneNumber' },
     {
       title: 'Actions',
@@ -54,11 +54,11 @@ const LinkedPeopleTable = ({ people, handleDelete }) => {
   ];
   return (
     <Table
-      dataSource={[]}
+      dataSource={people}
       columns={columns}
       rowKey="id"
       loading={!people}
-      tableLayout="auto"
+      tableLayout="fixed"
       bordered
     />
   );
