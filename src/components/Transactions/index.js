@@ -113,7 +113,7 @@ const TransactionCard = ({ transaction, handleClick }) => {
   );
 };
 
-const Transactions = ({ transList, fetchList }) => {
+const Transactions = ({ transList = [], fetchList }) => {
   //  Fetching full list of transactions
   useEffect(() => {
     fetchList();

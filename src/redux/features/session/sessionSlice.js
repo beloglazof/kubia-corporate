@@ -25,7 +25,9 @@ const sessionSlice = createSlice({
     removeSession(state, action) {
       Cookies.remove('token');
       Cookies.remove('refreshToken');
-      localStorage.clear();
+      localStorage.removeItem('user');
+      localStorage.removeItem('main');
+      localStorage.removeItem('accounts');
       state.token = null;
       state.refreshToken = null;
       if (window.Intercom) {
