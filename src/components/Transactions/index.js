@@ -115,8 +115,14 @@ const TransactionCard = ({ transaction, handleClick }) => {
 
 const Transactions = ({ transList = [], fetchList }) => {
   //  Fetching full list of transactions
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    fetchList();
+    const fetch = async () => {
+      setLoading(true);
+      await fetchList();
+      setLoading(false);
+    };
+    fetch()
   }, []);
 
   const [filters, updateFilters] = useState({
@@ -298,7 +304,7 @@ const Transactions = ({ transList = [], fetchList }) => {
           textAlign: 'center',
         }}
       >
-        <Spin spinning={!transList} size="large" tip="loading transactions...">
+        <Spin spinning={loading} size="large" tip="loading transactions...">
           <Radio.Group defaultValue="ALL" onChange={handleTypeChange}>
             {TRANSACTION_TYPES.map(type => (
               <Radio.Button value={type.name} key={type.name}>
