@@ -36,6 +36,7 @@ const renderFields = (fields, form) => {
           label={label}
           id={fieldName}
           disabled={disabled}
+          key={fieldName}
         />
       );
     }
@@ -76,7 +77,7 @@ const BeneficiaryInfoStepForm = ({ form, fields, submitButtonLayoutProps }) => (
       required
     />
     {renderFields(fields, form)}
-    <Form.Item >
+    <Form.Item>
       <Button type="primary" htmlType="submit">
         Submit
       </Button>
