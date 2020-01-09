@@ -1,19 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const storageFirstPagePath = localStorage.getItem('firstPagePath');
-const firstPagePath = storageFirstPagePath ? storageFirstPagePath : '/accounts';
-
 const settingsSlice = createSlice({
   name: 'screens',
   initialState: {
-    firstPagePath
+    firstPagePath: localStorage.getItem('firstPagePath')
+      ? localStorage.getItem('firstPagePath')
+      : '/accounts',
   },
   reducers: {
     setFirstPagePath(state, action) {
       localStorage.setItem('firstPagePath', action.payload);
       state.firstPagePath = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { setFirstPagePath } = settingsSlice.actions;
