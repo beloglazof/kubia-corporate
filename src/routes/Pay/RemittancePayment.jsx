@@ -244,7 +244,7 @@ const RemittancePaymentForm = ({
             disabled={inputAmountDisabled}
             formItemProps={{
               wrapperCol: { xs: 24 },
-              help: '&nbsp;',
+              help: '\t', // this fix for Mac
             }}
             inputProps={{
               addonBefore: buyCurrency,
