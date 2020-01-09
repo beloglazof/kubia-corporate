@@ -59,14 +59,22 @@ CurrentSession.propTypes = {
 };
 
 const CloseAllSessionsButton = ({ handler }) => {
+  const [loading, setLoading] = useState(false);
+  const handleConfirm = async () => {
+    setLoading(true);
+    await handler();
+    setLoading(false);
+  };
   return (
     <Popconfirm
       title="Are you sure close all session until current?"
-      onConfirm={handler}
+      onConfirm={handleConfirm}
       okText="Yes"
       cancelText="No"
     >
-      <Button type="danger">Close All</Button>
+      <Button type="danger" loading={loading}>
+        Close All
+      </Button>
     </Popconfirm>
   );
 };
@@ -76,17 +84,20 @@ CloseAllSessionsButton.propTypes = {
 };
 
 const CloseSessionButton = ({ sessionId, handleClose }) => {
-  const handleClick = () => {
-    handleClose(sessionId);
+  const [loading, setLoading] = useState(false);
+  const handleClick = async () => {
+    setLoading(true);
+    await handleClose(sessionId);
+    setLoading(false);
   };
   return (
     <Popconfirm
-      title="Are you sure to close all session but current?"
+      title="Are you sure to close this session"
       onConfirm={handleClick}
       okText="Yes"
       cancelText="No"
     >
-      <Button type="danger" style={{ marginBottom: 0 }}>
+      <Button type="danger" style={{ marginBottom: 0 }} loading={loading}>
         Close
       </Button>
     </Popconfirm>
@@ -100,11 +111,11 @@ CloseSessionButton.propTypes = {
 
 const Settings = () => {
   const [sessions, setSessions] = useAsync(getSessions, []);
-  const [currentSession, setCurrentSession] = useState(null);
+  const [currentSession, setCurrentSession] = useState({});
   useEffect(() => {
     const current = sessions.find(session => session.current);
     const otherSessions = sessions.filter(session => !session.current);
-    if (!currentSession && current) {
+    if (current) {
       setCurrentSession(current);
     }
     setSessions(otherSessions);

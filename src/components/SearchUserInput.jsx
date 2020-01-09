@@ -2,35 +2,34 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { Form, Input, Select, Button, message } from 'antd';
 import { uniq } from 'lodash';
-import PropTypes, { node } from 'prop-types';
+import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import {
   parsePhoneNumber,
-  isValidPhoneNumber,
   isPossiblePhoneNumber,
 } from 'react-phone-number-input';
-import { usersCheck, getCountries, getCompanies } from '../api';
-import { PHONE_NUMBER_LENGTH, SINGAPORE_CALLING_CODE } from '../constants';
+import { usersCheck, getCompanies } from '../api';
 import useAsync from '../hooks/useAsync';
-
-const { Search } = Input;
-const { Option } = Select;
 
 const PhoneInputWithSearchButton = ({
   checkPhone,
   value = '',
   onChange = () => {},
-  buttonDisabled,
 }) => {
   const [companies] = useAsync(getCompanies);
-  const [companyCountryCode, setCompanyCountryCode] = useState();
+  const [companyCountryCode, setCompanyCountryCode] = useState('sg');
   useEffect(() => {
-    if (!companies) return;
+    if (!companies) {
+      return;
+    }
     const companyInfo = companies[0];
     const fields = companyInfo.fields;
+    if (!fields) {
+      return;
+    }
     const countryFieldId = 8;
     const countryCodeField = fields.find(field => field.id === countryFieldId);
-    const code = countryCodeField.value.toLowerCase();
+    const code = countryCodeField?.value.toLowerCase();
     setCompanyCountryCode(code);
   }, [companies]);
 
@@ -53,7 +52,6 @@ const PhoneInputWithSearchButton = ({
           value={value}
           onChange={onChange}
           onKeyDown={handleEnterKeyDown}
-          // autoFormat={false}
           enableSearch
         />
       </div>
@@ -74,43 +72,22 @@ const hasErrors = fieldsErrors => {
   return Object.keys(fieldsErrors).some(field => fieldsErrors[field]);
 };
 
-const PhoneCodeSelector = ({ form }) => {
-  const [countries] = useAsync(getCountries, []);
-  const countryCodes = uniq(countries.map(({ dial }) => dial.toString()));
-  const { getFieldDecorator } = form;
-  return getFieldDecorator('phoneCode', {
-    initialValue: SINGAPORE_CALLING_CODE,
-  })(
-    <Select showSearch style={{ width: '70px' }}>
-      {countryCodes.map(code => {
-        return (
-          <Option value={code} key={code}>
-            +{code}
-          </Option>
-        );
-      })}
-    </Select>
-  );
-};
-const SearchUserInput = ({
-  form,
-  setFoundUser,
-  label = 'Phone number',
-  formItemProps = {},
-}) => {
-  const [user, setUser] = useState();
+const SearchUserInput = ({ form, setFoundUser, formItemProps = {} }) => {
+  const [user, setUser] = useState({ name: 'user' });
   const { getFieldDecorator } = form;
 
+  const phone = form.getFieldValue('phone');
   useLayoutEffect(() => {
-    const phone = form.getFieldValue('phone');
     const fieldHasErrors = hasErrors(form.getFieldsError(['phone']));
-    if (!phone || fieldHasErrors || phone.length < 0) {
+    const possiblePhone = isPossiblePhoneNumber(phone);
+
+    if (!phone || !possiblePhone || fieldHasErrors || phone.length < 0) {
       setUser(null);
       if (setFoundUser) {
         setFoundUser(null);
       }
     }
-  });
+  }, [phone]);
 
   const normalizePhone = value => {
     if (!value) {
@@ -157,28 +134,10 @@ const SearchUserInput = ({
     <>
       <Form.Item extra={user ? user.name : null} {...formItemProps}>
         {getFieldDecorator('phone', {
-          rules: [
-            { required: true, message: 'Please input phone number!' },
-            {
-              /* {
-            len: PHONE_NUMBER_LENGTH
-          } */
-            },
-          ],
+          rules: [{ required: true, message: 'Please input phone number!' }],
           normalize: normalizePhone,
           validateFirst: true,
-          validateTrigger: ['onSearch'],
-        })(<PhoneInputWithSearchButton checkPhone={checkPhone} />)
-
-        /* <Search
-          inputMode="tel"
-          addonBefore={<PhoneCodeSelector form={form} />}
-          pattern="[0-9]*"
-          placeholder="Search people by phone"
-          onSearch={checkPhone}
-          enterButton
-        /> */
-        }
+        })(<PhoneInputWithSearchButton checkPhone={checkPhone} />)}
       </Form.Item>
     </>
   );

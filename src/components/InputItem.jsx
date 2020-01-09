@@ -14,10 +14,16 @@ const InputItem = ({
   validators = [],
   formItemProps = {},
   inputProps = {},
-  style = {},
+  style = {}
 }) => {
   if (!form) return null;
-  const rules = [];
+  const hasLengthWhenTrimmed = (rule, value, callback) => {
+    if (!value.trim().length) {
+      return callback(`${label} required`)
+    }
+    callback()
+  }
+  const rules = [{validator: hasLengthWhenTrimmed}];
   if (required) {
     const requiredRule = { required: true, message: `Please input ${label}` };
     rules.push(requiredRule);
@@ -38,6 +44,7 @@ const InputItem = ({
     rules,
     initialValue,
     validateTrigger: 'onSubmit',
+    validateFirst: true
   };
 
   const fieldDecorator = form && form.getFieldDecorator(id, fieldConfig);
