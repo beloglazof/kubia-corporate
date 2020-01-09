@@ -16,7 +16,7 @@ const reducers = combineReducers({
   settings,
   session,
   user,
-  transactions
+  transactions,
 });
 
 const RESET_STATE = 'RESET_STATE';
@@ -25,7 +25,15 @@ export const resetState = () => ({ type: RESET_STATE });
 
 const rootReducer = (state, action) => {
   if (action.type === RESET_STATE) {
-    state = undefined;
+    state = {
+      ...state,
+      commonData: undefined,
+      screens: undefined,
+      accounts: undefined,
+      session: undefined,
+      user: undefined,
+      transactions: undefined,
+    };
   }
   return reducers(state, action);
 };
