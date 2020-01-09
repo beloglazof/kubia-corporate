@@ -64,7 +64,7 @@ const Beneficiaries = ({ history }) => {
           dataSource={loading ? [] : beneficiaries}
           renderItem={renderBeneficiary}
           grid={{
-            gutter: [32, 16],
+            gutter: 16,
             xs: 1,
             md: 2,
             lg: 2,

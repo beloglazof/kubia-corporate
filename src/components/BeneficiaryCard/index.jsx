@@ -56,7 +56,7 @@ const DetailsModal = ({ details, ...props }) => {
       title="Beneficiary details"
       {...props}
     >
-      <Descriptions bordered column={2} layout="vertical">
+      <Descriptions bordered column={1}>
         {renderFields(details)}
       </Descriptions>
     </Modal>
@@ -164,9 +164,9 @@ const renderFields = fields => {
       return nestedFields;
     }
     const label = startCase(name);
-    const span = name === 'email' ? 2 : 1;
+    // const span = name === 'email' ? 2 : 1;
     return (
-      <Descriptions.Item span={span} label={label} key={name}>
+      <Descriptions.Item label={label} key={name}>
         <span style={{ fontWeight: 'bold' }}>{value}</span>
       </Descriptions.Item>
     );
@@ -199,23 +199,30 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
     ([fieldName]) => fieldName !== 'id'
   );
   const cardFields = details.filter(([name]) => fieldSet.has(name));
-  const cardTitle = startCase(beneficiary?.nickname) || null;
+  const cardTitle = startCase(beneficiary?.nickname) || beneficiary.email;
 
   const actions = getCardActions(showDetails, onDelete);
   return (
     <Card
       title={cardTitle}
       headStyle={{
-        fontSize: '1.6em',
-        marginLeft: '1em',
-        lineHeight: '1.5em',
+        fontSize: '1.2em',
+        lineHeight: '1.7',
+        paddingLeft: '1em',
+        fontWeight: 'bold',
       }}
       actions={actions}
       size="small"
+      bodyStyle={{
+        // height: 'auto',
+        padding: '1em 1em 1em 1.4em',
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: 'auto'
+      }}
+      style={{ height: '360px', display:'flex', flexDirection:'column' }}
     >
-      <Descriptions bordered column={2} layout="vertical">
-        {renderFields(cardFields)}
-      </Descriptions>
+      <Descriptions column={2}>{renderFields(cardFields)}</Descriptions>
       <DetailsModal {...detailsModalProps} details={details} />
       {/* <EditFormModal
         {...editModalProps}
