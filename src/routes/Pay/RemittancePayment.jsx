@@ -167,7 +167,7 @@ const RemittancePaymentForm = ({
     });
   };
 
-  const [fixedSide, setFixedSide] = useState('');
+  const [fixedSide, setFixedSide] = useState('buy');
   const handleSellAmountChange = event => {
     const { value } = event.target;
     setFixedSide('sell');
