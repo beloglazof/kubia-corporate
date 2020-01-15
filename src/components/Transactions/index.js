@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { groupBy, mapValues, uniqBy } from 'lodash';
+import { groupBy, mapValues, uniqBy, startCase } from 'lodash';
 import PropTypes from 'prop-types';
 
 import {
@@ -50,8 +50,8 @@ export const MONTHS = [
 
 export const MONTHS_LENGTH = [31, 28, 30, 31, 30, 31, 30, 31, 30, 31, 30, 31];
 export const LINKED_ACC_TYPES = {
-  DEPOSIT: 'Sender',
-  WITHDRAWAL: 'Recipient',
+  DEPOSIT: 'sender',
+  WITHDRAWAL: 'receiver',
 };
 
 const TRANSACTION_TYPES = [
@@ -75,20 +75,31 @@ const amountTooltip = amount => (
 );
 
 const TransactionCard = ({ transaction, handleClick }) => {
+  const transactionType = transaction.type;
+  const color = COLORS[transactionType];
+  const icon = TRANS_ICONS[transactionType];
+  const linkedAccType = LINKED_ACC_TYPES[transaction.type];
+
+  const [linkedAccount, setLinkedAccount] = useState({
+    name: '',
+    account_number: '',
+  });
+  useEffect(() => {
+    if (transaction.details) {
+      setLinkedAccount(transaction.details[linkedAccType]);
+    }
+  }, [transaction.details]);
+
   return (
     <Card
       size="small"
       title={
         <span>
-          {currencyTooltip(transaction.currency)}{' '}
+          {currencyTooltip(transaction.currency)}
           {amountTooltip(transaction.amount)}
         </span>
       }
-      extra={
-        <span style={{ color: COLORS[transaction.type] }}>
-          {transaction.type}
-        </span>
-      }
+      extra={<span style={{ color }}>{transaction.type}</span>}
       hoverable
       style={{ margin: 'auto auto 10px', width: '50%' }}
       headStyle={{ textAlign: 'left' }}
@@ -99,16 +110,11 @@ const TransactionCard = ({ transaction, handleClick }) => {
       }}
       onClick={() => handleClick(transaction)}
     >
-      <Icon
-        type={TRANS_ICONS[transaction.type]}
-        style={{ color: COLORS[transaction.type] }}
-      />
+      <Icon type={icon} style={{ color }} />
       <Tooltip title="Account number">
-        <span style={{ flex: '1' }}>{transaction.account.number}</span>
+        <span style={{ flex: '1' }}>{linkedAccount.account_number}</span>
       </Tooltip>
-      <Tooltip title={LINKED_ACC_TYPES[transaction.type]}>
-        {transaction.linked_account.name}
-      </Tooltip>
+      <Tooltip title={startCase(linkedAccType)}>{linkedAccount.name}</Tooltip>
     </Card>
   );
 };
@@ -122,7 +128,7 @@ const Transactions = ({ transList = [], fetchList }) => {
       await fetchList();
       setLoading(false);
     };
-    fetch()
+    fetch();
   }, []);
 
   const [filters, updateFilters] = useState({
@@ -137,7 +143,7 @@ const Transactions = ({ transList = [], fetchList }) => {
   }, [transList]);
 
   const [modalShown, toggleModal] = useState(false);
-  const [modalData, fillModal] = useState('');
+  const [modalData, fillModal] = useState();
 
   const showTransactionDetails = record => {
     fillModal(
@@ -240,7 +246,7 @@ const Transactions = ({ transList = [], fetchList }) => {
     const monthInd = MONTHS.indexOf(month).toString();
     const monthTransactionsByDayEntries = Object.entries(
       monthTransactionsByDay
-    );
+    ).reverse();
     return (
       <TabPane tab={month} key={month}>
         <Anchor
