@@ -3,10 +3,11 @@ import { take } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
 import useAsync from '../../hooks/useAsync';
-import { singaporeDateTimeFormat } from '../../util/config';
+import { singaporeDateTimeFormat, singaporeDateFormat } from '../../util/config';
 import { formatISODate } from '../../util/index.js';
 import { useHistory } from 'react-router-dom';
 
+import {LINKED_ACC_TYPES} from './index'
 const lastTransactionsNumber = 5;
 
 const LastTransactions = ({ data }) => {
@@ -26,13 +27,19 @@ const LastTransactions = ({ data }) => {
     return amountWithCurrency;
   };
 
-  const renderFromField = linkedAccount => {
+  const renderFromField = (linkedAccount, transaction) => {
+    const linkedAccType = LINKED_ACC_TYPES[transaction.type];
+
+    if (transaction.details) {
+      return transaction.details[linkedAccType].name;
+    }
     const name = linkedAccount.name;
     return name;
   };
 
   const renderDate = (date, record) => {
-    const formattedDate = formatISODate(date, singaporeDateTimeFormat.medium);
+    const formattedDate = formatISODate(date, singaporeDateFormat.long);
+
     return formattedDate;
   };
   const isLoading = !data;
