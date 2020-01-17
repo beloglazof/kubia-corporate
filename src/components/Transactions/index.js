@@ -61,23 +61,29 @@ const TRANSACTION_TYPES = [
 ];
 
 //  Currency with tooltip
-const currencyTooltip = currency => (
-  <Tooltip title={currency?.name}>
-    <span>{currency?.symbol}</span>
-  </Tooltip>
-);
+const currencyTooltip = currency => {
+  return (
+    <Tooltip title={currency?.name}>
+      <span>{currency?.symbol}</span>
+    </Tooltip>
+  );
+};
 
 //  Amount styled with tooltip
-const amountTooltip = amount => (
-  <Tooltip title="Amount">
-    <span>{amount}</span>
-  </Tooltip>
-);
+const amountTooltip = amount => {
+  const normalizedAmount = String(amount).replace('-', '');
+  const formattedAmount = Number(normalizedAmount).toFixed(2);
+  return (
+    <Tooltip title="Amount">
+      <span>{formattedAmount}</span>
+    </Tooltip>
+  );
+};
 
 const TransactionCard = ({ transaction, handleClick }) => {
-  const transactionType = transaction.type;
-  const color = COLORS[transactionType];
-  const icon = TRANS_ICONS[transactionType];
+  const transactionDirection = transaction.type;
+  const color = COLORS[transactionDirection];
+  const icon = TRANS_ICONS[transactionDirection];
   const linkedAccType = LINKED_ACC_TYPES[transaction.type];
 
   const [linkedAccount, setLinkedAccount] = useState({
@@ -88,18 +94,11 @@ const TransactionCard = ({ transaction, handleClick }) => {
     if (transaction.details) {
       setLinkedAccount(transaction.details[linkedAccType]);
     }
-  }, [transaction.details]);
+  }, [transaction]);
 
   return (
     <Card
       size="small"
-      title={
-        <span>
-          {currencyTooltip(transaction.currency)}
-          {amountTooltip(transaction.amount)}
-        </span>
-      }
-      extra={<span style={{ color }}>{transaction.type}</span>}
       hoverable
       style={{ margin: 'auto auto 10px', width: '50%' }}
       headStyle={{ textAlign: 'left' }}
@@ -110,11 +109,22 @@ const TransactionCard = ({ transaction, handleClick }) => {
       }}
       onClick={() => handleClick(transaction)}
     >
-      <Icon type={icon} style={{ color }} />
-      <Tooltip title="Account number">
-        <span style={{ flex: '1' }}>{linkedAccount.account_number}</span>
-      </Tooltip>
-      <Tooltip title={startCase(linkedAccType)}>{linkedAccount.name}</Tooltip>
+      <Icon
+        type="transaction"
+        style={{ fontSize: '2em', marginRight: '1em' }}
+      />
+      <div style={{ textAlign: 'left', flexGrow: '1' }}>
+        <Tooltip title={startCase(linkedAccType)}>
+          <b>{linkedAccount.name}</b>
+        </Tooltip>
+        <br />
+        {formatISODate(transaction.creationDate, 'dd MMMM yyyy')}
+      </div>
+      <span style={{ fontSize: '1.2em', fontWeight: 'bold' }}>
+        {transactionDirection === 'WITHDRAWAL' ? '-' : ''}
+        {currencyTooltip(transaction.currency)}
+        {amountTooltip(transaction.amount)}
+      </span>
     </Card>
   );
 };
