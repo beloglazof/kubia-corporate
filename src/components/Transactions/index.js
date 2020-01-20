@@ -68,10 +68,10 @@ const Transactions = ({ transList = [], fetchList }) => {
   const [filteredTransactions, setFilteredTransactions] = useState(transList);
   useEffect(() => {
     setFilteredTransactions(transList);
-    getLinkedAccounts();
+    // getLinkedAccounts();
   }, [transList]);
 
-  const getLinkedAccounts = () => {
+  const getCounteragents = () => {
     const allLinkedAccs = transList.map(t => ({
       id: t.linked_account.id,
       name: t.linked_account.name,
@@ -81,7 +81,18 @@ const Transactions = ({ transList = [], fetchList }) => {
     return uniqueAccs;
   };
 
-  const linkedAccounts = getLinkedAccounts();
+  const counteragents = getCounteragents();
+  const [selectedCounteragents, setSelectedCounteragents] = useState(
+    new Set([])
+  );
+  const filterBySelectedCounteragents = transactions => {
+    if (!selectedCounteragents.size) {
+      return transactions;
+    }
+    return transactions.filter(transaction =>
+      selectedCounteragents.has(transaction.linked_account.id.toString())
+    );
+  };
 
   //  Handle transaction type filter
   const handleFilter = e => {
@@ -100,35 +111,14 @@ const Transactions = ({ transList = [], fetchList }) => {
         .filter(t => t.linked_account.id.toString() === f)
         .map(t => newData.push(t))
     );
-    if (filter.length) {
-      dataToProcess = newData;
-    } else {
-      dataToProcess = transList;
-    }
 
-    //  Type filtering
-    switch (filter) {
-      case 'DEPOSIT': {
-        newData = dataToProcess.filter(t => t.type === filter);
-        break;
-      }
-      case 'WITHDRAWAL': {
-        newData = dataToProcess.filter(t => t.type === filter);
-        break;
-      }
-      default: {
-        newData = dataToProcess;
-        break;
-      }
-    }
     setFilteredTransactions(newData);
   };
 
-  const defaultDirection = TRANSACTION_DIRECTIONS[0];
+  const defaultDirection = TRANSACTION_DIRECTIONS[0].name;
   const [directionFilter, setDirectionFilter] = useState(defaultDirection);
   const filterByDirection = transactions => {
-
-    if (directionFilter.name === 'ALL') {
+    if (directionFilter === 'ALL') {
       return transactions;
     }
     const filteredList = transactions.filter(
@@ -136,20 +126,6 @@ const Transactions = ({ transList = [], fetchList }) => {
     );
 
     return filteredList;
-  };
-  useEffect(() => {
-    if (directionFilter.name === 'ALL') {
-      return setFilteredTransactions(transList);
-    }
-    const filteredList = transList.filter(
-      transaction => transaction.type === directionFilter
-    );
-    setFilteredTransactions(filteredList);
-  }, [directionFilter]);
-
-  const handleDirectionFilterChange = ({ target }) => {
-    const newType = target.value;
-    setDirectionFilter(newType);
   };
 
   const yearFormat = 'y';
@@ -270,9 +246,20 @@ const Transactions = ({ transList = [], fetchList }) => {
   const renderTransactions = flow([
     filterByYear,
     filterByMonth,
-    // filterByDirection,
+    filterByDirection,
+    filterBySelectedCounteragents,
     renderTransactionsContainer,
   ]);
+
+  const handleDirectionFilterChange = ({ target }) => {
+    const newType = target.value;
+    setDirectionFilter(newType);
+  };
+
+  const handleCounteragentFilterChange = selectedIdList => {
+    const selectedIdSet = new Set(selectedIdList);
+    setSelectedCounteragents(selectedIdSet)
+  };
 
   return (
     <>
@@ -285,7 +272,10 @@ const Transactions = ({ transList = [], fetchList }) => {
         }}
       >
         <Spin spinning={loading} size="large" tip="loading transactions...">
-          <Radio.Group defaultValue={defaultDirection.name} onChange={handleDirectionFilterChange}>
+          <Radio.Group
+            defaultValue={defaultDirection}
+            onChange={handleDirectionFilterChange}
+          >
             {TRANSACTION_DIRECTIONS.map(direction => (
               <Radio.Button value={direction.name} key={direction.name}>
                 {direction.label}
@@ -298,10 +288,10 @@ const Transactions = ({ transList = [], fetchList }) => {
             style={{ width: '100%' }}
             placeholder="Select counteragents"
             // defaultValue={[]}
-            onChange={handleFilter}
+            onChange={handleCounteragentFilterChange}
             allowClear
           >
-            {linkedAccounts.map(account => (
+            {counteragents.map(account => (
               <Option key={account.id}>{account.name}</Option>
             ))}
           </Select>
