@@ -15,10 +15,12 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import InternalPayment from './Pay/InternalPayment';
 import RemittancePayment from './Pay/RemittancePayment';
 import SubmitRemittance from './Pay/SubmitRemittance';
+import Reports from './Reports';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
   { name: 'Pay', path: '/payments/new', iconName: 'transaction' },
+  { name: 'reports', path: '/reports', iconName: 'file' },
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
@@ -105,6 +107,7 @@ const App = () => {
           component={BeneficiaryAddForm}
         />
         <BoundaryRoute exact path={`/linked-people`} component={LinkedPeople} />
+        <BoundaryRoute exact path={`/reports`} component={Reports} />
         <RouteNotFound />
       </Switch>
     </div>
