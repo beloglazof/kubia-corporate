@@ -29,8 +29,8 @@ const { Link } = Anchor;
 const { Option } = Select;
 
 export const COLORS = {
-  DEPOSIT: 'limegreen',
-  WITHDRAWAL: 'tomato',
+  DEPOSIT: 'rgba(50, 105, 50, 0.4)',
+  WITHDRAWAL: 'rgba(255, 99, 71, 0.4)',
   TRANSFER: '#28aaeb',
 };
 export const TRANS_ICONS = {
@@ -92,27 +92,6 @@ const Transactions = ({ transList = [], fetchList }) => {
     return transactions.filter(transaction =>
       selectedCounteragents.has(transaction.linked_account.id.toString())
     );
-  };
-
-  //  Handle transaction type filter
-  const handleFilter = e => {
-    let newData = [];
-    let dataToProcess = [];
-    let filter = '';
-    if (e.target) {
-      filter = e.target.value;
-    } else {
-      filter = e;
-    }
-
-    //  Linked account filtering
-    filter.map(f =>
-      transList
-        .filter(t => t.linked_account.id.toString() === f)
-        .map(t => newData.push(t))
-    );
-
-    setFilteredTransactions(newData);
   };
 
   const defaultDirection = TRANSACTION_DIRECTIONS[0].name;

@@ -2642,9 +2642,15 @@ body.dark-theme {
       background-color: transparent;
     }
 
-    &-link-active > .ant-anchor-link-title {
-      color: darken(@dark-theme-text-color, 10%);
+    .ant-anchor-link-title {
+      color: fade(@dark-theme-text-color, 60%);
     }
+
+    &-link-active > .ant-anchor-link-title {
+      color: @dark-theme-text-color;
+    }
+
+    
 
     &-ink-ball {
       border-color: @dark-theme-text-color;

@@ -1,8 +1,8 @@
 // @ts-check
-import React, { useState, useEffect } from 'react'
-import { startCase } from "lodash";
+import React, { useState, useEffect } from 'react';
+import { startCase } from 'lodash';
 import { Tooltip, Icon, Card } from 'antd';
-import { LINKED_ACC_TYPES } from '.';
+import { LINKED_ACC_TYPES, COLORS } from '.';
 import { formatISODate } from '../../util';
 
 //  Currency with tooltip
@@ -36,11 +36,11 @@ const TransactionCard = ({ transaction, handleClick }) => {
     if (transaction.details) {
       setCounterparty(transaction.details[linkedAccType]);
       if (transaction.details.type?.toLowerCase() === 'purchase') {
-        setCounterparty(transaction.details.purchase.merchant)
+        setCounterparty(transaction.details.purchase.merchant);
       }
     }
   }, [transaction]);
-
+  const color = COLORS[transactionDirection];
   return (
     <Card
       size="small"
@@ -65,7 +65,16 @@ const TransactionCard = ({ transaction, handleClick }) => {
         <br />
         {formatISODate(transaction.creationDate, 'dd MMMM yyyy')}
       </div>
-      <span style={{ fontSize: '1.2em', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+      <span
+        style={{
+          fontSize: '1.1em',
+          fontWeight: 'bold',
+          whiteSpace: 'nowrap',
+          backgroundColor: color,
+          borderRadius: '8px',
+          padding: '5px'
+        }}
+      >
         {transactionDirection === 'WITHDRAWAL' ? '-' : ''}
         {currencyTooltip(transaction.currency)}
         {amountTooltip(transaction.amount)}
@@ -74,4 +83,4 @@ const TransactionCard = ({ transaction, handleClick }) => {
   );
 };
 
-export default TransactionCard
+export default TransactionCard;
