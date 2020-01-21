@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, Table, Button } from 'antd';
+import { DatePicker, Table, Button, Select } from 'antd';
 import useAsync from '../hooks/useAsync';
-import { getReports, getReportTypes } from '../api';
+import { getReports, getReportTypes, createReport } from '../api';
 import { formatISODate } from '../util';
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const Reports = () => {
   const [fetchedReports, setFetchedReports, loadingReports] = useAsync(
@@ -16,10 +17,10 @@ const Reports = () => {
       setReports(fetchedReports.result);
     }
   }, [fetchedReports]);
-  const [reportTypes, setReportTypes, loadingTypes] = useAsync(getReportTypes);
-  const handleRangeChange = (date, dateString) => {
-    console.log(date, dateString);
-  };
+  const [reportTypes, setReportTypes, loadingTypes] = useAsync(
+    getReportTypes,
+    []
+  );
   const dateFormat = 'd-MM-yyyy';
   const columns = [
     { title: 'Name', dataIndex: 'name', key: 'name' },
@@ -29,12 +30,12 @@ const Reports = () => {
       key: 'type',
       render: typeId => {
         const type = reportTypes.find(type => type.id === typeId);
-        return type.name;
+        return type?.name;
       },
     },
     {
       title: 'Period',
-      key: 'name',
+      key: 'period',
       render: (text, record) => {
         const { period_start, period_end } = record;
         const formattedStartDate = formatISODate(period_start, dateFormat);
@@ -55,28 +56,73 @@ const Reports = () => {
       title: 'Actions',
       key: 'actions',
       render: (text, record) => {
-        return (
-          <Button type="link" icon="download" href={record.download} disabled={!record.download}>
-            Download
-          </Button>
-        );
+        const { download: downloadURL } = record;
+        if (downloadURL) {
+          return (
+            <Button type="link" icon="download" href={record.download}>
+              Download
+            </Button>
+          );
+        } else {
+          return 'Report is not prepared yet';
+        }
       },
     },
   ];
+
+  const [reportType, setReportType] = useState(1);
+  const handleReportTypeChange = value => setReportType(value);
+
+  const [periodStart, setPeriodStart] = useState();
+  const [periodFinish, setPeriodFinish] = useState();
+  const handleRangeChange = (date, dateStrings) => {
+    console.log(date, dateStrings);
+    const [start, finish] = dateStrings;
+    setPeriodStart(start);
+    setPeriodFinish(finish);
+  };
+  const handleGenerateClick = async () => {
+    await createReport(reportType, periodStart, periodFinish);
+    const updatedReports = await getReports();
+    setFetchedReports(updatedReports);
+  };
+
+  const generateButtonDisabled = !periodStart || !periodFinish;
+
   return (
     <>
       <div
         style={{
-          display: 'flex',
           marginBottom: '1em',
         }}
       >
+        <Select
+          value={reportType}
+          onChange={handleReportTypeChange}
+          style={{ marginRight: '1em', width: '180px' }}
+        >
+          {reportTypes.map(type => (
+            <Option value={type.id} key={type.id}>
+              {type.name}
+            </Option>
+          ))}
+        </Select>
         <RangePicker onChange={handleRangeChange} />
-        <Button type="primary" style={{ marginLeft: '1em' }}>
+        <Button
+          type="primary"
+          style={{ marginLeft: '1em' }}
+          onClick={handleGenerateClick}
+          disabled={generateButtonDisabled}
+        >
           Generate
         </Button>
       </div>
-      <Table dataSource={reports} columns={columns} loading={loadingReports} />
+      <Table
+        dataSource={reports}
+        columns={columns}
+        loading={loadingReports}
+        rowKey="id"
+      />
     </>
   );
 };
