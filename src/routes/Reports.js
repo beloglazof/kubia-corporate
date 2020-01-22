@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, Table, Button, Select } from 'antd';
+import { DatePicker, Table, Button, Select, message } from 'antd';
 import useAsync from '../hooks/useAsync';
 import { getReports, getReportTypes, createReport } from '../api';
 import { formatISODate } from '../util';
@@ -76,7 +76,6 @@ const Reports = () => {
   const [periodStart, setPeriodStart] = useState();
   const [periodFinish, setPeriodFinish] = useState();
   const handleRangeChange = (date, dateStrings) => {
-    console.log(date, dateStrings);
     const [start, finish] = dateStrings;
     setPeriodStart(start);
     setPeriodFinish(finish);
@@ -86,7 +85,8 @@ const Reports = () => {
   const handleGenerateClick = async () => {
     setSendingCreateRequest(true)
     await createReport(reportType, periodStart, periodFinish);
-
+    setSendingCreateRequest(false)
+    message.info('Request for generating report successfully accepted. Report will shown in table below', 10)
     const updatedReports = await getReports();
     setFetchedReports(updatedReports);
   };
@@ -117,6 +117,7 @@ const Reports = () => {
           style={{ marginLeft: '1em' }}
           onClick={handleGenerateClick}
           disabled={generateButtonDisabled}
+          loading={sendingCreateRequest}
         >
           Generate
         </Button>
