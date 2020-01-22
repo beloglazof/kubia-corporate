@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, Table, Button, Select, message } from 'antd';
+import { DatePicker, Table, Button, Select, message, Spin } from 'antd';
 import useAsync from '../hooks/useAsync';
 import { getReports, getReportTypes, createReport } from '../api';
 import { formatISODate } from '../util';
@@ -59,7 +59,7 @@ const Reports = () => {
         const { download: downloadURL } = record;
         if (downloadURL) {
           return (
-            <Button type="link" icon="download" href={record.download}>
+            <Button type="link" icon="download" download href={record.download}>
               Download
             </Button>
           );
@@ -94,7 +94,7 @@ const Reports = () => {
   const generateButtonDisabled = !periodStart || !periodFinish;
 
   return (
-    <>
+    <Spin size="large" spinning={loadingReports}>
       <div
         style={{
           marginBottom: '1em',
@@ -125,10 +125,9 @@ const Reports = () => {
       <Table
         dataSource={reports}
         columns={columns}
-        loading={loadingReports}
         rowKey="id"
       />
-    </>
+    </Spin>
   );
 };
 
