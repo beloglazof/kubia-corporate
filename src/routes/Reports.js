@@ -81,8 +81,12 @@ const Reports = () => {
     setPeriodStart(start);
     setPeriodFinish(finish);
   };
+
+  const [sendingCreateRequest, setSendingCreateRequest] = useState(false)
   const handleGenerateClick = async () => {
+    setSendingCreateRequest(true)
     await createReport(reportType, periodStart, periodFinish);
+
     const updatedReports = await getReports();
     setFetchedReports(updatedReports);
   };
