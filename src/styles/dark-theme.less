@@ -11,6 +11,8 @@
 @dark-theme-border-color: #495762;
 @dark-theme-active-border-color: @grey-6;
 @dark-theme-focus-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+@dark-theme-input-background-color: lighten(@dark-theme-component-background, 2%);
+
 
 /*Base Styles*/
 body.dark-theme {
@@ -1944,9 +1946,10 @@ body.dark-theme {
       color: darken(@dark-theme-text-color, 20%);
     }
 
+
     &-picker-clear {
       color: @dark-theme-text-color;
-      background: none;
+      background: @dark-theme-input-background-color;
     }
 
     & .ant-calendar-ok-btn {
@@ -1969,11 +1972,11 @@ body.dark-theme {
     }
 
     &-range .ant-calendar-in-range-cell:before {
-      background-color: lighten(@dark-theme-component-background, 15%);
+      background-color: lighten(@dark-theme-component-background, 25%);
     }
 
     &-week-number .ant-calendar-body tr.ant-calendar-active-week {
-      background: lighten(@dark-theme-component-background, 15%);
+      background: lighten(@dark-theme-component-background, 25%);
     }
 
     &-week-number
