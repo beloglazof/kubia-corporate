@@ -9,6 +9,8 @@
 @dark-theme-sidebar-dark-bg-darken: lighten(@dark-theme-sidebar-dark-bg, 6%);
 @dark-theme-sidebar-dark-hover-color: @dark-theme-component-background;
 @dark-theme-border-color: #495762;
+@dark-theme-active-border-color: @grey-6;
+@dark-theme-focus-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 
 /*Base Styles*/
 body.dark-theme {
@@ -1660,8 +1662,8 @@ body.dark-theme {
     &-focused .ant-select-selection,
     &-selection:focus,
     &-selection:active {
-      border-color: @grey-6;
-      .box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1));
+      border-color: @dark-theme-active-border-color;
+      box-shadow: @dark-theme-focus-box-shadow;
     }
 
     &-dropdown {
@@ -1773,7 +1775,7 @@ body.dark-theme {
     color: @dark-theme-text-color;
 
     &-range-picker-separator {
-      color: @dark-theme-text-color
+      color: @dark-theme-text-color;
     }
 
     &-today .ant-calendar-date {
@@ -1837,8 +1839,10 @@ body.dark-theme {
       color: @dark-theme-text-color;
     }
 
+    &-picker:focus .ant-calendar-picker-input:not(.ant-input-disabled),
     &-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled) {
-      border-color: @dark-theme-border-color;
+      border-color: @dark-theme-active-border-color;
+      box-shadow: @dark-theme-focus-box-shadow;
     }
 
     &-header .ant-calendar-prev-century-btn,
@@ -1854,6 +1858,32 @@ body.dark-theme {
     &-header .ant-calendar-year-select,
     &-header .ant-calendar-month-select {
       color: @dark-theme-text-color;
+    }
+    &-header .ant-calendar-prev-century-btn:hover::before,
+    &-header .ant-calendar-next-century-btn:hover::before,
+    &-header .ant-calendar-prev-decade-btn:hover::before,
+    &-header .ant-calendar-next-decade-btn:hover::before,
+    &-header .ant-calendar-prev-month-btn:hover::before,
+    &-header .ant-calendar-next-month-btn:hover::before,
+    &-header .ant-calendar-prev-year-btn:hover::before,
+    &-header .ant-calendar-next-year-btn:hover::before,
+    &-header .ant-calendar-century-select:hover::before,
+    &-header .ant-calendar-decade-select:hover::before,
+    &-header .ant-calendar-year-select:hover::before,
+    &-header .ant-calendar-month-select:hover::before,
+    &-header .ant-calendar-prev-century-btn:hover::after,
+    &-header .ant-calendar-next-century-btn:hover::after,
+    &-header .ant-calendar-prev-decade-btn:hover::after,
+    &-header .ant-calendar-next-decade-btn:hover::after,
+    &-header .ant-calendar-prev-month-btn:hover::after,
+    &-header .ant-calendar-next-month-btn:hover::after,
+    &-header .ant-calendar-prev-year-btn:hover::after,
+    &-header .ant-calendar-next-year-btn:hover::after,
+    &-header .ant-calendar-century-select:hover::after,
+    &-header .ant-calendar-decade-select:hover::after,
+    &-header .ant-calendar-year-select:hover::after,
+    &-header .ant-calendar-month-select:hover::after {
+      border-color: @dark-theme-active-border-color;
     }
 
     &-month-panel-header .ant-calendar-month-panel-prev-century-btn,
@@ -1939,11 +1969,11 @@ body.dark-theme {
     }
 
     &-range .ant-calendar-in-range-cell:before {
-      background-color: lighten(@dark-theme-component-background, 7%);
+      background-color: lighten(@dark-theme-component-background, 15%);
     }
 
     &-week-number .ant-calendar-body tr.ant-calendar-active-week {
-      background: lighten(@dark-theme-component-background, 7%);
+      background: lighten(@dark-theme-component-background, 15%);
     }
 
     &-week-number
@@ -2653,8 +2683,6 @@ body.dark-theme {
     &-link-active > .ant-anchor-link-title {
       color: @dark-theme-text-color;
     }
-
-    
 
     &-ink-ball {
       border-color: @dark-theme-text-color;
