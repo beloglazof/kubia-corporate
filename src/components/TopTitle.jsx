@@ -6,7 +6,7 @@ const TopTitle = ({ title, children = null, backButton = true }) => {
   let history = useHistory();
 
   return (
-    <Row style={{ marginBottom: '1.5em' }}>
+    <Row style={{ marginBottom: '1em' }}>
       <Col span={24}>
         <div style={{ display: 'flex', alignItems: 'bottom' }}>
           <Typography.Title level={2} style={{ marginBottom: '0.2em' }}>

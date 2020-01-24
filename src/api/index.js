@@ -164,6 +164,9 @@ export const deletePeople = async id => await httpDelete('/people', { id });
 export const getAccounts = async () => await get('/accounts');
 
 export const getReports = async () => await get('/report');
-export const createReport = async (type, period_start, period_end) =>
-  await post('/report', { type, period_start, period_end });
+export const createReport = async (type, period_start, period_end, email) =>
+  await post('/report', { type, period_start, period_end, email });
+export const sendReport = async (reportId) =>
+  await post('/report', { reportId });
 export const getReportTypes = async () => await get('/report/types');
+export const getReportStatuses = async () => await get('report/statuses');
