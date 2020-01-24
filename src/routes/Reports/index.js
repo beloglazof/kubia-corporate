@@ -63,7 +63,7 @@ const EmailInputForm = ({
     });
   };
   return (
-    <Form layout="vertical" onSubmit={handleSubmit} hideRequiredMark>
+    <Form layout="vertical" onSubmit={handleSubmit} style={{marginTop: '1em'}} hideRequiredMark>
       <Form.Item label="Email">
         {form.getFieldDecorator('email', {
           initialValue: defaultEmail,
