@@ -148,12 +148,11 @@ const renderFormFields = (form, fields) => {
 // const EditFormModal = Form.create()(EditBeneficiaryFormModal);
 
 const renderFields = fields => {
-  const topFieldNames = new Set(fields.map(([fieldName]) => fieldName));
+  const fieldNames = new Set(fields.map(([fieldName]) => fieldName));
   const renderField = ([name, value]) => {
     if (typeof value === 'object') {
       const fieldsWithNewNames = Object.keys(value).reduce((acc, fieldName) => {
-        const coverTopField = topFieldNames.has(fieldName);
-        const newFieldName = coverTopField
+        const newFieldName = fieldNames.has(fieldName)
           ? camelCase(`${name}-${fieldName}`)
           : fieldName;
         return { ...acc, [newFieldName]: value[fieldName] };
@@ -218,9 +217,9 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
         padding: '1em 1em 1em 1.4em',
         display: 'flex',
         alignItems: 'center',
-        marginBottom: 'auto'
+        marginBottom: 'auto',
       }}
-      style={{ height: '360px', display:'flex', flexDirection:'column' }}
+      style={{ height: '360px', display: 'flex', flexDirection: 'column' }}
     >
       <Descriptions column={2}>{renderFields(cardFields)}</Descriptions>
       <DetailsModal {...detailsModalProps} details={details} />

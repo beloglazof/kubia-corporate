@@ -1,7 +1,10 @@
 .parameter {
-  margin-left: 1.5em;
   margin-top: 2em;
   margin-bottom: 2em;
+}
+
+.parameter:first-of-type {
+  margin-top: 0;
 }
 
 .current {

@@ -3,23 +3,94 @@ import { Button, Form, Input } from 'antd';
 import { connect } from 'react-redux';
 import IntlMessages from 'util/IntlMessages';
 import MainLogo from '../components/MainLogo';
-import { signIn } from '../redux/features/session/sessionSlice';
+import { signIn, submitSignIn } from '../redux/features/session/sessionSlice';
 import InfoView from '../templateComponents/InfoView';
 
 const FormItem = Form.Item;
 
+const CredentialsForm = ({ handleSubmit, getFieldDecorator }) => (
+  <Form onSubmit={handleSubmit} className="gx-signin-form gx-form-row0">
+    <FormItem>
+      {getFieldDecorator('phone', {
+        initialValue: '',
+        rules: [
+          {
+            required: true,
+            type: 'string',
+            message: 'Please input phone!',
+          },
+        ],
+      })(<Input placeholder="Phone" />)}
+    </FormItem>
+    <FormItem>
+      {getFieldDecorator('password', {
+        initialValue: '',
+        rules: [
+          {
+            required: true,
+            message: 'Please input password!',
+          },
+        ],
+      })(<Input type="password" placeholder="Password" />)}
+    </FormItem>
+    <FormItem>
+      <Button type="primary" className="gx-mb-0" htmlType="submit">
+        <IntlMessages id="app.userAuth.signIn" />
+      </Button>
+    </FormItem>
+  </Form>
+);
+
+const CodeForm = ({ handleSubmit, getFieldDecorator }) => (
+  <Form onSubmit={handleSubmit} className="gx-signin-form gx-form-row0">
+    <FormItem>
+      {getFieldDecorator('code', {
+        initialValue: '',
+        rules: [
+          {
+            required: true,
+            message: 'Please input code from SMS!',
+          },
+        ],
+      })(<Input type="number" placeholder="Code from SMS" />)}
+    </FormItem>
+    <FormItem>
+      <Button type="primary" className="gx-mb-0" htmlType="submit">
+        <IntlMessages id="app.userAuth.send" />
+      </Button>
+    </FormItem>
+  </Form>
+);
+
 class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      authState: 'credentials',
+    };
+  }
   handleSubmit = e => {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        this.props.signIn(values);
+        const response = await this.props.signIn(values);
+        if (response && response === 'TWO_FACTOR_AUTH') {
+          this.setState({ authState: 'code' });
+        }
+      }
+    });
+  };
+
+  handleCodeSubmit = e => {
+    e.preventDefault();
+    this.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        await this.props.submitSignIn(values.code);
       }
     });
   };
 
   componentDidMount() {
-    console.log(this.props.token);
     if (this.props.token !== null) {
       this.props.history.push('/');
     }
@@ -33,7 +104,7 @@ class SignIn extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-
+    const { authState } = this.state;
     return (
       <div className="gx-app-login-wrap">
         <div className="gx-app-login-container">
@@ -44,74 +115,25 @@ class SignIn extends React.Component {
                 <h1>
                   <IntlMessages id="app.userAuth.signIn" />
                 </h1>
-                {/*<p>*/}
-                {/*  <IntlMessages id="app.userAuth.bySigning" />*/}
-                {/*</p>*/}
-                {/*<p>*/}
-                {/*  <IntlMessages id="app.userAuth.getAccount" />*/}
-                {/*</p>*/}
               </div>
               <div className="gx-app-logo">
-                {/*<img alt="example" src={require('../assets/images/main-logo.svg')} />*/}
                 <MainLogo />
               </div>
             </div>
             <div className="gx-app-login-content">
-              <Form
-                onSubmit={this.handleSubmit}
-                className="gx-signin-form gx-form-row0"
-              >
-                <FormItem>
-                  {getFieldDecorator('phone', {
-                    initialValue: '',
-                    rules: [
-                      {
-                        required: true,
-                        type: 'string',
-                        message: 'Please input phone!'
-                      }
-                    ]
-                  })(<Input placeholder="Phone" />)}
-                </FormItem>
-                <FormItem>
-                  {getFieldDecorator('password', {
-                    initialValue: '',
-                    rules: [
-                      {
-                        required: true,
-                        message: 'Please input password!'
-                      }
-                    ]
-                  })(<Input type="password" placeholder="Password" />)}
-                </FormItem>
-                {/*<FormItem>*/}
-                {/*  {getFieldDecorator('remember', {*/}
-                {/*    valuePropName: 'checked',*/}
-                {/*    initialValue: true*/}
-                {/*  })(*/}
-                {/*    <Checkbox>*/}
-                {/*      <IntlMessages id="appModule.iAccept" />*/}
-                {/*    </Checkbox>*/}
-                {/*  )}*/}
-                {/*  <span className="gx-signup-form-forgot gx-link">*/}
-                {/*    <IntlMessages id="appModule.termAndCondition" />*/}
-                {/*  </span>*/}
-                {/*</FormItem>*/}
-                <FormItem>
-                  <Button type="primary" className="gx-mb-0" htmlType="submit">
-                    <IntlMessages id="app.userAuth.signIn" />
-                  </Button>
-                  {/*<span>*/}
-                  {/*  <IntlMessages id="app.userAuth.or" />*/}
-                  {/*</span>*/}
-                  {/*<Link to="/signup">*/}
-                  {/*  <IntlMessages id="app.userAuth.signUp" />*/}
-                  {/*</Link>*/}
-                </FormItem>
-                <span className="gx-text-light gx-fs-sm">
-                  {/* demo user email: 'demo@example.com' and password: 'demo#123' */}
-                </span>
-              </Form>
+              {authState === 'credentials' && (
+                <CredentialsForm
+                  handleSubmit={this.handleSubmit}
+                  getFieldDecorator={getFieldDecorator}
+                />
+              )}
+
+              {authState === 'code' && (
+                <CodeForm
+                  handleSubmit={this.handleCodeSubmit}
+                  getFieldDecorator={getFieldDecorator}
+                />
+              )}
             </div>
             <InfoView />
           </div>
@@ -128,6 +150,6 @@ const mapStateToProps = ({ session }) => {
   return { token };
 };
 
-const actions = { signIn };
+const actions = { signIn, submitSignIn };
 
 export default connect(mapStateToProps, actions)(WrappedNormalLoginForm);

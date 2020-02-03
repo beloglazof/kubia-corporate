@@ -24,6 +24,7 @@ export const navItems = [
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
+  { name: 'payrolls', path: '/payrolls', iconName: 'solution' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
@@ -74,7 +75,6 @@ const RouteNotFound = () => {
 };
 const App = () => {
   const { firstPagePath } = useSelector(state => state.settings);
-  let history = useHistory();
   return (
     <div className="gx-main-content-wrapper">
       <Switch>
