@@ -1,3 +1,6 @@
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Button,
   Descriptions,
@@ -9,9 +12,6 @@ import {
   Table,
 } from 'antd';
 import { startCase } from 'lodash/string';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { getSessions, killSession } from '../../api';
 import { THEME_TYPE_DARK, THEME_TYPE_LITE } from '../../constants/ThemeSetting';
@@ -21,6 +21,7 @@ import { formatISODate } from '../../util';
 import { navItems } from '../index';
 import styles from './settings.module.css';
 import useAsync from '../../hooks/useAsync';
+import TopTitle from '../../components/TopTitle';
 
 const CurrentSession = ({ session }) => {
   if (!session) return null;
@@ -140,8 +141,8 @@ const Settings = () => {
 
   const formLayoutProps = {
     labelAlign: 'left',
-    labelCol: { xs: 12, sm: 6 },
     wrapperCol: { xs: 12, sm: 6 },
+    layout: 'vertical',
   };
   const { firstPagePath } = useSelector(state => state.settings);
   const dispatch = useDispatch();
@@ -191,13 +192,8 @@ const Settings = () => {
   };
   return (
     <>
+      <TopTitle title="Settings" backButton={false} />
       <section className={styles.parameter}>
-        <Divider
-          orientation={'left'}
-          style={{ fontSize: '1.4em', margin: '1.3em 0' }}
-        >
-          Settings
-        </Divider>
         <Form {...formLayoutProps}>
           <Form.Item label="Select your first page">
             <Select

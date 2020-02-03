@@ -24,6 +24,7 @@ import styles from './Transactions.module.css';
 import { formatISODate } from '../../util';
 import { MONTHS } from '../../constants';
 import { format } from 'date-fns';
+import TopTitle from '../TopTitle';
 
 const { Link } = Anchor;
 const { Option } = Select;
@@ -237,11 +238,12 @@ const Transactions = ({ transList = [], fetchList }) => {
 
   const handleCounteragentFilterChange = selectedIdList => {
     const selectedIdSet = new Set(selectedIdList);
-    setSelectedCounteragents(selectedIdSet)
+    setSelectedCounteragents(selectedIdSet);
   };
 
   return (
     <>
+      <TopTitle title="Transactions" backButton={false} />
       <div
         style={{
           padding: '10px',

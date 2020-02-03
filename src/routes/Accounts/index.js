@@ -6,10 +6,11 @@ import CompanyInfoCard from '../../components/CompanyInfoCard';
 import useAsync from '../../hooks/useAsync';
 import { getAccounts } from '../../api';
 import { fetchAccounts } from '../../redux/features/accounts/accountsSlice';
+import TopTitle from '../../components/TopTitle';
 
 const Accounts = () => {
   const accounts = useSelector(state => state.accounts);
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAccounts());
@@ -18,6 +19,7 @@ const Accounts = () => {
   const isCorporateUser = userType && userType.toLowerCase() === 'corporate';
   return (
     <>
+      <TopTitle title="Accounts" />
       <Row gutter={16}>
         <Col span={24} xl={12}>
           <List

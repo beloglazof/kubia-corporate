@@ -16,6 +16,8 @@ import InternalPayment from './Pay/InternalPayment';
 import RemittancePayment from './Pay/RemittancePayment';
 import SubmitRemittance from './Pay/SubmitRemittance';
 import Reports from './Reports';
+import Payrolls from './Payrolls';
+import NewPayroll from './Payrolls/NewPayroll';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
@@ -24,6 +26,7 @@ export const navItems = [
   { name: 'transactions', path: '/transactions', iconName: 'swap' },
   { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
   { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
+  { name: 'payrolls', path: '/payrolls', iconName: 'solution' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
@@ -108,6 +111,8 @@ const App = () => {
         />
         <BoundaryRoute exact path={`/linked-people`} component={LinkedPeople} />
         <BoundaryRoute exact path={`/reports`} component={Reports} />
+        <BoundaryRoute exact path={`/payrolls`} component={Payrolls} />
+        <BoundaryRoute exact path={`/payrolls/new`} component={NewPayroll} />
         <RouteNotFound />
       </Switch>
     </div>
