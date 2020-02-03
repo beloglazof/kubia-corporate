@@ -179,14 +179,14 @@ const Transactions = ({ transList = [], fetchList }) => {
     );
   };
 
-  const [modalShown, toggleModal] = useState(false);
-  const [modalData, fillModal] = useState();
+  const [modalShown, setModalShown] = useState(false);
+  const [modalData, setModalData] = useState();
 
   const showTransactionDetails = record => {
-    fillModal(
+    setModalData(
       filteredTransactions.find(transaction => transaction.id === record.id)
     );
-    toggleModal(true);
+    setModalShown(true);
   };
 
   const renderMonthTransactions = ([day, transactions], month) => {
@@ -285,10 +285,7 @@ const Transactions = ({ transList = [], fetchList }) => {
       <TransactionDetails
         modalShown={modalShown}
         modalData={modalData}
-        toggleModal={toggleModal}
-        COLORS={COLORS}
-        TRANS_ICONS={TRANS_ICONS}
-        LINKED_ACC_TYPES={LINKED_ACC_TYPES}
+        toggleModal={setModalShown}
       />
     </>
   );

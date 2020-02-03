@@ -13,3 +13,9 @@ export const formatISODate = (date, formatPattern = defaultPattern) => {
     console.log(e);
   }
 };
+
+export const formatAmount = amount => {
+  const normalizedAmount = String(amount).replace('-', '');
+  const formattedAmount = Number(normalizedAmount).toFixed(2);
+  return formattedAmount;
+};

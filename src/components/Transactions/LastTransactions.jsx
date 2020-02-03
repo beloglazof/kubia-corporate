@@ -3,11 +3,16 @@ import { take } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { getTransactions } from '../../api';
 import useAsync from '../../hooks/useAsync';
-import { singaporeDateTimeFormat, singaporeDateFormat } from '../../util/config';
+import {
+  singaporeDateTimeFormat,
+  singaporeDateFormat,
+} from '../../util/config';
 import { formatISODate } from '../../util/index.js';
 import { useHistory } from 'react-router-dom';
 
-import {LINKED_ACC_TYPES} from './index'
+import { LINKED_ACC_TYPES, COLORS } from './index';
+import TransactionDetails from './TransactionDetails/TransactionDetails';
+import { TransactionAmount } from './TransactionCard';
 const lastTransactionsNumber = 5;
 
 const LastTransactions = ({ data }) => {
@@ -21,10 +26,25 @@ const LastTransactions = ({ data }) => {
     }
   }, [data]);
 
-  const renderAmount = (amount, record) => {
-    const currency = record.currency.symbol;
-    const amountWithCurrency = `${currency} ${amount}`;
-    return amountWithCurrency;
+  const [modalShown, setModalShown] = useState(false);
+  const [modalData, setModalData] = useState();
+
+  const showTransactionDetails = record => {
+    setModalData(
+      lastTransactions.find(transaction => transaction.id === record.id)
+    );
+    setModalShown(true);
+  };
+
+  const renderAmount = (amount, transaction) => {
+    const { currency, type: direction } = transaction;
+    return (
+      <TransactionAmount
+        amount={amount}
+        currency={currency}
+        transactionDirection={direction}
+      />
+    );
   };
 
   const renderFromField = (linkedAccount, transaction) => {
@@ -37,7 +57,7 @@ const LastTransactions = ({ data }) => {
     return name;
   };
 
-  const renderDate = (date, record) => {
+  const renderDate = date => {
     const formattedDate = formatISODate(date, singaporeDateFormat.long);
 
     return formattedDate;
@@ -56,6 +76,7 @@ const LastTransactions = ({ data }) => {
         rowKey="id"
         size="small"
         pagination={false}
+        onRowClick={showTransactionDetails}
         bordered
       >
         <Column
@@ -78,8 +99,13 @@ const LastTransactions = ({ data }) => {
           key="linkedAccount"
           render={renderFromField}
         />
-        <Column title="Type" dataIndex="type" key="type" />
+        <Column title="Type" dataIndex="details.type" key="type" />
       </Table>
+      <TransactionDetails
+        modalShown={modalShown}
+        modalData={modalData}
+        toggleModal={setModalShown}
+      />
       <div style={{ display: 'flex' }}>
         <Button
           style={{ marginTop: '1em', marginLeft: 'auto', width: '20%' }}
