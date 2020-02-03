@@ -12,6 +12,9 @@ export const tokenObtain = async (params = { phone: '', password: '' }) =>
 export const tokenRefresh = async (params = { refreshToken: '' }) =>
   await post('token/refresh', params);
 
+export const twoFactorAuth = async (secret, code) =>
+  await post('token/obtain/2fa', { secret, ['2fa_code']: code });
+
 export const logout = async () => await get('logout');
 
 export const paymentsPay = async (amount, account_id, user_id, idempotency) =>
@@ -166,7 +169,6 @@ export const getAccounts = async () => await get('/accounts');
 export const getReports = async () => await get('/report');
 export const createReport = async (type, period_start, period_end, email) =>
   await post('/report', { type, period_start, period_end, email });
-export const sendReport = async (reportId) =>
-  await post('/report', { reportId });
+export const sendReport = async reportId => await post('/report', { reportId });
 export const getReportTypes = async () => await get('/report/types');
 export const getReportStatuses = async () => await get('report/statuses');

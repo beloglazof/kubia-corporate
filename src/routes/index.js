@@ -16,8 +16,6 @@ import InternalPayment from './Pay/InternalPayment';
 import RemittancePayment from './Pay/RemittancePayment';
 import SubmitRemittance from './Pay/SubmitRemittance';
 import Reports from './Reports';
-import Payrolls from './Payrolls';
-import NewPayroll from './Payrolls/NewPayroll';
 
 export const navItems = [
   { name: 'accounts', path: '/accounts', iconName: 'wallet' },
@@ -77,7 +75,6 @@ const RouteNotFound = () => {
 };
 const App = () => {
   const { firstPagePath } = useSelector(state => state.settings);
-  let history = useHistory();
   return (
     <div className="gx-main-content-wrapper">
       <Switch>
@@ -111,8 +108,6 @@ const App = () => {
         />
         <BoundaryRoute exact path={`/linked-people`} component={LinkedPeople} />
         <BoundaryRoute exact path={`/reports`} component={Reports} />
-        <BoundaryRoute exact path={`/payrolls`} component={Payrolls} />
-        <BoundaryRoute exact path={`/payrolls/new`} component={NewPayroll} />
         <RouteNotFound />
       </Switch>
     </div>
