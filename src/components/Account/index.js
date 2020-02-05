@@ -72,7 +72,7 @@ const Account = ({ account }) => {
   const defaulActiveTabKey = tabList[0].key;
   const [activeTabKey, setActiveTabKey] = useState(defaulActiveTabKey);
 
-  const [transactions] = useAsync(getTransactions, null, [], id);
+  const [transactions] = useAsync(getTransactions, null, [], id, 5);
   const renderTab = tabKey => {
     switch (tabKey) {
       case tabList[0].key:
