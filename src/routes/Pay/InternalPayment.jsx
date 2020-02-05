@@ -12,6 +12,7 @@ import {
 } from '../../components/PaymentFields';
 import { useHistory } from 'react-router-dom';
 import getRandomString from '../../util/getRandomString';
+import TopTitle from '../../components/TopTitle';
 
 const formLayoutProps = {
   // labelCol: {
@@ -111,21 +112,7 @@ const InternalPayment = () => {
   return (
     <Row>
       <Col span={24}>
-        <Row style={{ marginBottom: '2em' }}>
-          <Col span={24}>
-            <Typography.Title level={2} style={{ marginBottom: '0.2em' }}>
-              Internal payment
-            </Typography.Title>
-            <Button
-              icon="left"
-              onClick={() => history.goBack()}
-              style={{ padding: 0 }}
-              type="link"
-            >
-              Go back
-            </Button>
-          </Col>
-        </Row>
+        <TopTitle title="Internal payment" backButton />
         <div style={{ marginLeft: '1em' }}>
           {state === 'input' && <WrappedForm onSubmit={sendInternalPayment} />}
           {state === 'success' && (

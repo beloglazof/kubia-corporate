@@ -1,23 +1,17 @@
 import {
   Button,
   Card,
-  Col,
-  Collapse,
   Descriptions,
   List,
-  Modal,
-  Row,
 } from 'antd';
 import { startCase } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { useModal } from 'sunflower-antd';
 import LastTransactions from '../Transactions/LastTransactions';
-import styles from './account.module.css';
 import useAsync from '../../hooks/useAsync';
 import { getTransactions } from '../../api';
+import { formatAmount } from '../../util';
 
 const renderField = ([name, value]) => {
   const label = startCase(name);
@@ -35,81 +29,41 @@ const renderFields = (fieldsObj = {}) => {
 };
 
 const AccountCardHeader = ({ number, amount, currencyInfo, id }) => {
-  const makePaymentButtonDisabled = currencyInfo.code.toLowerCase() !== 'sgd';
-
+  const formattedAmount = formatAmount(amount);
   return (
-    <Row style={{ marginBottom: '.4em' }} gutter={[16, 16]}>
-      <Col xs={24}>
-        <div>
-          <span
-            className={'param-value'}
-            style={{
-              fontSize: 'calc(16px + 0.5vw)',
-              lineHeight: 'calc(16px + 1.05vw)',
-            }}
-          >
-            {currencyInfo.code} Account &nbsp;
-            {number}
-          </span>
+    <div>
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span>Account Number</span>
+          <span>{number}</span>
         </div>
-      </Col>
-      <Col xs={24}>
-        <div
-          style={{
-            textAlign: 'left',
-          }}
-        >
-          <span
-            style={{
-              letterSpacing: '-.02em',
-              fontWeight: 'bold',
-              fontSize: 'calc(14px + 0.5vw)',
-              lineHeight: 'calc(16px + 1.05vw)',
-            }}
-          >
-            Current Amount &nbsp;
-            {currencyInfo.symbol}
-            {Number(amount).toFixed(currencyInfo.units)}
-          </span>
-        </div>
-      </Col>
-      <Col xs={24}>
-        <Button type="primary" key="payment" block>
-          <Link
-            to={{ pathname: '/payments/new', state: { fromAccountId: id } }}
-          >
-            Make Payment
-          </Link>
-        </Button>
-      </Col>
 
-      {/* <Col xs={12}>
-            <div>
-              Currency:
-              <div className={'param-value'}>{currency_info.code}</div>
-            </div>
-          </Col> */}
-    </Row>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span>Current Amount</span>
+          <span>
+            {currencyInfo.symbol}
+            {formattedAmount}
+          </span>
+        </div>
+      </div>
+
+      <Button style={{ marginTop: '1em' }} type="primary" key="payment" block>
+        <Link to={{ pathname: '/payments/new', state: { fromAccountId: id } }}>
+          Make Payment
+        </Link>
+      </Button>
+    </div>
   );
 };
 
 const Account = ({ account }) => {
-  // const user = useSelector(({ user }) => user);
-  // const { first_name, last_name } = user;
-  // const name = first_name && last_name && `${first_name} ${last_name}`;
-
   const {
     number,
     amount,
     currency_info,
     id,
     bank_deposit,
-    // transactions,
   } = account;
-
-  const { modalProps, show } = useModal({
-    defaultVisible: false,
-  });
 
   const tabList = [
     { key: 'lastTransactions', tab: 'Last transactions' },
@@ -118,7 +72,7 @@ const Account = ({ account }) => {
   const defaulActiveTabKey = tabList[0].key;
   const [activeTabKey, setActiveTabKey] = useState(defaulActiveTabKey);
 
-  const [transactions] = useAsync(getTransactions, null, [], id);
+  const [transactions] = useAsync(getTransactions, null, [], id, 5);
   const renderTab = tabKey => {
     switch (tabKey) {
       case tabList[0].key:
@@ -154,20 +108,6 @@ const Account = ({ account }) => {
         onTabChange={key => setActiveTabKey(key)}
       >
         {renderTab(activeTabKey)}
-        {/* <div className={styles.name}>{name}</div> */}
-
-        {/* <Row gutter={[16, 16]}>
-          <Col span={24}>
-            <Collapse expandIconPosition="right">
-              <Collapse.Panel
-                header="Last transactions"
-                className={styles.panel}
-              >
-                <LastTransactions data={transactions} />
-              </Collapse.Panel>
-            </Collapse>
-          </Col>
-        </Row> */}
       </Card>
     </List.Item>
   );
@@ -181,10 +121,7 @@ Account.propTypes = {
     amount: PropTypes.number,
     balance: PropTypes.object,
     created: PropTypes.string,
-    updated: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.bool
-    ]),
+    updated: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
     bank_deposit: PropTypes.object,
     cards: PropTypes.array,
     transactions: PropTypes.object,

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { startCase } from 'lodash';
 import { Tooltip, Icon, Card } from 'antd';
 import { LINKED_ACC_TYPES, COLORS } from '.';
-import { formatISODate } from '../../util';
+import { formatISODate, formatAmount } from '../../util';
 
 //  Currency with tooltip
 const currencyTooltip = currency => {
@@ -15,13 +15,31 @@ const currencyTooltip = currency => {
 };
 
 //  Amount styled with tooltip
-const amountTooltip = amount => {
-  const normalizedAmount = String(amount).replace('-', '');
-  const formattedAmount = Number(normalizedAmount).toFixed(2);
+const amountTooltip = amount => (
+  <Tooltip title="Amount">
+    <span>{amount}</span>
+  </Tooltip>
+);
+
+export const TransactionAmount = ({ transactionDirection, currency, amount }) => {
+  const color = COLORS[transactionDirection];
+  const directionSign = transactionDirection === 'WITHDRAWAL' ? '-' : '';
+  const formattedAmount = formatAmount(amount);
+
   return (
-    <Tooltip title="Amount">
-      <span>{formattedAmount}</span>
-    </Tooltip>
+    <span
+      style={{
+        fontWeight: 'bold',
+        whiteSpace: 'nowrap',
+        backgroundColor: color,
+        borderRadius: '8px',
+        padding: '5px',
+      }}
+    >
+      {directionSign}
+      {currencyTooltip(currency)}
+      {amountTooltip(formattedAmount)}
+    </span>
   );
 };
 
@@ -40,7 +58,7 @@ const TransactionCard = ({ transaction, handleClick }) => {
       }
     }
   }, [transaction]);
-  const color = COLORS[transactionDirection];
+
   return (
     <Card
       size="small"
@@ -65,20 +83,11 @@ const TransactionCard = ({ transaction, handleClick }) => {
         <br />
         {formatISODate(transaction.creationDate, 'dd MMMM yyyy')}
       </div>
-      <span
-        style={{
-          fontSize: '1.1em',
-          fontWeight: 'bold',
-          whiteSpace: 'nowrap',
-          backgroundColor: color,
-          borderRadius: '8px',
-          padding: '5px'
-        }}
-      >
-        {transactionDirection === 'WITHDRAWAL' ? '-' : ''}
-        {currencyTooltip(transaction.currency)}
-        {amountTooltip(transaction.amount)}
-      </span>
+      <TransactionAmount
+        transactionDirection={transactionDirection}
+        amount={transaction.amount}
+        currency={transaction.currency}
+      />
     </Card>
   );
 };

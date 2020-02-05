@@ -1,0 +1,8 @@
+.typeButton {
+  width: 200px;
+  height: 90px;
+}
+
+.typeButton:not(:first-child) {
+  margin-left: 4em;
+}

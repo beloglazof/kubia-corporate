@@ -1,34 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import resolvePath from 'object-resolve-path';
-import {startCase} from 'lodash'
+import { startCase } from 'lodash';
 import { Descriptions, Icon, Modal } from 'antd';
 import styles from './ModalStyles.modules.css';
 import { formatISODate } from '../../../util';
+import { TransactionAmount } from '../TransactionCard';
+import { LINKED_ACC_TYPES } from '..';
 
 const TransactionDetails = ({
   modalShown,
   modalData: transaction,
   toggleModal,
-  COLORS,
-  TRANS_ICONS,
-  LINKED_ACC_TYPES,
 }) => {
-  if (!transaction) return null;
+  if (!transaction) {
+    return null;
+  }
 
-  const transactionType = transaction.type;
-  const color = COLORS[transactionType];
-  const icon = TRANS_ICONS[transactionType];
-  const linkedAccType = LINKED_ACC_TYPES[transaction.type];
+  const transactionDirection = transaction.type;
+  const linkedAccType = LINKED_ACC_TYPES[transactionDirection];
 
-  const [linkedAccount, setLinkedAccount] = useState({
+  const [counterparty, setCounterparty] = useState({
     name: '',
     account_number: '',
   });
+
+  const [details, setDetails] = useState();
   useEffect(() => {
     if (transaction.details) {
-      setLinkedAccount(transaction.details[linkedAccType]);
+      setCounterparty(transaction.details[linkedAccType]);
+      setDetails(transaction.details);
+      if (transaction.details.type?.toLowerCase() === 'purchase') {
+        setCounterparty(transaction.details.purchase.merchant);
+      }
     }
-  }, [transaction.details]);
+  }, [transaction]);
+
   return (
     <Modal
       visible={modalShown}
@@ -48,30 +54,28 @@ const TransactionDetails = ({
           span={2}
           className={styles.itemContent}
         >
-          {transaction.currency
-            ? resolvePath(transaction.currency, 'symbol')
-            : '$'}
-          {transaction.amount}
-        </Descriptions.Item>
-        <Descriptions.Item label="Type" className={styles.itemContent}>
-          <Icon
-            type={TRANS_ICONS[transaction.type]}
-            style={{ color: COLORS[transaction.type] }}
+          <TransactionAmount
+            transactionDirection={transactionDirection}
+            amount={transaction.amount}
+            currency={transaction.currency}
           />
-          {transaction.type}
+        </Descriptions.Item>
+        <Descriptions.Item label="Type" className={styles.itemContent} span={2}>
+          {details && details.type}
         </Descriptions.Item>
         <Descriptions.Item
           label={startCase(linkedAccType)}
           className={styles.itemContent}
+          span={2}
         >
-          {linkedAccount.name}
+          {counterparty.name}
         </Descriptions.Item>
         <Descriptions.Item
           label="Account number"
           span={2}
           className={styles.itemContent}
         >
-          {linkedAccount.account_number}
+          {counterparty.account_number}
         </Descriptions.Item>
         <Descriptions.Item
           label="Notes"

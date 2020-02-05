@@ -1,17 +1,18 @@
 import { Layout, Button } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavLink as Link } from 'react-router-dom';
+import { NavLink as Link, NavLink } from 'react-router-dom';
 import UserInfo from 'templateComponents/UserInfo';
 import CustomScrollbars from 'util/CustomScrollbars';
 import MainLogo from '../../../components/MainLogo';
 import {
   switchLanguage,
-  toggleCollapsedNav
+  toggleCollapsedNav,
 } from '../../../redux/features/settings/themeSettingsSlice';
 import HorizontalNav from '../HorizontalNav';
 import languageData from '../languageData';
 import { signOut } from '../../../redux/features/session/sessionSlice';
+import IntlMessages from '../../../util/IntlMessages';
 
 const { Header } = Layout;
 
@@ -34,7 +35,7 @@ const { Header } = Layout;
 
 class HorizontalDark extends Component {
   state = {
-    searchText: ''
+    searchText: '',
   };
 
   languageMenu = () => (
@@ -56,7 +57,7 @@ class HorizontalDark extends Component {
 
   updateSearchChatUser = evt => {
     this.setState({
-      searchText: evt.target.value
+      searchText: evt.target.value,
     });
   };
 
@@ -65,22 +66,18 @@ class HorizontalDark extends Component {
 
     return (
       <div className="gx-header-horizontal gx-header-horizontal-dark">
-        {/*<div className='gx-header-horizontal-top'>*/}
-        {/*  <div className='gx-container'>*/}
-        {/*    <div className='gx-header-horizontal-top-flex'>*/}
-        {/*      <div className='gx-header-horizontal-top-left'>*/}
-        {/*        <i className='icon icon-alert gx-mr-3' />*/}
-        {/*        <p className='gx-mb-0 gx-text-truncate'>*/}
-        {/*          <IntlMessages id='app.announced' />*/}
-        {/*        </p>*/}
-        {/*      </div>*/}
-        {/*      <ul className='gx-login-list'>*/}
-        {/*        <li>Login</li>*/}
-        {/*        <li>Signup</li>*/}
-        {/*      </ul>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        {/* <div className="gx-header-horizontal-top">
+          <div className="gx-container">
+            <div className="gx-header-horizontal-top-flex">
+              <div className="gx-header-horizontal-top-left">
+                <i className="icon icon-alert gx-mr-3" />
+                <p className="gx-mb-0 gx-text-truncate">
+                  <IntlMessages id="app.announced" />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> */}
 
         <Header className="gx-header-horizontal-main">
           <div className="gx-container">
@@ -93,146 +90,54 @@ class HorizontalDark extends Component {
                   }}
                 />
               </div>
-              {/*<Link*/}
-              {/*  to='/'*/}
-              {/*  className='gx-d-block gx-d-lg-none gx-pointer gx-mr-xs-3 gx-pt-xs-1 gx-w-logo'*/}
-              {/*>*/}
-              {/*  <img alt='' src={require('assets/images/w-logo.png')} />*/}
-              {/*</Link>*/}
               <Link
                 to="/"
                 className="gx-d-none gx-d-lg-block gx-pointer gx-mr-xs-5 gx-logo"
               >
                 <MainLogo />
               </Link>
-              {/*<div className='gx-header-search gx-d-none gx-d-lg-flex'>*/}
-              {/*  <SearchBox*/}
-              {/*    styleName='gx-lt-icon-search-bar-lg'*/}
-              {/*    placeholder='Search in app...'*/}
-              {/*    onChange={this.updateSearchChatUser.bind(this)}*/}
-              {/*    value={this.state.searchText}*/}
-              {/*  />*/}
 
-              {/*  <Select*/}
-              {/*    defaultValue='lucy'*/}
-              {/*    style={{ width: 120 }}*/}
-              {/*    onChange={handleChange}*/}
-              {/*  >*/}
-              {/*    <Option value='jack'>Products</Option>*/}
-              {/*    <Option value='lucy'>Apps</Option>*/}
-              {/*    <Option value='Yiminghe'>Blogs</Option>*/}
-              {/*  </Select>*/}
-              {/*</div>*/}
-
-              <ul className="gx-header-notifications gx-ml-auto">
-                {/*<li className='gx-notify gx-notify-search gx-d-inline-block gx-d-lg-none'>*/}
-                {/*  <Popover*/}
-                {/*    overlayClassName='gx-popover-horizantal'*/}
-                {/*    placement='bottomRight'*/}
-                {/*    content={*/}
-                {/*      <div className='gx-d-flex'>*/}
-                {/*        <Dropdown overlay={menu}>*/}
-                {/*          <Button>*/}
-                {/*            Category <Icon type='down' />*/}
-                {/*          </Button>*/}
-                {/*        </Dropdown>*/}
-                {/*        <SearchBox*/}
-                {/*          styleName='gx-popover-search-bar'*/}
-                {/*          placeholder='Search in app...'*/}
-                {/*          onChange={this.updateSearchChatUser.bind(this)}*/}
-                {/*          value={this.state.searchText}*/}
-                {/*        />*/}
-                {/*      </div>*/}
-                {/*    }*/}
-                {/*    trigger='click'*/}
-                {/*  >*/}
-                {/*    <span className='gx-pointer gx-d-block'>*/}
-                {/*      <i className='icon icon-search-new' />*/}
-                {/*    </span>*/}
-                {/*  </Popover>*/}
-                {/*</li>*/}
-
-                {/*<li className='gx-notify'>*/}
-                {/*  <Popover*/}
-                {/*    overlayClassName='gx-popover-horizantal'*/}
-                {/*    placement='bottomRight'*/}
-                {/*    content={<AppNotification />}*/}
-                {/*    trigger='click'*/}
-                {/*  >*/}
-                {/*    <span className='gx-pointer gx-d-block'>*/}
-                {/*      <i className='icon icon-notification' />*/}
-                {/*    </span>*/}
-                {/*  </Popover>*/}
-                {/*</li>*/}
-
-                {/*<li className='gx-msg'>*/}
-                {/*  <Popover*/}
-                {/*    overlayClassName='gx-popover-horizantal'*/}
-                {/*    placement='bottomRight'*/}
-                {/*    content={<MailNotification />}*/}
-                {/*    trigger='click'*/}
-                {/*  >*/}
-                {/*    <span className='gx-pointer gx-status-pos gx-d-block'>*/}
-                {/*      <i className='icon icon-chat-new' />*/}
-                {/*      <span className='gx-status gx-status-rtl gx-small gx-orange' />*/}
-                {/*    </span>*/}
-                {/*  </Popover>*/}
-                {/*</li>*/}
-                {/*<li className='gx-language'>*/}
-                {/*  <Popover*/}
-                {/*    overlayClassName='gx-popover-horizantal'*/}
-                {/*    placement='bottomRight'*/}
-                {/*    content={this.languageMenu()}*/}
-                {/*    trigger='click'*/}
-                {/*  >*/}
-                {/*    <span className='gx-pointer gx-flex-row gx-align-items-center'>*/}
-                {/*      <i className={`flag flag-24 flag-${locale.icon}`} />*/}
-                {/*    </span>*/}
-                {/*  </Popover>*/}
-                {/*</li>*/}
-                <li className="gx-user-nav">
-                  {/* <UserInfo /> */}
-                  <span style={{
-                    fontSize: '0.8em'
-                  }}>
-                    {this.props.user.first_name}
-                    &nbsp;
-                    {this.props.user.last_name}
-                  </span>
-                  <Button icon="logout" type="link" onClick={() => this.props.signOut()} style={{color: '#e0e0e0'}}>
-                    Sign out
+              <div
+                className="gx-header-horizontal-nav gx-d-none gx-d-lg-block"
+                style={{ marginLeft: '2em' }}
+              >
+                <HorizontalNav location={this.props.location} />
+              </div>
+              <div style={{ marginLeft: 'auto' }}>
+                <Link to="/profile">
+                  <Button
+                    icon="user"
+                    type="link"
+                    style={{
+                      color: '#e0e0e0',
+                      marginBottom: '0',
+                    }}
+                  >
+                    Profile
                   </Button>
-                </li>
-              </ul>
+                </Link>
+                <Button
+                  icon="logout"
+                  type="link"
+                  onClick={() => this.props.signOut()}
+                  style={{
+                    color: '#e0e0e0',
+                    marginBottom: '0',
+                  }}
+                >
+                  Sign out
+                </Button>
+              </div>
             </div>
           </div>
         </Header>
-        <div className="gx-header-horizontal-nav gx-d-none gx-d-lg-block">
+        {/* <div className="gx-header-horizontal-nav gx-d-none gx-d-lg-block">
           <div className="gx-container">
             <div className="gx-header-horizontal-nav-flex">
               <HorizontalNav location={this.props.location} />
-              <ul className="gx-header-notifications gx-ml-auto">
-                {/*<li>*/}
-                {/*  <span className='gx-pointer gx-d-block'>*/}
-                {/*    <i className='icon icon-menu-lines' />*/}
-                {/*  </span>*/}
-                {/*</li>*/}
-                {/*<li>*/}
-                {/*  <span className="gx-pointer gx-d-block">*/}
-                {/*    <Link to="/settings" style={{color: 'inherit'}}>*/}
-                {/*      <i className="icon icon-setting" />*/}
-                {/*    </Link>*/}
-                {/*  </span>*/}
-                {/*</li>*/}
-                {/*<li>*/}
-                {/*  <span className='gx-pointer gx-d-block'>*/}
-                {/*    <i className='icon icon-apps-new' />*/}
-                {/*  </span>*/}
-                {/*</li>*/}
-              </ul>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -245,5 +150,5 @@ const mapStateToProps = ({ themeSettings, user }) => {
 export default connect(mapStateToProps, {
   toggleCollapsedNav,
   switchLanguage,
-  signOut
+  signOut,
 })(HorizontalDark);

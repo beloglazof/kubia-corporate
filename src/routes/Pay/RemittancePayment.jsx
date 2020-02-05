@@ -364,7 +364,7 @@ const RemittancePayment = () => {
 
   return (
     <>
-      <TopTitle title="Remittance payment request" />
+      <TopTitle title="Remittance payment request" backButton />
       <Row>
         <Col xs={24} sm={20} md={16} xl={14} xxl={12}>
           <div style={{ marginLeft: '1em' }}>
