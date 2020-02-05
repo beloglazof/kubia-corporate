@@ -1,15 +1,17 @@
-import { Menu } from 'antd';
+import { Menu, Icon } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   NAV_STYLE_ABOVE_HEADER,
   NAV_STYLE_BELOW_HEADER,
   NAV_STYLE_DEFAULT_HORIZONTAL,
-  NAV_STYLE_INSIDE_HEADER_HORIZONTAL
+  NAV_STYLE_INSIDE_HEADER_HORIZONTAL,
 } from '../../constants/ThemeSetting';
 import { renderNavigationItems } from '../../routes';
+import IntlMessages from '../../util/IntlMessages';
+import { Link } from 'react-router-dom';
 
-// const SubMenu = Menu.SubMenu;
+const SubMenu = Menu.SubMenu;
 
 class HorizontalNav extends Component {
   getNavStyleSubMenuClass = navStyle => {
@@ -28,7 +30,7 @@ class HorizontalNav extends Component {
   };
 
   render() {
-    const { location } = this.props;
+    const { location, navStyle } = this.props;
     const { pathname } = location;
     const selectedKeys = pathname;
     // const defaultOpenKeys = selectedKeys[1];
@@ -39,24 +41,6 @@ class HorizontalNav extends Component {
         mode="horizontal"
       >
         {renderNavigationItems()}
-        {/*<SubMenu*/}
-        {/*  className={this.getNavStyleSubMenuClass(navStyle)}*/}
-        {/*  key="main"*/}
-        {/*  title={<IntlMessages id="sidebar.main" />}*/}
-        {/*>*/}
-        {/*<Menu.Item key="home">*/}
-        {/*  <Link to="/">*/}
-        {/*    <Icon type="home" />*/}
-        {/*    Home*/}
-        {/*  </Link>*/}
-        {/*</Menu.Item>*/}
-        {/*<Menu.Item key="settings">*/}
-        {/*  <Link to="/settings">*/}
-        {/*    <Icon type="setting" />*/}
-        {/*    Settings*/}
-        {/*  </Link>*/}
-        {/*</Menu.Item>*/}
-        {/*</SubMenu>*/}
       </Menu>
     );
   }

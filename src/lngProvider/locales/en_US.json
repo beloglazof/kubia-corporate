@@ -304,5 +304,14 @@
   "sidebar.map.weather": "Weather map",
   "sidebar.extensions.shuffle": "Shuffle",
   "sidebar.extensions.profile": "Profile",
-  "sidebar.social": "Social Apps"
+  "sidebar.social": "Social Apps",
+  "navigation.category.money": "Money",
+  "navigation.category.people": "People",
+  "route.transactions": "Transactions",
+  "route.accounts": "Accounts",
+  "route.pay": "Pay",
+  "route.beneficiaries": "Beneficiaries",
+  "route.profile": "Profile",
+  "route.settings": "Settings",
+  "route.linkedPeople": "Linked People"
 }

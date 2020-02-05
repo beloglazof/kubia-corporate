@@ -29,7 +29,6 @@ export const TransactionAmount = ({ transactionDirection, currency, amount }) =>
   return (
     <span
       style={{
-        fontSize: '1.1em',
         fontWeight: 'bold',
         whiteSpace: 'nowrap',
         backgroundColor: color,

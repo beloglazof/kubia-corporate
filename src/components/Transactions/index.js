@@ -2,21 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { groupBy, mapValues, uniqBy, startCase, flow, uniq } from 'lodash';
+import { groupBy, uniqBy, flow, uniq } from 'lodash';
 import PropTypes from 'prop-types';
+import { Anchor, Divider, Radio, Select, Spin, Tabs, Empty } from 'antd';
 
-import {
-  Anchor,
-  Card,
-  Divider,
-  Icon,
-  Radio,
-  Select,
-  Spin,
-  Tabs,
-  Tooltip,
-  Empty,
-} from 'antd';
 import TransactionDetails from './TransactionDetails/TransactionDetails';
 import TransactionCard from './TransactionCard';
 import { fetchList } from '../../redux/actions';
@@ -213,6 +202,7 @@ const Transactions = ({ transList = [], fetchList }) => {
     const groupedByDay = groupBy(transactions, getTransactionDay);
     const availableDays = Object.keys(groupedByDay).reverse();
     const transactionsByDayEntries = Object.entries(groupedByDay).reverse();
+    
     return (
       <div id="transactions">
         {renderAnchors(availableDays)}

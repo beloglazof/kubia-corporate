@@ -16,15 +16,46 @@ import InternalPayment from './Pay/InternalPayment';
 import RemittancePayment from './Pay/RemittancePayment';
 import SubmitRemittance from './Pay/SubmitRemittance';
 import Reports from './Reports';
+import SubMenu from 'antd/lib/menu/SubMenu';
+import IntlMessages from '../util/IntlMessages';
+
+const categories = [
+  { name: 'money', iconName: 'dollar' },
+  { name: 'people', iconName: 'global' },
+];
 
 export const navItems = [
-  { name: 'accounts', path: '/accounts', iconName: 'wallet' },
-  { name: 'Pay', path: '/payments/new', iconName: 'transaction' },
+  {
+    name: 'accounts',
+    path: '/accounts',
+    iconName: 'wallet',
+    category: 'money',
+  },
+  {
+    name: 'pay',
+    path: '/payments/new',
+    iconName: 'transaction',
+    category: 'money',
+  },
+  {
+    name: 'transactions',
+    path: '/transactions',
+    iconName: 'swap',
+    category: 'money',
+  },
+  {
+    name: 'beneficiaries',
+    path: '/beneficiaries',
+    iconName: 'idcard',
+    category: 'people',
+  },
+  {
+    name: 'linkedPeople',
+    path: '/linked-people',
+    iconName: 'team',
+    category: 'people',
+  },
   { name: 'reports', path: '/reports', iconName: 'file' },
-  { name: 'transactions', path: '/transactions', iconName: 'swap' },
-  { name: 'beneficiaries', path: '/beneficiaries', iconName: 'idcard' },
-  { name: 'linkedPeople', path: '/linked-people', iconName: 'team' },
-  { name: 'payrolls', path: '/payrolls', iconName: 'solution' },
   { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
@@ -32,18 +63,40 @@ export const renderNavigationItems = () => {
   const activeStyles = {
     fontWeight: 'bold',
   };
-  const renderItem = route => {
+  const renderItem = category => route => {
     const showIcon = route.iconName && route.iconName.length > 0;
+    if (route.category !== category.name) {
+      return null;
+    }
+
     return (
       <Menu.Item key={route.path}>
         <NavLink activeStyle={activeStyles} to={route.path}>
           {showIcon && <Icon type={route.iconName} />}
-          {startCase(route.name)}
+          {<IntlMessages id={`route.${route.name}`} />}
         </NavLink>
       </Menu.Item>
     );
   };
-  return navItems.map(renderItem);
+
+  return categories.map(category => (
+    <SubMenu
+      key={category.name}
+      title={
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Icon type={category.iconName} style={{ fontSize: '1em' }} />
+          <IntlMessages id={`navigation.category.${category.name}`} />
+        </div>
+      }
+    >
+      {navItems.map(renderItem(category))}
+    </SubMenu>
+  ));
 };
 
 export const BoundaryRoute = props => {
