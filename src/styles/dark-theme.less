@@ -11,8 +11,10 @@
 @dark-theme-border-color: #495762;
 @dark-theme-active-border-color: @grey-6;
 @dark-theme-focus-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-@dark-theme-input-background-color: lighten(@dark-theme-component-background, 2%);
-
+@dark-theme-input-background-color: lighten(
+  @dark-theme-component-background,
+  2%
+);
 
 /*Base Styles*/
 body.dark-theme {
@@ -408,6 +410,13 @@ body.dark-theme {
 
   & .@{class-prefix}-header-horizontal-nav .ant-menu-horizontal {
     background: none;
+    & > .ant-menu-submenu {
+      &-selected {
+        & > .ant-menu-submenu-title {
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   & .ant-menu-horizontal > .ant-menu-item:hover,
@@ -1945,7 +1954,6 @@ body.dark-theme {
     &-decade-panel-next-century-cell .ant-calendar-decade-panel-decade {
       color: darken(@dark-theme-text-color, 20%);
     }
-
 
     &-picker-clear {
       color: @dark-theme-text-color;

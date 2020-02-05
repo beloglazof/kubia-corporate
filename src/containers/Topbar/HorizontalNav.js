@@ -36,7 +36,6 @@ class HorizontalNav extends Component {
     // const defaultOpenKeys = selectedKeys[1];
     return (
       <Menu
-        // defaultOpenKeys={[defaultOpenKeys]}
         selectedKeys={[selectedKeys]}
         mode="horizontal"
       >

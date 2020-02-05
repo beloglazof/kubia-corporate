@@ -108,7 +108,6 @@ class HorizontalDark extends Component {
                   <Button
                     icon="user"
                     type="link"
-                    onClick={() => this.props.signOut()}
                     style={{
                       color: '#e0e0e0',
                       marginBottom: '0',
