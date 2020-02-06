@@ -86,7 +86,7 @@ const BeneficiaryAddForm = ({ history, form }) => {
   // };
   return (
     <>
-      <TopTitle title="Add new beneficiary" />
+      <TopTitle title="Add new beneficiary" backButton />
 
       {/* <Steps {...stepsProps}>
         <Step />
