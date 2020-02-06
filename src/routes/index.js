@@ -18,153 +18,40 @@ import SubmitRemittance from './Pay/SubmitRemittance';
 import Reports from './Reports';
 import SubMenu from 'antd/lib/menu/SubMenu';
 import IntlMessages from '../util/IntlMessages';
+import Profile from './Profile';
 
-const categories = [
-  { name: 'money', iconName: 'dollar' },
-  { name: 'people', iconName: 'global' },
-];
-
-export const navItems = [
+export default [
   {
     name: 'accounts',
     path: '/accounts',
-    iconName: 'wallet',
-    category: 'money',
+    component: Accounts,
+    exact: true,
   },
   {
     name: 'pay',
     path: '/payments/new',
-    iconName: 'transaction',
-    category: 'money',
+    component: PayPage,
+    exact: true,
   },
   {
     name: 'transactions',
     path: '/transactions',
-    iconName: 'swap',
-    category: 'money',
+    component: Transactions,
+    exact: true,
   },
   {
     name: 'beneficiaries',
     path: '/beneficiaries',
-    iconName: 'idcard',
-    category: 'people',
+    component: Beneficiaries,
+    exact: true,
   },
   {
     name: 'linkedPeople',
     path: '/linked-people',
-    iconName: 'team',
-    category: 'people',
+    component: LinkedPeople,
+    exact: true,
   },
-  { name: 'reports', path: '/reports', iconName: 'file' },
-  { name: 'settings', path: '/settings', iconName: 'setting' },
+  { name: 'reports', path: '/reports', component: Reports, exact: true },
+  { name: 'settings', path: '/settings', component: Settings, exact: true },
+  { name: 'profile', path: '/profile', component: Profile, exact: true },
 ];
-
-export const renderNavigationItems = () => {
-  const activeStyles = {
-    fontWeight: 'bold',
-  };
-  const renderItem = category => route => {
-    const showIcon = route.iconName && route.iconName.length > 0;
-    if (route.category !== category.name) {
-      return null;
-    }
-
-    return (
-      <Menu.Item key={route.path}>
-        <NavLink activeStyle={activeStyles} to={route.path}>
-          {showIcon && <Icon type={route.iconName} />}
-          {<IntlMessages id={`route.${route.name}`} />}
-        </NavLink>
-      </Menu.Item>
-    );
-  };
-
-  return categories.map(category => (
-    <SubMenu
-      key={category.name}
-      title={
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          <Icon type={category.iconName} style={{ fontSize: '1em' }} />
-          <IntlMessages id={`navigation.category.${category.name}`} />
-        </div>
-      }
-    >
-      {navItems.map(renderItem(category))}
-    </SubMenu>
-  ));
-};
-
-export const BoundaryRoute = props => {
-  let history = useHistory();
-  return (
-    <ErrorBoundary history={history}>
-      <Route {...props}>{props.children}</Route>
-    </ErrorBoundary>
-  );
-};
-const RouteNotFound = () => {
-  let history = useHistory();
-  const { firstPagePath } = useSelector(state => state.settings);
-
-  return (
-    <Route path="*">
-      <Result
-        status="404"
-        title="404"
-        subTitle="Sorry, the page you visited does not exist."
-        extra={
-          <Button type="primary" onClick={() => history.push(firstPagePath)}>
-            Back Home
-          </Button>
-        }
-      />
-    </Route>
-  );
-};
-const App = () => {
-  const { firstPagePath } = useSelector(state => state.settings);
-  return (
-    <div className="gx-main-content-wrapper">
-      <Switch>
-        <Redirect exact from="/" to={firstPagePath} />
-        <BoundaryRoute path={`/accounts`} component={Accounts} />
-        <BoundaryRoute exact path={`/payments/new`} component={PayPage} />
-        <BoundaryRoute
-          exact
-          path={`/payments/new/internal`}
-          component={InternalPayment}
-        />
-        <BoundaryRoute
-          exact
-          path={`/payments/new/remittance`}
-          component={RemittancePayment}
-        />
-        <BoundaryRoute
-          path={`/payments/remittance/requests/:quoteId`}
-          component={SubmitRemittance}
-        />
-        <BoundaryRoute path={`/settings`} component={Settings} />
-        <BoundaryRoute path={`/transactions`} component={Transactions} />
-        <BoundaryRoute
-          exact
-          path={`/beneficiaries`}
-          component={Beneficiaries}
-        />
-        <BoundaryRoute
-          path={`/beneficiaries/add`}
-          component={BeneficiaryAddForm}
-        />
-        <BoundaryRoute exact path={`/linked-people`} component={LinkedPeople} />
-        <BoundaryRoute exact path={`/reports`} component={Reports} />
-        <RouteNotFound />
-      </Switch>
-    </div>
-  );
-};
-
-export default App;
