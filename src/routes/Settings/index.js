@@ -192,7 +192,7 @@ const Settings = () => {
   };
   return (
     <>
-      <TopTitle title="Settings" backButton={false} />
+      <TopTitle title="Settings" backButton />
       <section className={styles.parameter}>
         <Form {...formLayoutProps}>
           <Form.Item label="Select your first page">

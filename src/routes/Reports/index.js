@@ -220,7 +220,7 @@ const Reports = () => {
 
   return (
     <Spin size="large" spinning={loadingReports}>
-      <TopTitle title="Reports" backButton={false} />
+      <TopTitle title="Reports" backButton />
       <div style={{ marginBottom: '2em' }}>
         <h2>Send report</h2>
         <Form layout="inline" style={{ marginTop: '1.2em' }}>
