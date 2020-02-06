@@ -1,68 +1,19 @@
 import { Layout, Button } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NavLink as Link, NavLink } from 'react-router-dom';
-import UserInfo from 'templateComponents/UserInfo';
-import CustomScrollbars from 'util/CustomScrollbars';
+import { NavLink as Link } from 'react-router-dom';
 import MainLogo from '../../../components/MainLogo';
 import {
   switchLanguage,
   toggleCollapsedNav,
 } from '../../../redux/features/settings/themeSettingsSlice';
-import HorizontalNav from '../HorizontalNav';
-import languageData from '../languageData';
 import { signOut } from '../../../redux/features/session/sessionSlice';
-import IntlMessages from '../../../util/IntlMessages';
 
 const { Header } = Layout;
 
-// const Option = Select.Option;
-// const menu = (
-//   <Menu onClick={handleMenuClick}>
-//     <Menu.Item key="1">Products</Menu.Item>
-//     <Menu.Item key="2">Apps</Menu.Item>
-//     <Menu.Item key="3">Blogs</Menu.Item>
-//   </Menu>
-// );
-
-// function handleMenuClick(e) {
-//   message.info('Click on menu item.');
-// }
-
-// function handleChange(value) {
-//   console.log(`selected ${value}`);
-// }
-
 class HorizontalDark extends Component {
-  state = {
-    searchText: '',
-  };
-
-  languageMenu = () => (
-    <CustomScrollbars className="gx-popover-lang-scroll">
-      <ul className="gx-sub-popover">
-        {languageData.map(language => (
-          <li
-            className="gx-media gx-pointer"
-            key={JSON.stringify(language)}
-            onClick={e => this.props.switchLanguage(language)}
-          >
-            <i className={`flag flag-24 gx-mr-2 flag-${language.icon}`} />
-            <span className="gx-language-text">{language.name}</span>
-          </li>
-        ))}
-      </ul>
-    </CustomScrollbars>
-  );
-
-  updateSearchChatUser = evt => {
-    this.setState({
-      searchText: evt.target.value,
-    });
-  };
-
   render() {
-    const { navCollapsed } = this.props;
+    const { navCollapsed, location } = this.props;
 
     return (
       <div className="gx-header-horizontal gx-header-horizontal-dark">
@@ -101,7 +52,7 @@ class HorizontalDark extends Component {
                 className="gx-header-horizontal-nav gx-d-none gx-d-lg-block"
                 style={{ marginLeft: '2em' }}
               >
-                <HorizontalNav location={this.props.location} />
+                <Navigation location={location} mode="horizontal" />
               </div>
               <div style={{ marginLeft: 'auto' }}>
                 <Link to="/profile">
@@ -131,13 +82,6 @@ class HorizontalDark extends Component {
             </div>
           </div>
         </Header>
-        {/* <div className="gx-header-horizontal-nav gx-d-none gx-d-lg-block">
-          <div className="gx-container">
-            <div className="gx-header-horizontal-nav-flex">
-              <HorizontalNav location={this.props.location} />
-            </div>
-          </div>
-        </div> */}
       </div>
     );
   }

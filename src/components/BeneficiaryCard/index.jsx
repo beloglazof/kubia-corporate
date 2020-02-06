@@ -6,6 +6,8 @@ import { useForm, useModal } from 'sunflower-antd';
 import InputItem from '../InputItem';
 import CountrySelect from '../CountrySelect';
 
+import styles from './index.module.css'
+
 const getCardActions = (showDetails, onDelete, showEditModal) => {
   // const editBeneficiary = () => {
   //   showEditModal();
@@ -219,7 +221,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
         alignItems: 'center',
         marginBottom: 'auto',
       }}
-      style={{ height: '360px', display: 'flex', flexDirection: 'column' }}
+      className={styles.beneficiaryCard}
     >
       <Descriptions column={2}>{renderFields(cardFields)}</Descriptions>
       <DetailsModal {...detailsModalProps} details={details} />

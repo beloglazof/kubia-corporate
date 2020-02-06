@@ -67,9 +67,7 @@ const Beneficiaries = ({ history }) => {
             gutter: 16,
             xs: 1,
             md: 2,
-            lg: 2,
-            xl: 2,
-            xxl: 3,
+            xxl: 3
           }}
         />
       </div>

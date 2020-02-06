@@ -8,7 +8,7 @@ const TopTitle = ({ title, children = null, backButton = false }) => {
   return (
     <Row style={{ marginBottom: '1em' }}>
       <Col span={24}>
-        <div style={{ display: 'flex', alignItems: 'bottom' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Typography.Title level={2} style={{ marginBottom: '0.2em' }}>
             {title}
           </Typography.Title>

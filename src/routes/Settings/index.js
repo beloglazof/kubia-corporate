@@ -18,7 +18,7 @@ import { THEME_TYPE_DARK, THEME_TYPE_LITE } from '../../constants/ThemeSetting';
 import { setFirstPagePath } from '../../redux/features/settings/settingsSlice';
 import { setThemeType } from '../../redux/features/settings/themeSettingsSlice';
 import { formatISODate } from '../../util';
-import { navItems } from '../index';
+import routes from '../index';
 import styles from './settings.module.css';
 import useAsync from '../../hooks/useAsync';
 import TopTitle from '../../components/TopTitle';
@@ -201,7 +201,7 @@ const Settings = () => {
               value={firstPagePath}
               onChange={handleFirstPageChange}
             >
-              {navItems.map(item => (
+              {routes.map(item => (
                 <Select.Option value={item.path} key={item.path}>
                   {startCase(item.name)}
                 </Select.Option>

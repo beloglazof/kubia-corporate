@@ -6,12 +6,13 @@ import CustomScrollbars from 'util/CustomScrollbars';
 import {
   NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR,
   NAV_STYLE_NO_HEADER_MINI_SIDEBAR,
-  THEME_TYPE_LITE
+  THEME_TYPE_LITE,
 } from '../../constants/ThemeSetting';
 import { renderNavigationItems } from '../../routes';
 import UserInfo from '../../templateComponents/UserInfo';
 import AppsNavigation from './AppsNavigation';
 import SidebarLogo from './SidebarLogo';
+import Navigation from '../../components/Navigation';
 
 class SidebarContent extends Component {
   getNoHeaderClass = navStyle => {
@@ -33,8 +34,9 @@ class SidebarContent extends Component {
   render() {
     const { themeType, navStyle, location } = this.props;
     const selectedKeys = location.pathname;
+    const theme = themeType === THEME_TYPE_LITE ? 'lite' : 'dark';
     return (
-      <Auxiliary>
+      <>
         <SidebarLogo />
         <div className="gx-sidebar-content">
           <div
@@ -46,22 +48,10 @@ class SidebarContent extends Component {
             <AppsNavigation />
           </div>
           <CustomScrollbars className="gx-layout-sider-scrollbar">
-            <Menu
-              selectedKeys={[selectedKeys]}
-              theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
-              mode="inline"
-            >
-              {renderNavigationItems()}
-              {/*<Menu.Item key="sample">*/}
-              {/*  <Link to="/accounts">*/}
-              {/*    <i className="icon icon-widgets" />*/}
-              {/*    <IntlMessages id="sidebar.accounts" />*/}
-              {/*  </Link>*/}
-              {/*</Menu.Item>*/}
-            </Menu>
+            <Navigation location={location} theme={theme} mode="inline" />
           </CustomScrollbars>
         </div>
-      </Auxiliary>
+      </>
     );
   }
 }

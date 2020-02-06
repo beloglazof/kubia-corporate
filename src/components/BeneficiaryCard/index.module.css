@@ -1,0 +1,11 @@
+.beneficiaryCard {
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 1600px ) {
+  .beneficiaryCard {
+    height: 400px;
+  }
+}
