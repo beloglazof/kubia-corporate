@@ -5,7 +5,7 @@ import { NavLink as Link, useLocation, NavLink } from 'react-router-dom';
 import MainLogo from './MainLogo';
 import { toggleCollapsedNav } from '../redux/features/settings/themeSettingsSlice';
 import { signOut } from '../redux/features/session/sessionSlice';
-import Navigation, { NavigationItem } from './Navigation';
+import Navigation from './Navigation';
 import IntlMessages from '../util/IntlMessages';
 
 const { Header } = Layout;
@@ -50,7 +50,7 @@ const AppHeader = () => {
             </Link>
 
             <div
-              className="gx-header-horizontal-nav"
+              className="gx-d-none gx-d-lg-block gx-header-horizontal-nav"
               style={{
                 marginLeft: '2em',
                 display: 'flex',
@@ -59,45 +59,35 @@ const AppHeader = () => {
               }}
             >
               <Navigation location={location} mode="horizontal" />
-              <div
+            </div>
+            <div
+            className='gx-header-horizontal-nav'
+              style={{
+                marginLeft: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Menu selectedKeys={selectedKeys} mode="horizontal">
+                <Menu.Item key="/profile">
+                  <NavLink activeStyle={{ fontWeight: 'bold' }} to="/profile">
+                    <Icon type="user" />
+                    <IntlMessages id={`route.profile`} />
+                  </NavLink>
+                </Menu.Item>
+              </Menu>
+
+              <Button
+                icon="logout"
+                type="link"
+                onClick={() => dispatch(signOut())}
                 style={{
-                  marginLeft: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
+                  color: '#e0e0e0',
+                  marginBottom: '0',
                 }}
               >
-                <Menu selectedKeys={selectedKeys} mode="horizontal">
-                  <Menu.Item key="/profile">
-                    <NavLink activeStyle={{ fontWeight: 'bold' }} to="/profile">
-                      <Icon type="user" />
-                      <IntlMessages id={`route.profile`} />
-                    </NavLink>
-                  </Menu.Item>
-                </Menu>
-                {/* <Link to="/profile">
-                <Button
-                  icon="user"
-                  type="link"
-                  style={{
-                    color: '#e0e0e0',
-                    marginBottom: '0',
-                  }}
-                >
-                  Profile
-                </Button>
-              </Link> */}
-                <Button
-                  icon="logout"
-                  type="link"
-                  onClick={() => dispatch(signOut())}
-                  style={{
-                    color: '#e0e0e0',
-                    marginBottom: '0',
-                  }}
-                >
-                  Sign out
-                </Button>
-              </div>
+                Sign out
+              </Button>
             </div>
           </div>
         </div>

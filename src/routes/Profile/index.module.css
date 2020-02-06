@@ -1,0 +1,40 @@
+.content {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.descriptions {
+  width: 300px;
+  margin-right: 2em;
+}
+
+.descriptions table {
+  width: auto;
+}
+
+.linksTitle {
+  font-weight: bold;
+  margin-bottom: 1em;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+.link:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+
+.linkButton {
+  width: 180px;
+  height: 50px;
+}
+
+@media screen and (max-width: 579px ){
+
+  .descriptions {
+    margin-bottom: 1em;
+  }
+}
