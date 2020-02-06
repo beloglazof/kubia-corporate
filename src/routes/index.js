@@ -24,13 +24,13 @@ export default [
     exact: true,
   },
   {
-    name: 'pay',
+    name: 'internal payment',
     path: '/payments/new/internal',
     component: InternalPayment,
     exact: true,
   },
   {
-    name: 'pay',
+    name: 'remittance payment',
     path: '/payments/new/remittance',
     component: RemittancePayment,
     exact: true,
