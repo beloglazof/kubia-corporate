@@ -9,6 +9,7 @@ import InternalPayment from './Pay/InternalPayment';
 import RemittancePayment from './Pay/RemittancePayment';
 import Reports from './Reports';
 import Profile from './Profile';
+import Documents from './Documents';
 
 export default [
   {
@@ -75,6 +76,12 @@ export default [
     name: 'profile',
     path: '/profile',
     component: Profile,
+    exact: true,
+  },
+  {
+    name: 'documents',
+    path: '/documents',
+    component: Documents,
     exact: true,
   },
 ];
