@@ -7,9 +7,9 @@ import { startCase } from 'lodash';
 import styles from './index.module.css';
 
 const links = [
-  { name: 'reports', path: '/reports' },
-  { name: 'documents', path: '/documents' },
-  { name: 'settings', path: '/settings' },
+  { name: 'reports', path: '/reports', iconName: 'file' },
+  { name: 'documents', path: '/documents', iconName: 'container' },
+  { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
 const Profile = () => {
@@ -22,7 +22,10 @@ const Profile = () => {
   return (
     <div>
       <TopTitle title="Profile" />
-      <div className={styles.content} style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div
+        className={styles.content}
+        style={{ display: 'flex', flexWrap: 'wrap' }}
+      >
         <Descriptions
           size="small"
           title={fullName}
@@ -45,9 +48,13 @@ const Profile = () => {
               const name = startCase(link.name);
               return (
                 <Link to={link.path} className={styles.link}>
-                  <Button type="primary" className={styles.linkButton}>
+                  <Button
+                    type="primary"
+                    icon={link.iconName}
+                    className={styles.linkButton}
+                  >
                     {name}
-                    <Icon type="right" />
+                    <Icon style={{ marginLeft: 'auto' }} type="right" />
                   </Button>
                 </Link>
               );
