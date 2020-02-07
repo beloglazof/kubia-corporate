@@ -9,3 +9,9 @@
     height: 400px;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .beneficiaryCard {
+    height: 500px;
+  }
+}
