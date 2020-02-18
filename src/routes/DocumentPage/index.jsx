@@ -1,26 +1,47 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import { Form, Field } from 'react-final-form';
+import { Button, Descriptions, Input, DatePicker } from 'antd';
 import { getDocumentTemplate, getDocument } from '../../api';
 import TopTitle from '../../components/TopTitle';
-import { Form, Field } from 'react-final-form';
-import { Button, Descriptions, Input } from 'antd';
+import dayjs from 'dayjs';
 
 import styles from './index.module.css';
 
 const renderTemplateField = fieldData => {
-  const { label, type, name} = fieldData;
+  const { label, type, name, value } = fieldData;
   switch (type) {
     case 'text':
-      const {value} = fieldData
       return (
         <Field name={name} key={name} initialValue={value}>
           {props => (
             <div>
               <span>{label}</span>
-              <Input
-                value={props.input.value}
-                onChange={props.input.onChange}
-              />
+              <div>
+                <Input
+                  value={props.input.value}
+                  onChange={props.input.onChange}
+                />
+              </div>
+            </div>
+          )}
+        </Field>
+      );
+
+    case 'date':
+      // for antd datepicker because it works with moment.js object
+      const onChange = cb => (date, dateString) => cb(dateString);
+      return (
+        <Field name={name} key={name} initialValue={value}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <div>
+                <DatePicker
+                  onChange={onChange(props.input.onChange)}
+                  defaultValue={dayjs(props.meta.initial)}
+                />
+              </div>
             </div>
           )}
         </Field>
