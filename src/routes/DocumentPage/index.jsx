@@ -1,7 +1,14 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
-import { Button, Descriptions, Input, DatePicker, Radio } from 'antd';
+import {
+  Button,
+  Descriptions,
+  Input,
+  DatePicker,
+  Radio,
+  InputNumber,
+} from 'antd';
 import { getDocumentTemplate, getDocument } from '../../api';
 import TopTitle from '../../components/TopTitle';
 import dayjs from 'dayjs';
@@ -65,6 +72,23 @@ const renderTemplateField = fieldData => {
                     </Radio>
                   ))}
                 </Radio.Group>
+              </div>
+            </div>
+          )}
+        </Field>
+      );
+
+    case 'number':
+      return (
+        <Field name={name} key={name}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <div>
+                <InputNumber
+                  onChange={props.input.onChange}
+                  value={props.input.value}
+                />
               </div>
             </div>
           )}

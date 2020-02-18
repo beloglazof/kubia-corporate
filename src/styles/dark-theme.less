@@ -1502,9 +1502,14 @@ body.dark-theme {
       border-color: fade(@grey-2, 10%);
       color: @dark-theme-text-color;
 
+      &-focused {
+        border-color: darken(@grey-6, 20%);
+        box-shadow: @dark-theme-focus-box-shadow;
+      }
+
       &:focus,
       &:hover {
-        border-color: fade(@grey-3, 10%);
+        border-color: darken(@grey-6, 20%);
         .box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1));
       }
     }
