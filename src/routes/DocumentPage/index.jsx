@@ -2,11 +2,34 @@ import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { getDocumentTemplate, getDocument } from '../../api';
 import TopTitle from '../../components/TopTitle';
-import { Form } from 'react-final-form';
-import { Button, Descriptions } from 'antd';
+import { Form, Field } from 'react-final-form';
+import { Button, Descriptions, Input } from 'antd';
+
+import styles from './index.module.css';
 
 const renderTemplateField = fieldData => {
-  return fieldData.label;
+  const { label, type, name} = fieldData;
+  switch (type) {
+    case 'text':
+      const {value} = fieldData
+      return (
+        <Field name={name} key={name} initialValue={value}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <Input
+                value={props.input.value}
+                onChange={props.input.onChange}
+              />
+            </div>
+          )}
+        </Field>
+      );
+
+    default:
+      console.error(`Unknown field type: ${type}`);
+      return null;
+  }
 };
 
 const renderTemplateFields = fields => {
@@ -47,9 +70,11 @@ const DocumentPage = () => {
             {props => (
               <form onSubmit={props.handleSubmit}>
                 {fieldComponents}
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
+                <div className={styles.submitButtonWrapper}>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
+                </div>
               </form>
             )}
           </Form>
@@ -65,7 +90,7 @@ const DocumentPage = () => {
       );
 
     default:
-      console.error('unknown document status');
+      console.error('Unknown document status');
       return (
         <div>
           <TopTitle title={name} backButton />
