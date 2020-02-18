@@ -44,7 +44,12 @@ const Profile = () => {
           <h3 className={styles.linksTitle}>Links</h3>
           <div className={styles.links}>
             {links.map(({ name, iconName, path }) => (
-              <LinkButton name={name} iconName={iconName} path={path} />
+              <LinkButton
+                name={name}
+                iconName={iconName}
+                path={path}
+                key={name}
+              />
             ))}
           </div>
         </div>
