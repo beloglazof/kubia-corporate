@@ -124,6 +124,7 @@ const renderTemplateField = fieldData => {
           )}
         </Field>
       );
+
     case 'checkbox-group':
       return (
         <Field name={name} key={name}>
