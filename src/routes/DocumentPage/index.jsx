@@ -9,6 +9,9 @@ import {
   Radio,
   InputNumber,
   Select,
+  Upload,
+  Icon,
+  Checkbox,
 } from 'antd';
 import { getDocumentTemplate, getDocument } from '../../api';
 import TopTitle from '../../components/TopTitle';
@@ -116,6 +119,58 @@ const renderTemplateField = fieldData => {
                     </Option>
                   ))}
                 </Select>
+              </div>
+            </div>
+          )}
+        </Field>
+      );
+    case 'checkbox-group':
+      return (
+        <Field name={name} key={name}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <div>
+                <Checkbox.Group
+                  onChange={props.input.onChange}
+                  options={fieldData.values}
+                  defaultValue={props.meta.initial}
+                />
+              </div>
+            </div>
+          )}
+        </Field>
+      );
+
+    case 'file':
+      const uploadProps = {
+        name: 'file',
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        headers: {
+          authorization: 'authorization-text',
+        },
+        onChange(info) {
+          if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+          }
+          if (info.file.status === 'done') {
+            console.log(`${info.file.name} file uploaded successfully`);
+          } else if (info.file.status === 'error') {
+            console.log(`${info.file.name} file upload failed.`);
+          }
+        },
+      };
+      return (
+        <Field name={name} key={name}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <div>
+                <Upload {...uploadProps}>
+                  <Button type="primary">
+                    <Icon type="upload" /> Click to Upload
+                  </Button>
+                </Upload>
               </div>
             </div>
           )}
