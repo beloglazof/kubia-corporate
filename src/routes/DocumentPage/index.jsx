@@ -8,6 +8,7 @@ import {
   DatePicker,
   Radio,
   InputNumber,
+  Select,
 } from 'antd';
 import { getDocumentTemplate, getDocument } from '../../api';
 import TopTitle from '../../components/TopTitle';
@@ -80,7 +81,7 @@ const renderTemplateField = fieldData => {
 
     case 'number':
       return (
-        <Field name={name} key={name}>
+        <Field name={name} key={name} initialValue={value}>
           {props => (
             <div>
               <span>{label}</span>
@@ -89,6 +90,32 @@ const renderTemplateField = fieldData => {
                   onChange={props.input.onChange}
                   value={props.input.value}
                 />
+              </div>
+            </div>
+          )}
+        </Field>
+      );
+
+    case 'select':
+      const { Option } = Select;
+      const options = fieldData.values;
+      const initialValue = options.find(v => v.selected).value;
+      return (
+        <Field name={name} key={name} initialValue={initialValue}>
+          {props => (
+            <div>
+              <span>{label}</span>
+              <div>
+                <Select
+                  defaultValue={props.meta.initial}
+                  onChange={props.input.onChange}
+                >
+                  {options.map(({ value, label }) => (
+                    <Option value={value} key={value}>
+                      {label}
+                    </Option>
+                  ))}
+                </Select>
               </div>
             </div>
           )}
