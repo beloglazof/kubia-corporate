@@ -172,3 +172,188 @@ export const createReport = async (type, period_start, period_end, email) =>
 export const sendReport = async reportId => await post('/report', { reportId });
 export const getReportTypes = async () => await get('/report/types');
 export const getReportStatuses = async () => await get('report/statuses');
+
+const fields = [
+  {
+    type: 'text',
+    required: false,
+    label: 'Full Name',
+    name: 'fullName',
+    access: false,
+    value: 'John Doe',
+    subtype: 'text',
+  },
+  {
+    type: 'date',
+    required: true,
+    label: 'Birthday',
+    className: 'form-control',
+    name: 'birthday',
+    access: false,
+    value: '2020-02-18',
+  },
+  {
+    type: 'radio-group',
+    required: false,
+    label: 'Gender',
+    inline: false,
+    name: 'gender',
+    access: false,
+    other: false,
+    values: [
+      { label: 'Female', value: 'female' },
+      { label: 'Male', value: 'male', selected: true },
+      { label: 'Not sure', value: 'notSure' },
+    ],
+  },
+  {
+    type: 'number',
+    required: false,
+    label: 'Phone number',
+    name: 'phoneNumber',
+    access: false,
+    value: '6512312312',
+  },
+  {
+    type: 'select',
+    required: false,
+    label: 'Country',
+    name: 'country',
+    access: false,
+    multiple: false,
+    values: [
+      { label: 'Singapore', value: 'sg', selected: true },
+      { label: 'Russia', value: 'ru' },
+      { label: 'USA', value: 'us' },
+    ],
+  },
+  {
+    type: 'file',
+    required: false,
+    label: 'Upload documents',
+    name: 'documents',
+    access: false,
+    subtype: 'file',
+    multiple: false,
+  },
+  {
+    type: 'checkbox-group',
+    required: false,
+    label: 'Follow us',
+    toggle: false,
+    inline: false,
+    name: 'followUs',
+    access: false,
+    other: false,
+    values: [
+      { label: 'Twitter', value: 'twitter', selected: true },
+      { label: 'Facebook', value: 'facebook', selected: true },
+    ],
+  },
+];
+
+const docs = [
+  {
+    id: 1,
+    templateId: 1,
+    name: 'Document #1',
+    status: 'checked',
+    fields,
+  },
+  {
+    id: 2,
+    templateId: 1,
+    name: 'Document #2',
+    status: 'in progress',
+    fields,
+  },
+  {
+    id: 3,
+    templateId: 1,
+    name: 'Document #3',
+    status: 'new',
+  },
+];
+export const getDocuments = () => docs;
+export const getDocument = id =>
+  docs.find(({ id: docId }) => Number(docId) === Number(id));
+export const getDocumentTemplate = id => ({
+  id: 1,
+  name: 'Demo doc',
+  fields: [
+    {
+      type: 'date',
+      required: true,
+      label: 'Birthday',
+      className: 'form-control',
+      name: 'birthday',
+      access: false,
+    },
+    {
+      type: 'checkbox-group',
+      required: false,
+      label: 'Checkbox Group',
+      toggle: false,
+      inline: false,
+      name: 'checkbox-group-1582010325262',
+      access: false,
+      other: false,
+      values: [{ label: 'Option 1', value: 'option-1', selected: true }],
+    },
+    {
+      type: 'file',
+      required: false,
+      label: 'File Upload',
+      className: 'form-control',
+      name: 'file-1582010333095',
+      access: false,
+      subtype: 'file',
+      multiple: false,
+    },
+    {
+      type: 'number',
+      required: false,
+      label: 'Number',
+      className: 'form-control',
+      name: 'number-1582010335296',
+      access: false,
+    },
+    {
+      type: 'radio-group',
+      required: false,
+      label: 'Radio Group',
+      inline: false,
+      name: 'radio-group-1582010345564',
+      access: false,
+      other: false,
+      values: [
+        { label: 'Option 1', value: 'option-1', selected: true },
+        { label: 'Option 2', value: 'option-2' },
+        { label: 'Option 3', value: 'option-3' },
+      ],
+    },
+    {
+      type: 'select',
+      required: false,
+      label: 'Select',
+      className: 'form-control',
+      name: 'select-1582010354814',
+      access: false,
+      multiple: false,
+      values: [
+        { label: 'Option 1', value: 'option-1', selected: true },
+        { label: 'Option 2', value: 'option-2' },
+        { label: 'Option 3', value: 'option-3' },
+      ],
+    },
+    {
+      type: 'text',
+      required: false,
+      label: 'Text Field',
+      className: 'form-control',
+      name: 'text-1582010356146',
+      access: false,
+      subtype: 'text',
+    },
+  ],
+});

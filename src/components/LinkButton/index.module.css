@@ -1,0 +1,10 @@
+.link:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+
+.linkButton {
+  width: 180px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}

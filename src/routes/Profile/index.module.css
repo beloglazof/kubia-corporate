@@ -23,19 +23,7 @@
   align-content: space-around;
 }
 
-.link:not(:last-child) {
-  margin-bottom: 0.5em;
-}
-
-.linkButton {
-  width: 180px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-}
-
-@media screen and (max-width: 579px ){
-
+@media screen and (max-width: 579px) {
   .descriptions {
     margin-bottom: 1em;
   }
