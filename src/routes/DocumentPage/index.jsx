@@ -126,8 +126,12 @@ const renderTemplateField = fieldData => {
       );
 
     case 'checkbox-group':
+      const selected = fieldData.values
+        .filter(v => v.selected)
+        .map(v => v.value);
+        
       return (
-        <Field name={name} key={name}>
+        <Field name={name} key={name} initialValue={selected}>
           {props => (
             <div>
               <span>{label}</span>
