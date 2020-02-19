@@ -1,4 +1,5 @@
 import { get, httpDelete, patch, post, postFile } from './config';
+import Axios from 'axios';
 export const getDesktopMainScreen = async () =>
   await get('compose/desktop-main-screen');
 export const usersCheck = async (phone, notifyError) =>
@@ -172,3 +173,157 @@ export const createReport = async (type, period_start, period_end, email) =>
 export const sendReport = async reportId => await post('/report', { reportId });
 export const getReportTypes = async () => await get('/report/types');
 export const getReportStatuses = async () => await get('report/statuses');
+
+const fields = [
+  {
+    type: 'text',
+    required: false,
+    label: 'Full Name',
+    name: 'fullName',
+    access: false,
+    value: 'John Doe',
+    subtype: 'text',
+  },
+  {
+    type: 'date',
+    required: true,
+    label: 'Birthday',
+    className: 'form-control',
+    name: 'birthday',
+    access: false,
+    value: '2020-02-18',
+  },
+  {
+    type: 'radio-group',
+    required: false,
+    label: 'Gender',
+    inline: false,
+    name: 'gender',
+    access: false,
+    other: false,
+    values: [
+      { label: 'Female', value: 'female' },
+      { label: 'Male', value: 'male', selected: true },
+      { label: 'Not sure', value: 'notSure' },
+    ],
+  },
+  {
+    type: 'number',
+    required: false,
+    label: 'Phone number',
+    name: 'phoneNumber',
+    access: false,
+    value: '6512312312',
+  },
+  {
+    type: 'select',
+    required: false,
+    label: 'Country',
+    name: 'country',
+    access: false,
+    multiple: false,
+    values: [
+      { label: 'Singapore', value: 'sg', selected: true },
+      { label: 'Russia', value: 'ru' },
+      { label: 'USA', value: 'us' },
+    ],
+  },
+  {
+    type: 'file',
+    required: false,
+    label: 'Upload documents',
+    name: 'documents',
+    access: false,
+    subtype: 'file',
+    multiple: false,
+  },
+  {
+    type: 'checkbox-group',
+    required: false,
+    label: 'Follow us',
+    toggle: false,
+    inline: false,
+    name: 'followUs',
+    access: false,
+    other: false,
+    values: [
+      { label: 'Twitter', value: 'twitter', selected: true },
+      { label: 'Facebook', value: 'facebook', selected: true },
+    ],
+  },
+  {
+    type: 'template',
+    templateId: 2,
+  },
+];
+
+const docs = [
+  {
+    id: 1,
+    templateId: 1,
+    name: 'Document #1',
+    status: 'checked',
+    fields,
+  },
+  {
+    id: 2,
+    templateId: 1,
+    name: 'Document #2',
+    status: 'in progress',
+    fields,
+  },
+  {
+    id: 3,
+    templateId: 1,
+    name: 'Document #3',
+    status: 'new',
+  },
+];
+
+const templates = [
+  {
+    id: 1,
+    name: 'Demo doc',
+    fields,
+  },
+  {
+    id: 2,
+    name: 'Owner info',
+    fields: [
+      {
+        type: 'text',
+        required: false,
+        label: 'Full Owner Name',
+        name: 'ownerFullName',
+        access: false,
+        subtype: 'text',
+      },
+      {
+        type: 'date',
+        required: true,
+        label: 'Owner Birthday',
+        name: 'ownerBirthday',
+        access: false,
+      },
+      {
+        type: 'number',
+        required: false,
+        label: 'Owner phone number',
+        name: 'ownerPhoneNumber',
+        access: false,
+      },
+    ],
+  },
+];
+
+export const getDocuments = () => docs;
+export const getDocument = id =>
+  docs.find(({ id: docId }) => Number(docId) === Number(id));
+export const getDocumentTemplate = id =>
+  templates.find(({ id: templateId }) => Number(templateId) === Number(id));
+
+export const getUploadLink = async () => await get('/upload/link');
+export const uploadDoc = async doc => {
+  const uploadLink = new URL(await getUploadLink());
+  postFile(uploadLink.pathname, doc);
+};

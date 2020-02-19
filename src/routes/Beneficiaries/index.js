@@ -66,8 +66,8 @@ const Beneficiaries = ({ history }) => {
           grid={{
             gutter: 16,
             xs: 1,
-            md: 2,
-            xxl: 3
+            xl: 2,
+            xxl: 3,
           }}
         />
       </div>

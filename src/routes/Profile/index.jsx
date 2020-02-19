@@ -1,15 +1,14 @@
 import React from 'react';
 import TopTitle from '../../components/TopTitle';
 import { useSelector } from 'react-redux';
-import { Descriptions, List, Button, Icon } from 'antd';
-import { Link } from 'react-router-dom';
-import { startCase } from 'lodash';
+import { Descriptions } from 'antd';
 import styles from './index.module.css';
+import LinkButton from '../../components/LinkButton';
 
 const links = [
-  { name: 'reports', path: '/reports' },
-  { name: 'documents', path: '/documents' },
-  { name: 'settings', path: '/settings' },
+  { name: 'reports', path: '/reports', iconName: 'file' },
+  { name: 'documents', path: '/documents', iconName: 'container' },
+  { name: 'settings', path: '/settings', iconName: 'setting' },
 ];
 
 const Profile = () => {
@@ -22,7 +21,10 @@ const Profile = () => {
   return (
     <div>
       <TopTitle title="Profile" />
-      <div className={styles.content} style={{ display: 'flex', flexWrap: 'wrap' }}>
+      <div
+        className={styles.content}
+        style={{ display: 'flex', flexWrap: 'wrap' }}
+      >
         <Descriptions
           size="small"
           title={fullName}
@@ -41,17 +43,14 @@ const Profile = () => {
         <div>
           <h3 className={styles.linksTitle}>Links</h3>
           <div className={styles.links}>
-            {links.map(link => {
-              const name = startCase(link.name);
-              return (
-                <Link to={link.path} className={styles.link}>
-                  <Button type="primary" className={styles.linkButton}>
-                    {name}
-                    <Icon type="right" />
-                  </Button>
-                </Link>
-              );
-            })}
+            {links.map(({ name, iconName, path }) => (
+              <LinkButton
+                name={name}
+                iconName={iconName}
+                path={path}
+                key={name}
+              />
+            ))}
           </div>
         </div>
       </div>

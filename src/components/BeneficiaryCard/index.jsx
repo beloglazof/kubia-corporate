@@ -58,7 +58,7 @@ const DetailsModal = ({ details, ...props }) => {
       title="Beneficiary details"
       {...props}
     >
-      <Descriptions bordered column={1}>
+      <Descriptions column={1}>
         {renderFields(details)}
       </Descriptions>
     </Modal>
@@ -207,13 +207,11 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
     <Card
       title={cardTitle}
       headStyle={{
-        fontSize: '1.2em',
-        lineHeight: '1.7',
         paddingLeft: '1em',
         fontWeight: 'bold',
       }}
       actions={actions}
-      size="small"
+      // size="small"
       bodyStyle={{
         // height: 'auto',
         padding: '1em 1em 1em 1.4em',
@@ -223,7 +221,7 @@ const BeneficiaryCard = ({ beneficiary = {}, onDelete, onEdit }) => {
       }}
       className={styles.beneficiaryCard}
     >
-      <Descriptions column={2}>{renderFields(cardFields)}</Descriptions>
+      <Descriptions column={{xs: 1, md: 2}}>{renderFields(cardFields)}</Descriptions>
       <DetailsModal {...detailsModalProps} details={details} />
       {/* <EditFormModal
         {...editModalProps}

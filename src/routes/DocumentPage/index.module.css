@@ -1,0 +1,16 @@
+.submitButtonWrapper {
+  margin-top: 1em;
+}
+
+.fieldWrapper {
+  margin-bottom: 1em;
+}
+
+.fieldWrapper > label {
+  display: inline-block;
+  margin-bottom: 0.3em;
+}
+
+.templateSection {
+  margin-top: 1.25em;
+}

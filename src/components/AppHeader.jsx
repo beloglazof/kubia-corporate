@@ -71,7 +71,7 @@ const AppHeader = () => {
               <Menu selectedKeys={selectedKeys} mode="horizontal">
                 <Menu.Item key="/profile">
                   <NavLink activeStyle={{ fontWeight: 'bold' }} to="/profile">
-                    <Icon type="user" />
+                    <Icon type="profile" />
                     <IntlMessages id={`route.profile`} />
                   </NavLink>
                 </Menu.Item>
