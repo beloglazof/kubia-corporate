@@ -293,7 +293,7 @@ const templates = [
       {
         type: 'text',
         required: false,
-        label: 'Full Owner Name',
+        label: 'Full owner name',
         name: 'ownerFullName',
         access: false,
         subtype: 'text',
@@ -301,7 +301,7 @@ const templates = [
       {
         type: 'date',
         required: true,
-        label: 'Owner Birthday',
+        label: 'Owner birthday',
         name: 'ownerBirthday',
         access: false,
       },
@@ -324,6 +324,11 @@ export const getDocumentTemplate = id =>
 
 export const getUploadLink = async () => await get('/upload/link');
 export const uploadDoc = async doc => {
-  const uploadLink = new URL(await getUploadLink());
-  postFile(uploadLink.pathname, doc);
+  const uploadLink = await getUploadLink();
+  if (!uploadLink) {
+    return;
+  }
+
+  const uploadUrl = new URL(uploadLink);
+  postFile(uploadUrl.pathname, doc);
 };
