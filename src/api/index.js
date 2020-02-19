@@ -1,4 +1,5 @@
 import { get, httpDelete, patch, post, postFile } from './config';
+import Axios from 'axios';
 export const getDesktopMainScreen = async () =>
   await get('compose/desktop-main-screen');
 export const usersCheck = async (phone, notifyError) =>
@@ -274,6 +275,7 @@ const docs = [
     status: 'new',
   },
 ];
+
 export const getDocuments = () => docs;
 export const getDocument = id =>
   docs.find(({ id: docId }) => Number(docId) === Number(id));
@@ -282,3 +284,9 @@ export const getDocumentTemplate = id => ({
   name: 'Demo doc',
   fields,
 });
+
+export const getUploadLink = async () => await get('/upload/link');
+export const uploadDoc = async doc => {
+  const uploadLink = new URL(await getUploadLink());
+  postFile(uploadLink.pathname, doc);
+};

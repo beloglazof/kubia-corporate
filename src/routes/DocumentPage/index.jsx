@@ -13,9 +13,10 @@ import {
   Icon,
   Checkbox,
 } from 'antd';
-import { getDocumentTemplate, getDocument } from '../../api';
-import TopTitle from '../../components/TopTitle';
 import dayjs from 'dayjs';
+
+import { getDocumentTemplate, getDocument, uploadDoc } from '../../api';
+import TopTitle from '../../components/TopTitle';
 
 import styles from './index.module.css';
 
@@ -26,8 +27,8 @@ const renderTemplateField = fieldData => {
       return (
         <Field name={name} key={name} initialValue={value}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <Input
                   value={props.input.value}
@@ -42,11 +43,12 @@ const renderTemplateField = fieldData => {
     case 'date':
       // for antd datepicker because it works with moment.js object
       const onChange = cb => (date, dateString) => cb(dateString);
+
       return (
         <Field name={name} key={name} initialValue={value}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <DatePicker
                   onChange={onChange(props.input.onChange)}
@@ -60,11 +62,13 @@ const renderTemplateField = fieldData => {
 
     case 'radio-group':
       const { values } = fieldData;
+      const selectedOption = values.find(({ selected }) => selected).value;
+
       return (
-        <Field name={name} key={name}>
+        <Field name={name} key={name} initialValue={selectedOption}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <Radio.Group
                   onChange={props.input.onChange}
@@ -86,8 +90,8 @@ const renderTemplateField = fieldData => {
       return (
         <Field name={name} key={name} initialValue={value}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <InputNumber
                   onChange={props.input.onChange}
@@ -106,8 +110,8 @@ const renderTemplateField = fieldData => {
       return (
         <Field name={name} key={name} initialValue={initialValue}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <Select
                   defaultValue={props.meta.initial}
@@ -129,12 +133,12 @@ const renderTemplateField = fieldData => {
       const selected = fieldData.values
         .filter(v => v.selected)
         .map(v => v.value);
-        
+
       return (
         <Field name={name} key={name} initialValue={selected}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
                 <Checkbox.Group
                   onChange={props.input.onChange}
@@ -148,30 +152,37 @@ const renderTemplateField = fieldData => {
       );
 
     case 'file':
-      const uploadProps = {
-        name: 'file',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-        headers: {
-          authorization: 'authorization-text',
-        },
-        onChange(info) {
-          if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-          }
-          if (info.file.status === 'done') {
-            console.log(`${info.file.name} file uploaded successfully`);
-          } else if (info.file.status === 'error') {
-            console.log(`${info.file.name} file upload failed.`);
-          }
-        },
+      let fileId;
+      const upload = async ({ file, onProgress, onError, onSuccess }) => {
+        const uploaded = await uploadDoc(file);
+        if (uploaded) {
+          const { file_id } = uploaded;
+          fileId = file_id;
+          // setFileId(file_id);
+          onSuccess();
+        } else {
+          onError();
+        }
       };
+
+      const onUploadChange = cb => info => {
+        if (info.file.status === 'done') {
+          cb(fileId);
+        } else if (info.file.status === 'error') {
+          console.error(`${info.file.name} file upload failed.`);
+        }
+      };
+
       return (
         <Field name={name} key={name}>
           {props => (
-            <div>
-              <span>{label}</span>
+            <div className={styles.fieldWrapper}>
+              <label>{label}</label>
               <div>
-                <Upload {...uploadProps}>
+                <Upload
+                  customRequest={upload}
+                  onChange={onUploadChange(props.input.onChange)}
+                >
                   <Button type="primary">
                     <Icon type="upload" /> Click to Upload
                   </Button>
