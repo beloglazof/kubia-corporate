@@ -251,6 +251,10 @@ const fields = [
       { label: 'Facebook', value: 'facebook', selected: true },
     ],
   },
+  {
+    type: 'template',
+    templateId: 2,
+  },
 ];
 
 const docs = [
@@ -276,14 +280,47 @@ const docs = [
   },
 ];
 
+const templates = [
+  {
+    id: 1,
+    name: 'Demo doc',
+    fields,
+  },
+  {
+    id: 2,
+    name: 'Owner info',
+    fields: [
+      {
+        type: 'text',
+        required: false,
+        label: 'Full Owner Name',
+        name: 'ownerFullName',
+        access: false,
+        subtype: 'text',
+      },
+      {
+        type: 'date',
+        required: true,
+        label: 'Owner Birthday',
+        name: 'ownerBirthday',
+        access: false,
+      },
+      {
+        type: 'number',
+        required: false,
+        label: 'Owner phone number',
+        name: 'ownerPhoneNumber',
+        access: false,
+      },
+    ],
+  },
+];
+
 export const getDocuments = () => docs;
 export const getDocument = id =>
   docs.find(({ id: docId }) => Number(docId) === Number(id));
-export const getDocumentTemplate = id => ({
-  id: 1,
-  name: 'Demo doc',
-  fields,
-});
+export const getDocumentTemplate = id =>
+  templates.find(({ id: templateId }) => Number(templateId) === Number(id));
 
 export const getUploadLink = async () => await get('/upload/link');
 export const uploadDoc = async doc => {

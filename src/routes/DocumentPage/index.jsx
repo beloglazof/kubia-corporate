@@ -52,7 +52,7 @@ const renderTemplateField = fieldData => {
               <div>
                 <DatePicker
                   onChange={onChange(props.input.onChange)}
-                  defaultValue={dayjs(props.meta.initial)}
+                  defaultValue={props.meta.initial && dayjs(props.meta.initial)}
                 />
               </div>
             </div>
@@ -191,6 +191,16 @@ const renderTemplateField = fieldData => {
             </div>
           )}
         </Field>
+      );
+
+    case 'template':
+      const { templateId } = fieldData;
+      const template = getDocumentTemplate(templateId);
+      return (
+        <section className={styles.templateSection}>
+          <h2>{template.name}</h2>
+          {renderTemplateFields(template.fields)}
+        </section>
       );
 
     default:
