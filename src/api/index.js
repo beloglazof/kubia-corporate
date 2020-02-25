@@ -284,11 +284,14 @@ const templates = [
   {
     id: 1,
     name: 'Demo doc',
+    type: 'simple',
     fields,
   },
   {
     id: 2,
     name: 'Owner info',
+    type: 'multiple',
+    entityLimit: 4,
     fields: [
       {
         type: 'text',
@@ -311,6 +314,7 @@ const templates = [
         label: 'Owner phone number',
         name: 'ownerPhoneNumber',
         access: false,
+        multiple: true,
       },
     ],
   },

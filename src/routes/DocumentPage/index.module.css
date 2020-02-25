@@ -1,5 +1,12 @@
-.submitButtonWrapper {
-  margin-top: 1em;
+.multipleField {
+  display: flex;
+}
+
+.fieldActions {
+  margin-left: 1em;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 1em;
 }
 
 .fieldWrapper {
@@ -11,6 +18,30 @@
   margin-bottom: 0.3em;
 }
 
+.fieldWrapper > div {
+  width: 30vw;
+  max-width: 375px;
+}
+
+@media screen and (max-width: 1024px) {
+  .fieldWrapper > div {
+    width: 35vw;
+  }
+}
+@media screen and (max-width: 425px) {
+  .fieldWrapper > div {
+    width: 70vw;
+  }
+}
+
+.datepicker {
+  width: 100%;
+}
+
 .templateSection {
   margin-top: 1.25em;
+}
+
+.submitButtonWrapper {
+  margin-top: 1em;
 }
